@@ -1,3 +1,7 @@
+* {
+	font-family: "Microsoft Yahei";
+}
+
 body {
 	background-image: url("src/background_2.jpg");
 }
@@ -32,11 +36,12 @@ header #introduction {
 
 header #social {
 	margin: 5px;
+	margin-right: 20px;
 	float: right;
 }
 
-header #social #button-facebook {
-	background-image: url("src/facebook.png");
+header #social .social-buttons {
+	margin: 4px;
 	border-radius: 50%;
 	width: 30px;
 	height: 30px;
@@ -45,74 +50,7 @@ header #social #button-facebook {
 	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
 }
 
-header #social #button-facebook:hover {
-	background-image: url("src/facebook.png");
-	opacity: 1.0;
-	filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
-}
-
-header #social #button-twitter {
-	background-image: url("src/twitter.png");
-	border-radius: 50%;
-	width: 30px;
-	height: 30px;
-	background-size: contain;
-	opacity: 0.6;
-	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-}
-
-header #social #button-twitter:hover {
-	background-image: url("src/twitter.png");
-	opacity: 1.0;
-	filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
-}
-
-header #social #button-weibo {
-	background-image: url("src/weibo.png");
-	border-radius: 50%;
-	width: 30px;
-	height: 30px;
-	background-size: contain;
-	opacity: 0.6;
-	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-}
-
-header #social #button-weibo:hover {
-	background-image: url("src/weibo.png");
-	opacity: 1.0;
-	filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
-}
-
-header #social #button-renren {
-	background-image: url("src/renren.png");
-	border-radius: 50%;
-	overflow: hidden;
-	width: 30px;
-	height: 30px;
-	background-size: contain;
-	opacity: 0.6;
-	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-}
-
-header #social #button-renren:hover {
-	background-image: url("src/renren.png");
-	opacity: 1.0;
-	filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
-}
-
-header #social #button-zhihu {
-	background-image: url("src/zhihu.png");
-	border-radius: 50%;
-	overflow: hidden;
-	width: 30px;
-	height: 30px;
-	background-size: contain;
-	opacity: 0.6;
-	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-}
-
-header #social #button-zhihu:hover {
-	background-image: url("src/zhihu.png");
+header #social .social-buttons:hover {
 	opacity: 1.0;
 	filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
 }
@@ -123,7 +61,10 @@ header #nav {
 
 header #nav span {
 	margin: 30px;
+	padding: 10px;
 	font-size: 130%;
+	font-family: "SimSun";
+	font-weight: bold;
 }
 
 header #nav span:hover {
@@ -149,6 +90,19 @@ aside #weixin_2weima {
 	background-size: contain;
 }
 
-footer {
+article {
+	margin-top: 20px;
+	margin-right: 350px;
+	margin-left: 20px;
+	padding: 20px;
+}
 
+article .articles {
+	padding: 10px;
+	border: 1px solid #000;
+	border-radius: 7px;
+}
+
+footer {
+	float: top;
 }
