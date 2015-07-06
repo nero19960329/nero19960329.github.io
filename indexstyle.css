@@ -2,8 +2,9 @@
 	font-family: "Microsoft Yahei";
 }
 
-body {
+html, body {
 	background-image: url("src/background_2.jpg");
+	height: 100%;
 }
 
 header {
@@ -81,6 +82,8 @@ header #nav a:hover {
 
 aside {
 	float: right;
+	width: 21%;
+	height: 500px;
 	margin-right: 20px;
 	margin-bottom: 50px;
 	margin-top: 20px;
@@ -91,8 +94,8 @@ aside {
 
 aside #weixin_2weima {
 	background-image: url("src/weixin.jpg");
-	width: 290px;
-	height: 400px;
+	width: 80%;
+	height: 60%;
 	background-size: contain;
 }
 
@@ -118,6 +121,17 @@ article .articles .article-head {
 	margin-bottom: 10px;
 }
 
+article .articles .article-head a {
+	font-family: "SimSun";
+	color: #000;
+	text-decoration: none;
+}
+
+article .articles .article-head a:hover {
+	text-decoration: underline;
+	color: #78B;
+}
+
 article .articles .article-body {
 	margin-bottom: 10px;
 	text-indent: 35px;
@@ -129,4 +143,5 @@ article .articles .article-foot {
 
 footer {
 	float: top;
+	margin: 20px;
 }
