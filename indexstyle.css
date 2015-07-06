@@ -27,6 +27,7 @@ header #introduction {
 }
 
 header #social {
+	margin: 5px;
 	float: right;
 }
 
