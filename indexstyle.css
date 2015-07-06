@@ -1,0 +1,26 @@
+header {
+	background-color: #addd81;
+}
+
+header #face {
+	margin: 10px;
+	width: 160px;
+	height: 160px;
+	border-radius: 50%;
+	overflow: hidden;
+	float: left;
+}
+
+header #htmltitle {
+	margin-left: 170px;
+	margin-top: 10px;
+	height: 110px;
+	line-height: 110px;		/*设置文字垂直居中*/
+	float: top;
+}
+
+header #introduction {
+	margin-left: 170px;
+	height: 50px;
+	float: top;
+}
