@@ -1,6 +1,11 @@
+body {
+	background-image: url("src/background_2.jpg");
+}
+
 header {
 	margin: 0px;
-	background-color: #addd81;
+	/*background-color: #14446a;*/
+	background-image: url("src/background_1.jpg");
 }
 
 header #face {
@@ -116,4 +121,24 @@ header #social #button-zhihu:hover {
 	background-image: url("src/zhihu.png");
 	opacity: 1.0;
 	filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
+}
+
+aside {
+	float: right;
+	margin-right: 50px;
+	margin-bottom: 50px;
+	padding: 10px;
+	border: 1px solid #000;
+	border-radius: 7px;
+}
+
+aside #weixin_2weima {
+	background-image: url("src/weixin.jpg");
+	width: 290px;
+	height: 400px;
+	background-size: contain;
+}
+
+footer {
+	float: bottom;
 }
