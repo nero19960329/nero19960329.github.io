@@ -59,18 +59,24 @@ header #nav {
 	margin: 0;
 }
 
-header #nav span {
+header #nav a {
 	margin: 30px;
 	padding: 10px;
 	font-size: 130%;
 	font-family: "SimSun";
 	font-weight: bold;
+	color: #000;
+	text-decoration: none;
 }
 
-header #nav span:hover {
+header #nav a:visited {
+	font-family: "SimSun";
+	color: #000;
+}
+
+header #nav a:hover {
 	cursor: pointer;
-	color: blue;
-	text-decoration: underline;
+	color: #78B;
 }
 
 aside {
@@ -90,17 +96,35 @@ aside #weixin_2weima {
 	background-size: contain;
 }
 
-article {
-	margin-top: 20px;
-	margin-right: 350px;
-	margin-left: 20px;
-	padding: 20px;
-}
-
 article .articles {
 	padding: 10px;
 	border: 1px solid #000;
 	border-radius: 7px;
+}
+
+article .articles .divideline {
+	font-size: 1%;
+	color: #d2d3d5;
+	margin-top: 30px;
+	margin-bottom: 10px;
+	background-image: url("src/divideline.jpg");
+	background-repeat: repeat-x;
+}
+
+article .articles .article-head {
+	font-family: "SimSun";
+	font-size: 150%;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
+article .articles .article-body {
+	margin-bottom: 10px;
+	text-indent: 35px;
+}
+
+article .articles .article-foot {
+	color: #78B;
 }
 
 footer {
