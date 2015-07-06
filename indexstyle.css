@@ -3,8 +3,7 @@ body {
 }
 
 header {
-	margin: 0px;
-	/*background-color: #14446a;*/
+	margin: 0;
 	background-image: url("src/background_1.jpg");
 }
 
@@ -44,7 +43,6 @@ header #social #button-facebook {
 	background-size: contain;
 	opacity: 0.6;
 	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-	background-color: #addd81;
 }
 
 header #social #button-facebook:hover {
@@ -61,7 +59,6 @@ header #social #button-twitter {
 	background-size: contain;
 	opacity: 0.6;
 	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-	background-color: #addd81;
 }
 
 header #social #button-twitter:hover {
@@ -78,7 +75,6 @@ header #social #button-weibo {
 	background-size: contain;
 	opacity: 0.6;
 	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-	background-color: #addd81;
 }
 
 header #social #button-weibo:hover {
@@ -96,7 +92,6 @@ header #social #button-renren {
 	background-size: contain;
 	opacity: 0.6;
 	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-	background-color: #addd81;
 }
 
 header #social #button-renren:hover {
@@ -114,7 +109,6 @@ header #social #button-zhihu {
 	background-size: contain;
 	opacity: 0.6;
 	filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
-	background-color: #addd81;
 }
 
 header #social #button-zhihu:hover {
@@ -123,10 +117,26 @@ header #social #button-zhihu:hover {
 	filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
 }
 
+header #nav {
+	margin: 0;
+}
+
+header #nav span {
+	margin: 30px;
+	font-size: 130%;
+}
+
+header #nav span:hover {
+	cursor: pointer;
+	color: blue;
+	text-decoration: underline;
+}
+
 aside {
 	float: right;
-	margin-right: 50px;
+	margin-right: 20px;
 	margin-bottom: 50px;
+	margin-top: 20px;
 	padding: 10px;
 	border: 1px solid #000;
 	border-radius: 7px;
@@ -140,5 +150,5 @@ aside #weixin_2weima {
 }
 
 footer {
-	float: bottom;
+
 }
