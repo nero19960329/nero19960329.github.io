@@ -118,17 +118,6 @@ article .articles .article-head {
 	margin-bottom: 10px;
 }
 
-article .articles .article-head a {
-	font-family: "SimSun";
-	color: #000;
-	text-decoration: none;
-}
-
-article .articles .article-head a:hover {
-	text-decoration: underline;
-	color: #78B;
-}
-
 article .articles .article-body {
 	margin-bottom: 10px;
 	text-indent: 35px;
@@ -140,5 +129,4 @@ article .articles .article-foot {
 
 footer {
 	float: top;
-	margin: 20px;
 }
