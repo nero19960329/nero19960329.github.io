@@ -2,9 +2,8 @@
 	font-family: "Microsoft Yahei";
 }
 
-html, body {
+body {
 	background-image: url("src/background_2.jpg");
-	height: 100%;
 }
 
 header {
@@ -82,8 +81,8 @@ header #nav a:hover {
 
 aside {
 	float: right;
-	width: 21%;
-	height: 500px;
+	width: 310px;
+	height: 550px;
 	margin-right: 20px;
 	margin-bottom: 50px;
 	margin-top: 20px;
@@ -94,8 +93,8 @@ aside {
 
 aside #weixin_2weima {
 	background-image: url("src/weixin.jpg");
-	width: 80%;
-	height: 60%;
+	width: 290px;
+	height: 400px;
 	background-size: contain;
 }
 
@@ -142,5 +141,6 @@ article .articles .article-foot {
 }
 
 footer {
-	float: top;
+	float: right;
+	margin: 20px;
 }
