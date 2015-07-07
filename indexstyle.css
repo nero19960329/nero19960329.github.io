@@ -203,7 +203,7 @@ header #htmltitle {
 	}
 
 	.divideline {
-		font-size: 100%;
+		font-size: 1%;
 		color: #d2d3d5;
 		margin-top: 20px;
 		margin-bottom: 10px;
@@ -383,7 +383,7 @@ header #htmltitle {
 	}
 
 	.divideline {
-		font-size: 1%;
+		font-size: 1em;
 		color: #d2d3d5;
 		margin-top: 20px;
 		margin-bottom: 10px;
