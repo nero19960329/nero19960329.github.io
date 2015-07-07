@@ -309,11 +309,6 @@ header #htmltitle {
 	}
 
 	header #nav ul {
-		/*position: absolute;
-		left: 0;
-		top: 0%;
-		width: 100%;
-		height: 100%;*/
 		height: 100%;
 		background-color: #333;
 		border-bottom: 10% solid #ececec;
@@ -352,54 +347,17 @@ header #htmltitle {
 		width: 33%;
 	}
 
-	header #nav .n3 {
+	header #nav #n3 {
 		width: 32%;
 	}
 
 	header #nav .quebec {
-		position: absolute;
-		top: 100%;
-		left: 10px;
-		z-index: 3;
-		border: 0;
-		width: 0;
-		height: 10%;
-		padding: 0;
-		overflow: hidden;
-		text-indent: -9999em;
-		/*background: #511d7f;*/
-		background: #014c67;
-
-		-webkit-transition-property: left, width;
-	    -moz-transition-property: left, width;
-	    -ms-transition-property: left, width;
-	    -o-transition-property: left, width;
-	    transition-property: left, width;
-
-	    -webkit-transition-duration: .5s;
-	    -moz-transition-duration: .5s;
-	    -ms-transition-duration: .5s;
-	    -o-transition-duration: .5s;
-	    transition-duration: .5s;
-
-		pointer-events: none;
+		display: none;
 	}
 
 	header #nav li:hover {
 		z-index: 2;
 		padding: 0; 
-	}
-
-	header #nav .n1:hover ~ li.quebec {
-		left: 7.5%; width: 20%;
-	}
-
-	header #nav .n2:hover ~ li.quebec {
-		left: 40.5%; width: 20%;
-	}
-
-	header #nav .n3:hover ~ li.quebec {
-		left: 73%; width: 20%;
 	}
 
 	aside {
@@ -442,7 +400,8 @@ header #htmltitle {
 
 	article .articles .article-body {
 		margin-bottom: 10px;
-		text-indent: 10%;
+		text-indent: 5%;
+		word-break:break-all;			/*文字自动换行*/
 	}
 
 	article .articles .article-foot {
