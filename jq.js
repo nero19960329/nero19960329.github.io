@@ -30,7 +30,7 @@ $(function () {
 	$("header #face").css('width', faceHeight);
 	$("header #htmltitle").css('left', faceHeight * 1.4);
 	$("header #introduction").css('left', faceHeight * 1.4);
-	$("header #social").css('left', width - 300);
+	$("header #social").css('left', width - 320);
 	var htmlHeight = $(document).height();
 	var bodyHeight = $("body").height();
 	
@@ -65,7 +65,7 @@ $(window).resize(function() {
 	$("header #face").css('width', faceHeight);
 	$("header #htmltitle").css('left', faceHeight * 1.4);
 	$("header #introduction").css('left', faceHeight * 1.4);
-	$("header #social").css('left', width - 300);
+	$("header #social").css('left', width - 320);
 	var htmlHeight = $(document).height();
 	var bodyHeight = $("body").height();
 
