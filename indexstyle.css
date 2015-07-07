@@ -1,5 +1,9 @@
 * {
-	font-family: "Microsoft Yahei";
+	font-family: "Microsoft Yahei", arial;
+}
+
+html {
+	font-size: 100%;
 }
 
 body {
@@ -10,6 +14,11 @@ body {
 header {
 	margin: 0;
 	background-image: url("src/background_1.jpg");
+}
+
+header #htmltitle {
+	font-size: 2.1em;
+	font-weight: bold;
 }
 
 header #face {
@@ -113,7 +122,7 @@ header #nav .n2 {
 
 header #nav .quebec {
 	position: absolute;
-	top: 247px;
+	top: 260px;
 	left: 10px;
 	z-index: 3;
 	border: 0;
