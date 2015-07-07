@@ -20,38 +20,37 @@ header #htmltitle {
 	}
 
 	header {
+		position: absolute;
 		margin: 0;
 		background-image: url("src/background_1.jpg");
-		overflow: hidden;
+		width: 98%;
+		height: 20%;
 	}
 
 	header #htmltitle {
-		margin-left: 170px;
-		margin-top: 0px;
-		height: 110px;
-		line-height: 110px;		/*设置文字垂直居中*/
-		float: top;
+		position: absolute;
+		font-size: 1.5em;
+		margin: 0;
+		top: 15%;
 	}
 
 	header #face {
-		margin: 10px;
-		width: 160px;
-		height: 160px;
+		margin: 1%;
+		height: 70%;
 		border-radius: 50%;
 		overflow: hidden;
-		float: left;
 	}
 
 	header #introduction {
-		margin-left: 170px;
-		height: 50px;
-		float: top;
+		position: absolute;
+		font-size: 1em;
+		margin: 0;
+		top: 50%;
 	}
 
 	header #social {
-		margin: 5px;
-		margin-right: 20px;
-		float: right;
+		position: absolute;
+		top: 5%;
 	}
 
 	header #social .social-buttons {
@@ -70,8 +69,12 @@ header #htmltitle {
 	}
 
 	header #nav {
+		position: absolute;
+		left: 0;
+		top: 100%;
+		width: 100%;
+		height: 30%;
 		margin: 0;
-		overflow: hidden;
 	}
 
 	header #nav a {
@@ -83,22 +86,19 @@ header #htmltitle {
 	}
 
 	header #nav ul {
+		height: 100%;
 		background-color: #333;
-		border-bottom: 5px solid #ececec;
+		border-bottom: 10% solid #ececec;
 		overflow: hidden;
 		margin: 0;
-		padding-left: 30px;
-	}
-
-	header #nav .a {
-		top: 20px;
+		padding-left: 0;
 	}
 
 	header #nav li {
 		margin: 0;
 		list-style: none outside;
 		position: relative;
-		height: 40px;
+		height: 95%;
 		z-index: 1;
 		float: left;
 		padding: 0;
@@ -107,7 +107,7 @@ header #htmltitle {
 	header #nav li a {
 		color: white;
 		position: relative;
-		top: 5px;
+		top: 15%;
 		display: block;
 		margin: 0;
 		border-bottom: 5px solid transparent;
@@ -117,11 +117,11 @@ header #htmltitle {
 	}
 
 	header #nav .n1 {
-		width: 200px;
+		width: 20%;
 	}
 
 	header #nav .n2 {
-		width: 200px;
+		width: 20%;
 	}
 
 	header #nav .n3 {
@@ -130,7 +130,7 @@ header #htmltitle {
 
 	header #nav .quebec {
 		position: absolute;
-		top: 257px;
+		top: 100%;
 		left: 10px;
 		z-index: 3;
 		border: 0;
@@ -163,21 +163,19 @@ header #htmltitle {
 	}
 
 	header #nav .n1:hover ~ li.quebec {
-		left: 60px; width: 160px;
+		left: 5%; width: 10%;
 	}
 
 	header #nav .n2:hover ~ li.quebec {
-		left: 262px; width: 160px;
+		left: 25%; width: 10%;
 	}
 
 	aside {
-		float: right;
-		width: 290px;
-		height: 650px;
-		margin-right: 20px;
-		margin-bottom: 50px;
-		margin-top: 20px;
-		padding: 10px;
+		position: absolute;
+		width: 25%;
+		padding: 1%;
+		top: 30%;
+		left: 71%;
 		border: 1px solid #000;
 		border-radius: 7px;
 		box-shadow: 3px 3px 10px #000;
