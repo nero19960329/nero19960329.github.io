@@ -4,6 +4,7 @@
 
 body {
 	background-image: url("src/background_2.jpg");
+	min-width: 1024px;
 }
 
 header {
@@ -57,38 +58,111 @@ header #social .social-buttons:hover {
 
 header #nav {
 	margin: 0;
+	overflow: hidden;
 }
 
 header #nav a {
-	margin: 30px;
-	padding: 10px;
-	font-size: 130%;
-	font-family: "SimSun";
-	font-weight: bold;
 	color: #000;
+}
+
+header #nav a:hover, a:focus {
 	text-decoration: none;
 }
 
-header #nav a:visited {
-	font-family: "SimSun";
-	color: #000;
+header #nav ul {
+	background-color: #333;
+	border-bottom: 5px solid #ececec;
+	overflow: hidden;
+	margin: 0;
+	padding-left: 30px;
 }
 
-header #nav a:hover {
-	cursor: pointer;
-	color: #78B;
+header #nav .a {
+	top: 20px;
+}
+
+header #nav li {
+	margin: 0;
+	list-style: none outside;
+	position: relative;
+	height: 40px;
+	z-index: 1;
+	float: left;
+	padding: 0;
+}
+
+header #nav li a {
+	color: white;
+	position: relative;
+	top: 5px;
+	display: block;
+	margin: 0;
+	border-bottom: 5px solid transparent;
+	padding: 5px 0;
+	text-align: center;
+	text-decoration: none;
+}
+
+header #nav .n1 {
+	width: 200px;
+}
+
+header #nav .n2 {
+	width: 200px;
+}
+
+header #nav .quebec {
+	position: absolute;
+	top: 246px;
+	left: 10px;
+	z-index: 3;
+	border: 0;
+	width: 0;
+	height: 5px;
+	padding: 0;
+	overflow: hidden;
+	text-indent: -9999em;
+	background: #511d7f;
+
+	-webkit-transition-property: left, width;
+    -moz-transition-property: left, width;
+    -ms-transition-property: left, width;
+    -o-transition-property: left, width;
+    transition-property: left, width;
+
+    -webkit-transition-duration: .5s;
+    -moz-transition-duration: .5s;
+    -ms-transition-duration: .5s;
+    -o-transition-duration: .5s;
+    transition-duration: .5s;
+
+	pointer-events: none;
+}
+
+header #nav li:hover {
+	z-index: 2;
+	padding: 0; 
+}
+
+header #nav .n1:hover ~ li.quebec {
+	left: 60px; width: 160px;
+}
+
+header #nav .n2:hover ~ li.quebec {
+	left: 262px; width: 160px;
 }
 
 aside {
 	float: right;
-	width: 310px;
-	height: 550px;
+	width: 290px;
+	height: 650px;
 	margin-right: 20px;
 	margin-bottom: 50px;
 	margin-top: 20px;
 	padding: 10px;
 	border: 1px solid #000;
 	border-radius: 7px;
+	box-shadow: 3px 3px 10px #000;
 }
 
 aside #weixin_2weima {
@@ -102,9 +176,10 @@ article .articles {
 	padding: 10px;
 	border: 1px solid #000;
 	border-radius: 7px;
+	box-shadow: 3px 3px 10px #000;
 }
 
-article .articles .divideline {
+.divideline {
 	font-size: 1%;
 	color: #d2d3d5;
 	margin-top: 30px;
@@ -138,6 +213,16 @@ article .articles .article-body {
 
 article .articles .article-foot {
 	color: #78B;
+}
+
+article .articles .article-tag {
+	color: #67A;
+	background-color: #eee;
+	border-radius: 10px;
+	font-size: 50%;
+	padding: 4px 10px;
+	line-height: 100%;
+	margin-right: 5px;
 }
 
 footer {
