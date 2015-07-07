@@ -172,13 +172,14 @@ header #htmltitle {
 
 	aside {
 		position: absolute;
-		width: 25%;
+		width: 17%;
 		padding: 1%;
 		top: 30%;
-		left: 71%;
+		left: 79%;
 		border: 1px solid #000;
 		border-radius: 7px;
 		box-shadow: 3px 3px 10px #000;
+		margin-bottom: 3%;
 	}
 
 	article .blog-article {
@@ -193,9 +194,9 @@ header #htmltitle {
 	}
 
 	.divideline {
-		font-size: 50%;
+		font-size: 100%;
 		color: #d2d3d5;
-		margin-top: 30px;
+		margin-top: 20px;
 		margin-bottom: 10px;
 		background-image: url("src/divideline.jpg");
 		background-repeat: repeat-x;
@@ -239,8 +240,9 @@ header #htmltitle {
 	}
 
 	footer {
-		float: right;
-		margin: 20px;
+		margin: 0;
+		position: absolute;
+		top: 100%;
 	}
 }
 
@@ -414,7 +416,7 @@ header #htmltitle {
 	.divideline {
 		font-size: 1%;
 		color: #d2d3d5;
-		margin-top: 30px;
+		margin-top: 20px;
 		margin-bottom: 10px;
 		background-image: url("src/divideline.jpg");
 		background-repeat: repeat-x;
@@ -440,7 +442,7 @@ header #htmltitle {
 
 	article .articles .article-body {
 		margin-bottom: 10px;
-		text-indent: 35px;
+		text-indent: 10%;
 	}
 
 	article .articles .article-foot {
