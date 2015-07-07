@@ -15,12 +15,17 @@ function IsPC() {
 
 $(function () {
 	if (IsPC() == true) {
-		//alert("pc!");
 		$("#n3").hide();
 	}
 
+	var headerHeight = $("header").height();
+	var headerOffsettop = $("header").offset().top;
+	//alert(headerHeight);
+
 	var width = $(window).width();
 	var height = $(window).height();
+	$("article").css('margin-top', headerHeight + headerOffsettop + height * 0.04);
+	$("aside").css('margin-top', headerHeight + headerOffsettop + height * 0.04);
 	var faceHeight = $("header #face").innerHeight();
 	$("header #face").css('width', faceHeight);
 	$("header #htmltitle").css('left', faceHeight * 1.4);
@@ -28,11 +33,6 @@ $(function () {
 	$("header #social").css('left', width - 300);
 	var htmlHeight = $(document).height();
 	var bodyHeight = $("body").height();
-	//var DocumentHeight = $(document.body).outerHeight(true);
-	//$("footer").css('top', DocumentHeight * 0.95);
-	//alert($(document).outerHeight(true));
-	//alert($("article").height());
-	//alert(height + " " + htmlHeight + " " + bodyHeight);
 	
 	var contactme_margin = $("article #contact-me").width();
 	if (contactme_margin != undefined) {
@@ -51,19 +51,23 @@ $(function () {
 
 $(window).resize(function() {
 	if (IsPC() == true) {
-		//alert("pc!");
 		$("#n3").hide();
 	}
 
+	var headerHeight = $("header").height();
+	var headerOffsettop = $("header").offset().top;
+
 	var width = $(window).width();
 	var height = $(window).height();
+	$("article").css('margin-top', headerHeight + headerOffsettop + height * 0.04);
+	$("aside").css('margin-top', headerHeight + headerOffsettop + height * 0.04);
 	var faceHeight = $("header #face").innerHeight();
 	$("header #face").css('width', faceHeight);
 	$("header #htmltitle").css('left', faceHeight * 1.4);
 	$("header #introduction").css('left', faceHeight * 1.4);
 	$("header #social").css('left', width - 300);
 	var htmlHeight = $(document).height();
-	$("footer").css('top', htmlHeight);
+	var bodyHeight = $("body").height();
 
 	if (height < 500 && height >= 300) {
 		$("html").css('font-size', 12);

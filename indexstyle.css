@@ -2,10 +2,17 @@
 	font-family: "Microsoft Yahei", arial;
 }
 
+html {
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	background-image: url("src/background_2.jpg");
 	margin-left: 1%;
 	margin-right: 1%;
+	padding: 0;
+	/*border: 1px solid #f00;*/
 }
 
 header #htmltitle {
@@ -24,7 +31,7 @@ header #htmltitle {
 		margin: 0;
 		background-image: url("src/background_1.jpg");
 		width: 98%;
-		height: 20%;
+		height: 15%;
 	}
 
 	header #htmltitle {
@@ -45,7 +52,7 @@ header #htmltitle {
 		position: absolute;
 		font-size: 1em;
 		margin: 0;
-		top: 50%;
+		top: 55%;
 	}
 
 	header #social {
@@ -124,8 +131,8 @@ header #htmltitle {
 		width: 20%;
 	}
 
-	header #nav .n3 {
-		display: none;
+	header #nav #n3 {
+		width: 20%;
 	}
 
 	header #nav .quebec {
@@ -171,11 +178,12 @@ header #htmltitle {
 	}
 
 	aside {
-		position: absolute;
+		float: right;
 		width: 17%;
 		padding: 1%;
-		top: 30%;
-		left: 79%;
+		/*margin-top: 15%;*/
+		/*top: 30%;
+		left: 79%;*/
 		border: 1px solid #000;
 		border-radius: 7px;
 		box-shadow: 3px 3px 10px #000;
@@ -191,6 +199,7 @@ header #htmltitle {
 		border: 1px solid #000;
 		border-radius: 7px;
 		box-shadow: 3px 3px 10px #000;
+		margin-bottom: 5%;
 	}
 
 	.divideline {
@@ -240,9 +249,10 @@ header #htmltitle {
 	}
 
 	footer {
-		margin: 0;
-		position: absolute;
-		top: 100%;
+		float: top;
+		margin: 2%;
+		/*position: relative;*/
+		/*top: 100%;*/
 	}
 }
 
@@ -369,6 +379,7 @@ header #htmltitle {
 		border: 1px solid #000;
 		border-radius: 7px;
 		box-shadow: 3px 3px 10px #000;
+		margin-bottom: 5%;
 	}
 
 	.divideline {
@@ -410,17 +421,12 @@ header #htmltitle {
 
 	article .articles .article-tag {
 		color: #67A;
-		background-color: #eee;
-		border-radius: 10px;
-		font-size: 50%;
-		padding: 4px 10px;
-		line-height: 100%;
+		font-size: 0.2em;
 		margin-right: 5px;
 	}
 
 	footer {
-		position: absolute;
-		top: 95%;
-		margin: 0;
+		float: top;
+		margin: 2%;
 	}
 }
