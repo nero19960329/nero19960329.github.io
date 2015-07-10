@@ -1,0 +1,176 @@
+@media screen and (max-width: 959px) {
+	@media screen and (min-width: 600px) and (max-width: 959px) {
+		html {
+			font-size: 14px;
+		}
+	}
+
+	@media screen and (max-width: 599px) {
+		html {
+			font-size: 12px;
+		}
+	}
+
+	header {
+		position: absolute;
+		background-image: url("src/background_1.jpg");
+		/*width 在jq.js中定义*/
+		height: 20%;
+	}
+
+	header #social {
+		display: none;
+	}
+
+	header #face {
+		float: left;
+		margin: 1%;
+		height: 70%;
+	}
+
+	header #face #img-face {
+		border-radius: 50%;
+		width: 90%;
+		height: 90%;
+		margin: 5%;
+	}
+
+	header #htmltitle {
+		position: absolute;
+		font-weight: bold;
+		font-size: 1.5em;
+		margin: 0;
+		top: 12%;
+	}
+
+	header #introduction {
+		position: absolute;
+		font-size: 1em;
+		top: 37%;
+		word-break:break-all;
+	}
+
+	header #nav {
+		position: absolute;
+		left: 0;
+		top: 80%;
+		width: 100%;
+		height: 30%;
+		margin: 0;
+	}
+
+	header #nav a {
+		color: #000;
+	}
+
+	header #nav a:hover, a:focus {
+		text-decoration: none;
+	}
+
+	header #nav ul {
+		height: 100%;
+		background-color: #333;
+		border-bottom: 10% solid #ececec;
+		overflow: hidden;
+		margin: 0;
+		padding-left: 0;
+	}
+
+	header #nav li {
+		margin: 0;
+		list-style: none outside;
+		position: relative;
+		height: 95%;
+		z-index: 1;
+		float: left;
+		padding: 0;
+	}
+
+	header #nav li a {
+		color: white;
+		position: relative;
+		top: 15%;
+		display: block;
+		margin: 0;
+		border-bottom: 5px solid transparent;
+		padding: 5px 0;
+		text-align: center;
+		text-decoration: none;
+	}
+
+	header #nav .n1 {
+		width: 33%;
+	}
+
+	header #nav .n2 {
+		width: 33%;
+	}
+
+	header #nav #n3 {
+		width: 32%;
+	}
+
+	header #nav .quebec {
+		display: none;
+	}
+
+	aside {
+		display: none;
+	}
+
+	article .articles {
+		padding: 10px;
+		border: 1px solid #000;
+		border-radius: 7px;
+		box-shadow: 3px 3px 10px #000;
+		margin-bottom: 5%;
+	}
+
+	.divideline {
+		font-size: 1em;
+		color: #d2d3d5;
+		margin-top: 20px;
+		margin-bottom: 10px;
+		background-image: url("src/divideline.jpg");
+		background-repeat: repeat-x;
+	}
+
+	article .articles .article-head {
+		font-family: "SimSun";
+		font-size: 1.2em;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	article .articles .article-head a {
+		font-family: "SimSun";
+		color: #000;
+		text-decoration: none;
+	}
+
+	article .articles .article-head a:hover {
+		text-decoration: underline;
+		color: #78B;
+	}
+
+	article .articles .article-body {
+		margin-bottom: 10px;
+		text-indent: 5%;
+		word-break:break-all;			/*文字自动换行*/
+	}
+
+	article .articles .article-foot {
+		color: #78B;
+	}
+
+	article .articles .article-tag {
+		color: #67A;
+		font-size: 1em;
+		margin-right: 5px;
+	}
+
+	footer {
+		float: top;
+		margin: 2%;
+	}
+}

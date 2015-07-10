@@ -1,0 +1,235 @@
+@media screen and (min-width: 960px) {
+	html {
+		font-size: 16px;
+	}
+
+	header {
+		float: top;
+		/*border: 1px solid #f00;*/
+		margin-top: 10px;
+		margin-bottom: 0;
+		background-image: url("src/background_1.jpg");
+		width: 100%;
+		height: 190px;
+		padding-top: 1px;
+	}
+
+	header #face {
+		float: left;
+		height: 100%;
+		width: 150px;
+		height: 150px;
+	}
+
+	header #face #img-face {
+		border-radius: 50%;
+		width: 130px;
+		height: 130px;
+		margin: 10px;
+	}
+
+	header #htmltitle {
+		font-size: 1.7em;
+		font-weight: bold;
+		margin-left: 170px;
+		margin-top: 30px;
+	}
+
+	header #introduction {
+		float: top;
+		margin-left: 170px;
+		margin-top: 30px;
+		font-size: 1em;
+	}
+
+	header #social {
+		float: right;
+		margin-right: 15px;
+	}
+
+	header #social .social-buttons {
+		margin: 4px;
+		border-radius: 50%;
+		width: 30px;
+		height: 30px;
+		background-size: contain;
+		opacity: 0.6;
+		filter:alpha(opacity=60);		/*针对IE8及以前的浏览器*/
+	}
+
+	header #social .social-buttons:hover {
+		opacity: 1.0;
+		filter:alpha(opacity=100);		/*针对IE8及以前的版本*/
+	}
+
+	header #nav {
+		float: left;
+		margin-top: 0px;
+		width: 100%;
+		height: 40px;
+	}
+
+	header #nav a {
+		color: #000;
+	}
+
+	header #nav a:hover, a:focus {
+		text-decoration: none;
+	}
+
+	header #nav ul {
+		height: 100%;
+		background-color: #333;
+		border-bottom: 5px solid #ececec;
+		overflow: hidden;
+		margin: 0;
+		padding-left: 0;
+	}
+
+	header #nav li {
+		margin: 0;
+		list-style: none outside;
+		height: 100%;
+		z-index: 1;
+		float: left;
+		padding: 0;
+	}
+
+	header #nav li a {
+		color: white;
+		display: block;
+		margin-top: 4px;
+		border-bottom: 5px solid transparent;
+		padding: 5px 0;
+		text-align: center;
+		text-decoration: none;
+	}
+
+	header #nav .n1 {
+		width: 300px;
+	}
+
+	header #nav .n2 {
+		width: 300px;
+	}
+
+	header #nav #n3 {
+		width: 20%;
+	}
+
+	header #nav .quebec {
+		position: absolute;
+		top: 201px;
+		left: 10px;
+		z-index: 3;
+		border: 0;
+		width: 0;
+		height: 5px;
+		padding: 0;
+		overflow: hidden;
+		text-indent: -9999em;
+		/*background: #511d7f;*/
+		background: #014c67;
+
+		-webkit-transition-property: left, width;
+	    -moz-transition-property: left, width;
+	    -ms-transition-property: left, width;
+	    -o-transition-property: left, width;
+	    transition-property: left, width;
+
+	    -webkit-transition-duration: .5s;
+	    -moz-transition-duration: .5s;
+	    -ms-transition-duration: .5s;
+	    -o-transition-duration: .5s;
+	    transition-duration: .5s;
+
+		pointer-events: none;
+	}
+
+	header #nav .n1:hover ~ li.quebec {
+		left: 92px;
+		width: 140px;
+	}
+
+	header #nav .n2:hover ~ li.quebec {
+		left: 390px;
+		width: 140px;
+	}
+
+	aside {
+		float: right;
+		width: 17%;
+		padding: 1%;
+		border: 1px solid #000;
+		border-radius: 7px;
+		box-shadow: 3px 3px 10px #000;
+		margin-top: 30px;
+		margin-right: 10px;
+		margin-bottom: 3%;
+	}
+
+	article .blog-article {
+		margin-top: 20px; margin-right: 7%; margin-left: 7%; padding: 20px;
+	}
+
+	article .articles {
+		padding: 10px;
+		border: 1px solid #000;
+		border-radius: 7px;
+		box-shadow: 3px 3px 10px #000;
+		margin-bottom: 5%;
+	}
+
+	.divideline {
+		font-size: 1%;
+		color: #d2d3d5;
+		margin-top: 20px;
+		margin-bottom: 10px;
+		background-image: url("src/divideline.jpg");
+		background-repeat: repeat-x;
+	}
+
+	article .articles .article-head {
+		font-family: "SimSun";
+		font-size: 150%;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	article .articles .article-head a {
+		font-family: "SimSun";
+		color: #000;
+		text-decoration: none;
+	}
+
+	article .articles .article-head a:hover {
+		text-decoration: underline;
+		color: #78B;
+	}
+
+	article .articles .article-body {
+		margin-bottom: 10px;
+		text-indent: 35px;
+	}
+
+	article .articles .article-foot {
+		color: #78B;
+	}
+
+	article .articles .article-tag {
+		color: #67A;
+		background-color: #eee;
+		border-radius: 10px;
+		font-size: 50%;
+		padding: 4px 10px;
+		line-height: 100%;
+		margin-right: 5px;
+	}
+
+	footer {
+		float: top;
+		margin: 2%;
+		/*position: relative;*/
+		/*top: 100%;*/
+	}
+}
