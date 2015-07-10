@@ -3,6 +3,11 @@
 		font-size: 16px;
 	}
 
+	body {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
 	header {
 		float: top;
 		/*border: 1px solid #f00;*/

@@ -11,11 +11,18 @@
 		}
 	}
 
+	body {
+		margin-left: 0%;
+		margin-right: 0%;
+	}
+
 	header {
 		position: absolute;
 		background-image: url("src/background_1.jpg");
+		margin-top: 0;
 		/*width 在jq.js中定义*/
 		height: 20%;
+		padding-top: 1px;
 	}
 
 	header #social {
