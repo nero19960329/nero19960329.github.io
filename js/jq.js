@@ -25,17 +25,32 @@ function setType() {
 	var htmlHeight = $(document).height();
 	var bodyHeight = $("body").height();
 	var bodyWidth = $("body").width();
-	if (width > 960) {
+	if (width >= 960) {
+		$("header").css('width', bodyWidth);
+		$("header #face").css('width', 150);
+		$("article").css('margin-top', 30);
 		if ($("html").attr('class') != "blogs") {
+			console.log("ininin  " + width);
 			$('article').css('width', 0.8 * width - 110);
 		}
 	} else {
 		var faceHeight = $("header #face").innerHeight();
+		$("header").css('width', bodyWidth);
 		$("header #face").css('width', faceHeight);
 		$("header #htmltitle").css('left', faceHeight * 1.2);
 		$("header #introduction").css('left', faceHeight * 1.2);
 		$("article").css('margin-top', headerHeight + headerOffsettop + height * 0.04);
-		$("header").css('width', bodyWidth);
+		$("article").css('width', bodyWidth * 0.9);
+	}
+
+	if (height < 300) {
+		$("header #introduction").css('display', 'none');
+		$("header #face").css('display', 'none');
+		$("header #nav").css('display', 'none');
+	} else {
+		$("header #introduction").css('display', 'block');
+		$("header #face").css('display', 'block');
+		$("header #nav").css('display', 'block');
 	}
 	
 	/*var contactme_margin = $("article #contact-me").width();
