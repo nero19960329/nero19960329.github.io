@@ -1,0 +1,59 @@
+@media screen and (min-width: 960px) {
+	article .blog-article {
+		margin-top: 20px; margin-right: 7%; margin-left: 7%; padding: 20px;
+	}
+
+	article .articles {
+		padding: 10px;
+		border: 1px solid #000;
+		border-radius: 7px;
+		box-shadow: 3px 3px 10px #000;
+		margin-bottom: 5%;
+	}
+
+	.divideline {
+		font-size: 1%;
+		color: #d2d3d5;
+		margin-top: 20px;
+		margin-bottom: 10px;
+		background-image: url("../../src/divideline.jpg");
+		background-repeat: repeat-x;
+	}
+
+	article .articles .article-head {
+		font-family: "SimSun";
+		font-size: 150%;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+
+	article .articles .article-head a {
+		font-family: "SimSun";
+		color: #000;
+		text-decoration: none;
+	}
+
+	article .articles .article-head a:hover {
+		text-decoration: underline;
+		color: #78B;
+	}
+
+	article .articles .article-body {
+		margin-bottom: 10px;
+		text-indent: 35px;
+	}
+
+	article .articles .article-foot {
+		color: #78B;
+	}
+
+	article .articles .article-tag {
+		color: #67A;
+		background-color: #eee;
+		border-radius: 10px;
+		font-size: 50%;
+		padding: 4px 10px;
+		line-height: 100%;
+		margin-right: 5px;
+	}
+}

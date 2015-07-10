@@ -8,8 +8,12 @@ html {
 }
 
 body {
-	background-image: url("src/background_2.jpg");
+	background-image: url("../src/background_2.jpg");
 	margin-top: 0;
 	margin-bottom: 0;
 	padding: 0;
+}
+
+header #face #img-face {
+	
 }

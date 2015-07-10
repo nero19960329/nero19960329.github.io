@@ -1,0 +1,27 @@
+@media screen and (min-width: 960px) {
+	html {
+		font-size: 16px;
+	}
+
+	body {
+		margin-left: 10px;
+		margin-right: 10px;
+	}
+
+	aside {
+		float: right;
+		width: 17%;
+		padding: 1%;
+		border: 1px solid #000;
+		border-radius: 7px;
+		box-shadow: 3px 3px 10px #000;
+		margin-top: 30px;
+		margin-right: 10px;
+		margin-bottom: 3%;
+	}
+
+	footer {
+		float: top;
+		margin: 2%;
+	}
+}

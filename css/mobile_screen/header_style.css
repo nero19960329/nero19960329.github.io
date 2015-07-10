@@ -1,24 +1,7 @@
 @media screen and (max-width: 959px) {
-	@media screen and (min-width: 600px) and (max-width: 959px) {
-		html {
-			font-size: 14px;
-		}
-	}
-
-	@media screen and (max-width: 599px) {
-		html {
-			font-size: 12px;
-		}
-	}
-
-	body {
-		margin-left: 0%;
-		margin-right: 0%;
-	}
-
 	header {
 		position: absolute;
-		background-image: url("src/background_1.jpg");
+		background-image: url("../../src/background_1.jpg");
 		margin-top: 0;
 		/*width 在jq.js中定义*/
 		height: 20%;
@@ -119,65 +102,5 @@
 
 	header #nav .quebec {
 		display: none;
-	}
-
-	aside {
-		display: none;
-	}
-
-	article .articles {
-		padding: 10px;
-		border: 1px solid #000;
-		border-radius: 7px;
-		box-shadow: 3px 3px 10px #000;
-		margin-bottom: 5%;
-	}
-
-	.divideline {
-		font-size: 1em;
-		color: #d2d3d5;
-		margin-top: 20px;
-		margin-bottom: 10px;
-		background-image: url("src/divideline.jpg");
-		background-repeat: repeat-x;
-	}
-
-	article .articles .article-head {
-		font-family: "SimSun";
-		font-size: 1.2em;
-		font-weight: bold;
-		margin-bottom: 10px;
-	}
-
-	article .articles .article-head a {
-		font-family: "SimSun";
-		color: #000;
-		text-decoration: none;
-	}
-
-	article .articles .article-head a:hover {
-		text-decoration: underline;
-		color: #78B;
-	}
-
-	article .articles .article-body {
-		margin-bottom: 10px;
-		text-indent: 5%;
-		word-break:break-all;			/*文字自动换行*/
-	}
-
-	article .articles .article-foot {
-		color: #78B;
-	}
-
-	article .articles .article-tag {
-		color: #67A;
-		font-size: 1em;
-		margin-right: 5px;
-	}
-
-	footer {
-		float: top;
-		margin: 2%;
 	}
 }
