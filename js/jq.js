@@ -25,7 +25,6 @@ function setType() {
 	var htmlHeight = $(document).height();
 	var bodyHeight = $("body").height();
 	var bodyWidth = $("body").width();
-	console.log($("html").attr('class'));
 	if (width > 960) {
 		if ($("html").attr('class') != "blogs") {
 			$('article').css('width', 0.8 * width - 110);
@@ -39,14 +38,19 @@ function setType() {
 		$("header").css('width', bodyWidth);
 	}
 	
-	var contactme_margin = $("article #contact-me").width();
+	/*var contactme_margin = $("article #contact-me").width();
 	if (contactme_margin != undefined) {
 		$("article").css('margin-left', (width - 160) / 2);
 		$("article").css('margin-right', (width - 160) / 2);
-	}
+	}*/
 }
 
 $(function () {
+	// 不让电脑上只有手机才能看到的网页
+	if ($("html").attr('class') == "mobile" && IsPC() == true) {
+		self.location='index.html';
+	}
+
 	setType();
 })
 

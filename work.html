@@ -2,20 +2,24 @@
 <meta name="keywords" content="blog">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="indexstyle.css">
+<link rel="stylesheet" type="text/css" href="css/extern_style.css">
+<link rel="stylesheet" type="text/css" href="css/PC_screen/header_style.css">
+<link rel="stylesheet" type="text/css" href="css/PC_screen/article_style.css">
+<link rel="stylesheet" type="text/css" href="css/PC_screen/other_style.css">
+<link rel="stylesheet" type="text/css" href="css/mobile_screen/header_style.css">
+<link rel="stylesheet" type="text/css" href="css/mobile_screen/article_style.css">
+<link rel="stylesheet" type="text/css" href="css/mobile_screen/other_style.css">
 <link rel="shortcut icon" href="src/icon.ico">
 <html>
 	<head>
-		<script type="text/javascript" src="jquery-1.8.0.js"></script>
-		<script type="text/javascript" src="jq.js"></script>
+		<script type="text/javascript" src="jQuery/jquery-1.8.0.js"></script>
+		<script type="text/javascript" src="js/jq.js"></script>
 		<title>tokui_nico's blog</title>
 		<style type="text/css">
 				@media screen and (min-width: 960px) {
-					/*article {position: absolute; top: 30%; left: 2%; margin-right: 23%; padding: 0%;}*/
-					article {float: left; margin-top: 0%; margin-left: 2%; margin-bottom: 5%; padding: 0%; width: 77%;}
+					article {float: left; margin-top: 30px; margin-left: 50px; margin-bottom: 50px; padding: 0%;}
 				}
 				@media screen and (max-width: 959px) {
-					/*article {position: absolute; margin: 0% 5%; top: 30%;}*/
 					article {float: left; margin-top: 0%; margin-left: 5%; margin-right: 5%; margin-bottom: 5%; width: 90%;}
 				}
 			</style>
@@ -31,9 +35,11 @@
 				<a href="http://www.zhihu.com/people/drinksoup" target="_blank"><img class="social-buttons" src="src/zhihu.png" title="Contact me at Zhihu" /></a>
 				<a href="https://github.com/nero19960329" target="_blank"><img class="social-buttons" src="src/github.png" title="Contact me at Github" /></a>
 			</div>
-			<img id="face" src="src/face.jpg" />
-			<p id="htmltitle">tokui_nico的个人空间</p>
-			<p id="introduction">清华大学本科生在读｜轻度宅｜程序猿｜ラブライブ最高！にこ最高！</p>
+			<div id="face">
+				<img id="img-face" src="src/face.jpg" />
+			</div>
+			<div id="htmltitle">tokui_nico的个人空间</div>
+			<div id="introduction">「0」が過去で、「１」が未来、「今」は何処にもない</div>
 
 			<div id="nav">
 				<ul class="a">
@@ -47,6 +53,15 @@
 
 
 		<aside>
+			<h2>关于我</h2>
+			<div class="divideline">.</div>
+			<ul>
+				<li>清华大学在读本科生</li>
+				<li>轻度宅</li>
+				<li>程序猿</li>
+				<li>矢澤にこ最高！</li>
+			</ul>
+			<div class="divideline">.</div>
 			<h2>联系方式</h2>
 			<div class="divideline">.</div>
 			<h3>微信：</h3>
@@ -59,7 +74,7 @@
 		<article>
 			<div class="articles">
 				<div class="article-head">
-					<a href="blog_2.html">第一次作业链接</a>
+					<a href="blogs/blog_2.html">第一次作业链接</a>
 				</div>
 
 				<div class="divideline">.</div>
