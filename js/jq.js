@@ -30,8 +30,9 @@ function setType() {
 		$("header #face").css('width', 150);
 		$("article").css('margin-top', 30);
 		if ($("html").attr('class') != "blogs") {
-			console.log("ininin  " + width);
 			$('article').css('width', 0.8 * width - 110);
+		} else {
+			$('article').css('width', bodyWidth * 0.9);
 		}
 	} else {
 		var faceHeight = $("header #face").innerHeight();
