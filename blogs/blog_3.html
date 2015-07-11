@@ -19,6 +19,12 @@
 				width: 150px;
 				margin-right: 20px;
 			}
+
+			@media screen and (max-width: 959px) {
+				#blog3-buttons, #blog3-inputs {
+					display: none;
+				}
+			}
 		</style>
 		<title>置顶按钮测试 - tokui_nico's blog</title>
 	</head>
@@ -58,16 +64,16 @@
 				<div class="divideline">.</div>
 
 				<div class="article-body">
-					<div>置顶按钮的测试页，只有电脑可见，用手机的朋友们也可以看看图。</div>
+					<div>置顶按钮的测试页，只有宽度大于960像素的电脑才可见，用手机的朋友们就看看图吧。</div>
 					<div>置顶控件默认是我自定义的位置，看不到控件可能因为处于页面顶端而导致的该控件不显示，尝试将向下滚滑轮。</div>
-					<div>
+					<div id="blog3-buttons">
 						<button class="buttons" id="button-leftup" onclick="totop_leftup()">生成左上角置顶控件</button>
 						<button class="buttons" id="button-leftdown" onclick="totop_leftdown()">生成左下角置顶控件</button>
 						<button class="buttons" id="button-rightup" onclick="totop_rightup()">生成右上角置顶控件</button>
 						<button class="buttons" id="button-rightdown" onclick="totop_rightdown()">生成右下角置顶控件</button>
 						<button class="buttons" id="button-recover" onclick="totop_recover()">恢复到默认位置</button>
 					</div>
-					<div>
+					<div id="blog3-inputs">
 						x <input type="number" id="totop-x" min="0" style="width: 132px; margin-right: 21px;" value="0" />
 						y <input type="number" id="totop-y" min="0" style="width: 132px; margin-right: 21px;" value="0" />
 						<button id="button-xy" onclick="totop_xy()" style="margin-left: 0px;">指定x，y位置生成置顶控件</button>
@@ -100,7 +106,7 @@
 		<script type="text/javascript">
 			console.log($('.img-blog3')[0]);
 			console.log($('article').width());
-			$('.img-blog3').css('max-width', $('article').width() * 0.9);
+			$('.img-blog3').css('max-width', $('article').width() * 0.9 - 20);
 
 			var bttWidget = new BackToTop();
 			bttWidget.init({Custom: "blogs"});
