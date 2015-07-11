@@ -78,7 +78,8 @@ $(document).bind({
 
 $(window).bind({
 	scroll: function() {
-		if (document.body.scrollTop == 0) {
+		var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+		if (scrollTop == 0) {
 			$('.totop').css('display', 'none');
 		} else {
 			$('.totop').css('display', 'inline');

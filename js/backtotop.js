@@ -1,9 +1,10 @@
 function pageScroll() {
 	var scrollTime = 200, scrollInterval = 40;
-	var nowScrollTop = document.body.scrollTop;
+	var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+	var nowScrollTop = scrollTop;
 	var scrolldelay = setInterval(function() {
 		window.scrollBy(0, -nowScrollTop * scrollInterval / scrollTime);
-		if (document.body.scrollTop == 0) {
+		if ((document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop) == 0) {
 			clearInterval(scrolldelay);
 		}
 	}, scrollInterval);
@@ -53,7 +54,8 @@ function BackToTop() {
 		}
 		$('body').append(widget);
 
-		if (document.body.scrollTop == 0) {
+		var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+		if (scrollTop == 0) {
 			$('.totop').css('display', 'none');
 		}
 
