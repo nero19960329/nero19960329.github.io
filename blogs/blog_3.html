@@ -73,8 +73,8 @@
 						<button id="button-xy" onclick="totop_xy()" style="margin-left: 0px;">指定x，y位置生成置顶控件</button>
 					</div>
 					<div>为了把页面撑长一点，随便加了两张图</div>
-					<div><img src="../src/blog3_1.jpg" /></div>
-					<div><img src="../src/blog3_2.jpg" /></div>
+					<div><img class="img-blog3" src="../src/blog3_1.jpg" /></div>
+					<div><img class="img-blog3" src="../src/blog3_2.jpg" /></div>
 				</div>
 
 				<div class="divideline">.</div>
@@ -98,10 +98,12 @@
 
 		<script type="text/javascript" src="../js/backtotop.js"></script>
 		<script type="text/javascript">
+			console.log($('.img-blog3')[0]);
+			console.log($('article').width());
+			$('.img-blog3').css('max-width', $('article').width() * 0.9);
+
 			var bttWidget = new BackToTop();
 			bttWidget.init({Custom: "blogs"});
-
-			console.log($(window).width() + ", " + $(window).height());
 
 			function totop_xy() {
 				var widget = new BackToTop();
