@@ -14,7 +14,13 @@
 	<head>
 		<script type="text/javascript" src="../jQuery/jquery-1.8.0.js"></script>
 		<script type="text/javascript" src="../js/jq.js"></script>
-		<title>第一次作业链接 - tokui_nico's blog</title>
+		<style type="text/css">
+			.buttons {
+				width: 150px;
+				margin-right: 20px;
+			}
+		</style>
+		<title>置顶按钮测试 - tokui_nico's blog</title>
 	</head>
 
 	<body>
@@ -46,25 +52,41 @@
 		<article style="float: left; margin-top: 50px; margin-left: 5%; margin-right: 5%; margin-bottom: 5%; width: 90%;">
 			<div class="articles">
 				<div class="article-head">
-					<a href="blog_2.html">第一次作业链接</a>
+					<a href="blog_3.html">置顶按钮测试</a>
 				</div>
 
 				<div class="divideline">.</div>
 
 				<div class="article-body">
-					<a href="https://nero19960329.github.io">个人主页【点我】</a>
-					<div>马马虎虎地做了个主页，效果一般吧。以后有一些想法或者bug的解决方法会写在上面，主页自己以后也会一点点修改好。</div>
+					<div>置顶按钮的测试页，只有电脑可见，用手机的朋友们也可以看看图。</div>
+					<div>置顶控件默认是我自定义的位置，看不到控件可能因为处于页面顶端而导致的该控件不显示，尝试将向下滚滑轮。</div>
+					<div>
+						<button class="buttons" id="button-leftup" onclick="totop_leftup()">生成左上角置顶控件</button>
+						<button class="buttons" id="button-leftdown" onclick="totop_leftdown()">生成左下角置顶控件</button>
+						<button class="buttons" id="button-rightup" onclick="totop_rightup()">生成右上角置顶控件</button>
+						<button class="buttons" id="button-rightdown" onclick="totop_rightdown()">生成右下角置顶控件</button>
+						<button class="buttons" id="button-recover" onclick="totop_recover()">恢复到默认位置</button>
+					</div>
+					<div>
+						x <input type="number" id="totop-x" min="0" style="width: 132px; margin-right: 21px;" value="0" />
+						y <input type="number" id="totop-y" min="0" style="width: 132px; margin-right: 21px;" value="0" />
+						<button id="button-xy" onclick="totop_xy()" style="margin-left: 0px;">指定x，y位置生成置顶控件</button>
+					</div>
+					<div>为了把页面撑长一点，随便加了两张图</div>
+					<div><img src="../src/blog3_1.jpg" /></div>
+					<div><img src="../src/blog3_2.jpg" /></div>
 				</div>
 
 				<div class="divideline">.</div>
 
 				<div class="article-foot">
-					<span>Date: 2015-7-7</span>
+					<span>Date: 2015-7-11</span>
 					<span style="float: right; color: #000;">
 						标签：
 						<span class="article-tag">HTML5</span>
 						<span class="article-tag">CSS3</span>
 						<span class="article-tag">js</span>
+						<span class="article-tag">jQuery</span>
 					</span>
 				</div>
 			</div>
@@ -78,6 +100,55 @@
 		<script type="text/javascript">
 			var bttWidget = new BackToTop();
 			bttWidget.init({Custom: "blogs"});
+
+			console.log($(window).width() + ", " + $(window).height());
+
+			function totop_xy() {
+				var widget = new BackToTop();
+				var left = $('#totop-x').attr('value');
+				var top = $('#totop-y').attr('value');
+				console.log(parseFloat(top));
+				if (isNaN(parseFloat(top)) || isNaN(parseFloat(left))) {
+					alert("输入数字格式有问题！");
+					return;
+				} else if (parseFloat(left) > $(window).width() - 50 || parseFloat(top) > $(window).height() - 50|| 
+							parseFloat(left) < 0 || parseFloat(top) < 0) {
+					alert("输入值超过范围！\nx: 0~" + ($(window).width() - 50) + "\ny: 0~" + ($(window).height() - 50));
+					return;
+				}
+				$('.totop').remove();
+				widget.init({x: left, y: top});
+			}
+
+			function totop_leftup() {
+				$('.totop').remove();
+				var widget = new BackToTop();
+				widget.init({LeftUp: true});
+			}
+
+			function totop_leftdown() {
+				$('.totop').remove();
+				var widget = new BackToTop();
+				widget.init({LeftDown: true});
+			}
+
+			function totop_rightup() {
+				$('.totop').remove();
+				var widget = new BackToTop();
+				widget.init({RightUp: true});
+			}
+
+			function totop_rightdown() {
+				$('.totop').remove();
+				var widget = new BackToTop();
+				widget.init({RightDown: true});
+			}
+
+			function totop_recover() {
+				$('.totop').remove();
+				var widget = new BackToTop();
+				widget.init({Custom: "blogs"});
+			}
 		</script>
 	</body>
 </html>

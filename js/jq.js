@@ -30,10 +30,11 @@ function setType() {
 		$("header #face").css('width', 150);
 		$("article").css('margin-top', 30);
 		if ($("html").attr('class') != "blogs") {
-			$('article').css('width', 0.8 * width - 110);
+			$('article').css('width', 0.8 * width - 160);
 		} else {
 			$('article').css('width', bodyWidth * 0.9);
 		}
+		$("aside").css('display', 'block');
 	} else {
 		var faceHeight = $("header #face").innerHeight();
 		$("header").css('width', bodyWidth);
@@ -42,6 +43,7 @@ function setType() {
 		$("header #introduction").css('left', faceHeight * 1.2);
 		$("article").css('margin-top', headerHeight + headerOffsettop + height * 0.04);
 		$("article").css('width', bodyWidth * 0.9);
+		$("aside").css('display', 'none');
 	}
 
 	if (height < 300) {
@@ -53,12 +55,6 @@ function setType() {
 		$("header #face").css('display', 'block');
 		$("header #nav").css('display', 'block');
 	}
-	
-	/*var contactme_margin = $("article #contact-me").width();
-	if (contactme_margin != undefined) {
-		$("article").css('margin-left', (width - 160) / 2);
-		$("article").css('margin-right', (width - 160) / 2);
-	}*/
 }
 
 $(function () {
@@ -70,6 +66,46 @@ $(function () {
 	setType();
 })
 
-$(window).resize(function() {
-	setType();
+
+$(document).bind({
+	keydown: function(e) {
+		if (e.keyCode == '36') {
+			pageScroll();
+			return false;
+		}
+	}
+});
+
+$(window).bind({
+	scroll: function() {
+		if (document.body.scrollTop == 0) {
+			$('.totop').css('display', 'none');
+		} else {
+			$('.totop').css('display', 'inline');
+		}
+	},
+
+	resize: function() {
+		setType();
+		var totop = $('.totop');
+		var width = $(window).width();
+		var height = $(window).height();
+		if (totop.attr('id') == 'totop_xy') {
+			totop.css('top', totop.attr('top'));
+			totop.css('left', totop.attr('left'));
+		} else if (totop.attr('id') == 'totop_leftdown') {
+			totop.css('top', height - 70);
+		} else if (totop.attr('id') == 'totop_rightup') {
+			totop.css('left', width - 70);
+		} else if (totop.attr('id') == 'totop_rightdown') {
+			totop.css('top', height - 70);
+			totop.css('left', width - 70);
+		} else if (totop.attr('id') == 'totop_custom_index') {
+			totop.css('left', 0.8 * width - 80);
+			totop.css('top', height - 230);
+		} else if (totop.attr('id') == 'totop_custom_blogs') {
+			totop.css('left', 0.975 * width - 25);
+			totop.css('top', height - 230);
+		}
+	}
 });
