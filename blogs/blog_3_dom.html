@@ -22,12 +22,12 @@
 			}
 
 			@media screen and (max-width: 959px) {
-				#blog3-buttons, #blog3-inputs {
+				.blog3-invisibleonmobile {
 					display: none;
 				}
 			}
 		</style>
-		<title>置顶按钮测试 - tokui_nico's blog</title>
+		<title>置顶按钮&自定义弹窗测试 - tokui_nico's blog</title>
 	</head>
 
 	<body>
@@ -59,26 +59,29 @@
 		<article style="float: left; margin-top: 50px; margin-left: 5%; margin-right: 5%; margin-bottom: 5%; width: 90%;">
 			<div class="articles">
 				<div class="article-head">
-					<a href="blog_3.html">置顶按钮测试</a>
+					<a href="blog_3_dom.html">置顶按钮测试</a>
 				</div>
 
 				<div class="divideline">.</div>
 
 				<div class="article-body">
-					<div>置顶按钮的测试页，只有宽度大于960像素的电脑才可见，用手机的朋友们就看看图吧。</div>
+					<div>置顶按钮以及自定义弹窗的测试页，只有宽度大于960像素的电脑才可见，用手机的朋友们就看看图吧。</div>
 					<div>置顶控件默认是我自定义的位置，看不到控件可能因为处于页面顶端而导致的该控件不显示，尝试向下滚滑轮。</div>
-					<div id="blog3-buttons">
+					<div class="blog3-invisibleonmobile">
 						<button class="buttons" id="button-leftup" onclick="totop_leftup()">生成左上角置顶控件</button>
 						<button class="buttons" id="button-leftdown" onclick="totop_leftdown()">生成左下角置顶控件</button>
 						<button class="buttons" id="button-rightup" onclick="totop_rightup()">生成右上角置顶控件</button>
 						<button class="buttons" id="button-rightdown" onclick="totop_rightdown()">生成右下角置顶控件</button>
 						<button class="buttons" id="button-recover" onclick="totop_recover()">恢复到默认位置</button>
 					</div>
-					<div id="blog3-inputs">
+					<div class="blog3-invisibleonmobile">
 						x <input type="number" id="totop-x" min="0" style="width: 132px; margin-right: 21px;" value="0" />
 						y <input type="number" id="totop-y" min="0" style="width: 132px; margin-right: 21px;" value="0" />
 						<button id="button-xy" onclick="totop_xy()" style="margin-left: 0px;">指定x，y位置生成置顶控件</button>
 					</div>
+					<div class="blog3-invisibleonmobile">生成内容为"niconiconi~"的弹窗 <button onclick="generateModal_1()">生成</button></div>
+					<div class="blog3-invisibleonmobile">生成内容为"niconiconi~"，且不可拖拽的弹窗 <button onclick="generateModal_2()">生成</button></div>
+					<div class="blog3-invisibleonmobile">生成内容为"niconiconi~"，且按下'w'键可以退出的弹窗 <button onclick="generateModal_3()">生成</button></div>
 					<div>为了把页面撑长一点，随便加了两张图</div>
 					<div><img class="img-blog3" src="../src/blog3_1.jpg" /></div>
 					<div><img class="img-blog3" src="../src/blog3_2.jpg" /></div>
@@ -103,62 +106,79 @@
 			<p>Copyright © 2015 Wang Zhao. All rights reserved.</p>
 		</footer>
 
-		<script type="text/javascript" src="../js/backtotop.js"></script>
+		<script type="text/javascript" src="../js/backtotop_dom.js"></script>
 		<script type="text/javascript">
-			console.log($('.img-blog3')[0]);
-			console.log($('article').width());
+			//console.log($('.img-blog3')[0]);
+			//console.log($('article').width());
 			$('.img-blog3').css('max-width', $('article').width() * 0.9 - 20);
 
 			var bttWidget = new BackToTop();
 			bttWidget.init({Custom: "blogs"});
 
+			function generateModal_1() {
+				var m = new Modal();
+				m.init({content: "niconiconi~"});
+			}
+
+			function generateModal_2() {
+				var m = new Modal();
+				m.init({content: "niconiconi~", draggable: false});
+			}
+
+			function generateModal_3() {
+				var m = new Modal();
+				m.init({content: "niconiconi~", closeKey: 87});
+			}
+
 			function totop_xy() {
 				var widget = new BackToTop();
-				var left = $('#totop-x').attr('value');
-				var top = $('#totop-y').attr('value');
-				console.log(parseFloat(top));
+				var left = parseInt(document.getElementById("totop-x").value);
+				var top = parseInt(document.getElementById("totop-y").value);
+				console.log(left + ", " + top);
 				if (isNaN(parseFloat(top)) || isNaN(parseFloat(left))) {
 					alert("输入数字格式有问题！");
 					return;
-				} else if (parseFloat(left) > $(window).width() - 50 || parseFloat(top) > $(window).height() - 50|| 
+				} else if (parseFloat(left) > document.documentElement.clientWidth - 50 || 
+							parseFloat(top) > document.documentElement.clientHeight - 50|| 
 							parseFloat(left) < 0 || parseFloat(top) < 0) {
-					alert("输入值超过范围！\nx: 0~" + ($(window).width() - 50) + "\ny: 0~" + ($(window).height() - 50));
+					alert("输入值超过范围！\nx: 0~" + (document.documentElement.clientWidth - 50) + 
+											"\ny: 0~" + (document.documentElement.clientHeight - 50));
 					return;
 				}
-				$('.totop').remove();
+				document.body.removeChild(document.getElementsByClassName("totop")[0]);
 				widget.init({x: left, y: top});
 			}
 
 			function totop_leftup() {
-				$('.totop').remove();
+				document.body.removeChild(document.getElementsByClassName("totop")[0]);
 				var widget = new BackToTop();
 				widget.init({LeftUp: true});
 			}
 
 			function totop_leftdown() {
-				$('.totop').remove();
+				document.body.removeChild(document.getElementsByClassName("totop")[0]);
 				var widget = new BackToTop();
 				widget.init({LeftDown: true});
 			}
 
 			function totop_rightup() {
-				$('.totop').remove();
+				document.body.removeChild(document.getElementsByClassName("totop")[0]);
 				var widget = new BackToTop();
 				widget.init({RightUp: true});
 			}
 
 			function totop_rightdown() {
-				$('.totop').remove();
+				document.body.removeChild(document.getElementsByClassName("totop")[0]);
 				var widget = new BackToTop();
 				widget.init({RightDown: true});
 			}
 
 			function totop_recover() {
-				$('.totop').remove();
+				document.body.removeChild(document.getElementsByClassName("totop")[0]);
 				var widget = new BackToTop();
 				widget.init({Custom: "blogs"});
 			}
 		</script>
-		<script type="text/javascript" src="../js/modalwindow.js"></script>
+		<script type="text/javascript" src="../js/modalwindow_dom.js"></script>
 	</body>
 </html>

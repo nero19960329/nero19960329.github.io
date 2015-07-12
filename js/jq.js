@@ -87,6 +87,7 @@ $(window).bind({
 	},
 
 	resize: function() {
+		console.log('jq.js -- resize');
 		setType();
 		var totop = $('.totop');
 		var width = $(window).width();
