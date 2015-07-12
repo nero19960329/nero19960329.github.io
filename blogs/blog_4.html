@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<html>
+	<head>
+		<script type="text/javascript" src="../jQuery/jquery-1.8.0.js"></script>
+		<style type="text/css">
+			@font-face {
+				font-family: "shaonv";
+				src: url("../fonts/shaonv.ttf");
+			}
+
+			#words {
+				animation: appear 0.5s;
+			}
+
+			@keyframes appear {
+				0% {width: 60px; height: 18px; font-size: 0em;}
+				50% {font-size: 0em;}
+				90% {font-size: 0em;}
+				100% {width: 240px; height: 73px; font-size: 1.2em;}
+			}
+
+			#myButtons div:hover {
+				animation: tosolid 0.5s;
+				animation-fill-mode: forwards;	/*定格画面在最后一帧*/
+			}
+
+			@keyframes tosolid {
+				0% {opacity: 0.7;}
+				100% {opacity: 1;}
+			}
+		</style>
+	</head>
+
+	<body>
+		<script type="text/javascript">
+			var pages = 1;
+
+			// 主菜单音频
+			var audio_main = new Array();
+			audio_main[0] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0001.ogg" type="audio/ogg" />');
+			audio_main[1] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0003.ogg" type="audio/ogg" />');
+			audio_main[2] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0005.ogg" type="audio/ogg" />');
+			audio_main[3] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0020.ogg" type="audio/ogg" />');
+			audio_main[4] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0149.ogg" type="audio/ogg" />');
+			audio_main[5] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0151.ogg" type="audio/ogg" />');
+			audio_main[6] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0028.ogg" type="audio/ogg" />');
+			audio_main[7] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0021.ogg" type="audio/ogg" />');
+			audio_main[8] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0022.ogg" type="audio/ogg" />');
+			audio_main[9] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0023.ogg" type="audio/ogg" />');
+			audio_main[10] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0024.ogg" type="audio/ogg" />');
+			audio_main[11] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0025.ogg" type="audio/ogg" />');
+			audio_main[12] = $('<audio class="nico_audio_main" src="../src/audio/vo_na_009_0026.ogg" type="audio/ogg" />');
+
+			// 触摸音频
+			var audio_touch = new Array();
+			audio_touch[0] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0031.ogg" type="audio/ogg" />');
+			audio_touch[1] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0032.ogg" type="audio/ogg" />');
+			audio_touch[2] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0033.ogg" type="audio/ogg" />');
+			audio_touch[3] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0034.ogg" type="audio/ogg" />');
+			audio_touch[4] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0035.ogg" type="audio/ogg" />');
+			audio_touch[5] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0036.ogg" type="audio/ogg" />');
+			audio_touch[6] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0037.ogg" type="audio/ogg" />');
+			audio_touch[7] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0038.ogg" type="audio/ogg" />');
+			audio_touch[8] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0039.ogg" type="audio/ogg" />');
+			audio_touch[9] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0040.ogg" type="audio/ogg" />');
+			audio_touch[10] = $('<audio class="nico_audio_touch" src="../src/audio/vo_na_009_0041.ogg" type="audio/ogg" />');
+
+			var randomNumber = parseInt(Math.random() * audio_main.length);
+			var nowHour = new Date().getHours();
+			while (true) {
+				randomNumber = parseInt(Math.random() * audio_main.length);
+				if (randomNumber >= 0 && randomNumber <= 6) {
+					break;
+				} else {
+					if (nowHour >= 5 && nowHour < 17) {
+						if (randomNumber == 7) {
+							break;
+						}
+					}
+					if (nowHour >= 17 || nowHour < 5) {
+						if (randomNumber == 8) {
+							break;
+						}
+					}
+					if (nowHour >= 5 && nowHour < 11) {
+						if (randomNumber == 9) {
+							break;
+						}
+					}
+					if (nowHour >= 11 && nowHour < 17) {
+						if (randomNumber == 10) {
+							break;
+						}
+					}
+					if (nowHour >= 17 && nowHour < 23) {
+						if (randomNumber == 11) {
+							break;
+						}
+					}
+					if (nowHour >= 23 || nowHour < 5) {
+						if (randomNumber == 12) {
+							break;
+						}
+					}
+				}
+			}
+
+			var words_main = new Array();
+			words_main[0] = '大家的偶像矢泽妮可来了哦～妮可妮可妮☆';
+			words_main[1] = '妮可虽然是高三，但是比大家看起来都矮小...好自卑哦';
+			words_main[2] = '在学校也是这种感觉吗？...妮可什么事情都不知道♪';
+			words_main[3] = '好了，粉丝都在等着妮可♪';
+			words_main[4] = '今天请一直像遮阳伞一样待在妮可身边吧';
+			words_main[5] = '真不可思议啊。一看到你一脸寂寞的表情，为什么连妮可也变得悲伤起来了呢';
+			words_main[6] = '好热啊！...很期待妮可的泳装吧？';
+			words_main[7] = '来吧，让全世界都知道妮可的可爱！';
+			words_main[8] = '辛苦了！请以后也多多关照♪';
+			words_main[9] = '早上好！今天也很精神，妮可妮可妮☆';
+			words_main[10] = '不断前进妮可♪';
+			words_main[11] = '累了吗？撒娇的话可不行哦！';
+			words_main[12] = '已经很晚了妮可必须要睡觉了！晚安，希望你会梦见妮可，做个好梦♪';
+
+			var words_touch = new Array();
+			words_touch[0] = '让妮可来帮助你吧♪';
+			words_touch[1] = '主人，你是在叫我吗？';
+			words_touch[2] = '发生什么事情了吗？';
+			words_touch[3] = '呀，感觉痒痒的';
+			words_touch[4] = '你干什么呀！......妮可妮可妮';
+			words_touch[5] = '呀，讨厌，什么事情啊？';
+			words_touch[6] = '不，不行的呀';
+			words_touch[7] = '在随便乱摸什么啊！';
+			words_touch[8] = '简直就是拿你没办法啊！';
+			words_touch[9] = '喂，搞什么啊！如果这样会很害羞的呀！';
+			words_touch[10] = '在大庭广众之下，会不会有点......';
+
+			function effArea() {
+				var areaWidth = 960;
+				var areaHeight = 640;
+
+				var area = $('<div />');
+				area.attr('id', 'eff_area');
+				area.css('width', areaWidth);
+				area.css('height', areaHeight);
+				area.css('position', 'fixed');
+				area.css('left', ($(window).width() - areaWidth) / 2);
+				area.css('top', ($(window).height() - areaHeight) / 2);
+				//area.css('border', '1px solid #000');
+				area.css('background-image', 'url("../src/nico_background.png")');
+				$('body').append(area);
+
+				for (var i = 0; i < audio_main.length; ++i) {
+					area.append(audio_main[i]);
+				}
+				$('.nico_audio_main')[randomNumber].play();
+				
+				for (var i = 0; i < audio_touch.length; ++i) {
+					area.append(audio_touch[i]);
+				}
+			}
+
+			function Nico() {
+				var character = $('<div />');
+				character.attr('id', 'nico_ch');
+				character.css('float', 'left');
+				character.css('width', parseInt($('#eff_area').css('width')) * 0.4);
+				character.css('height', parseInt(character.css('width')) * 858 / 592);
+				//character.css('margin-top', 0);
+				character.css('position', 'absolute');
+				character.css('top', parseInt($('#eff_area').css('height')) - Math.ceil(parseInt(character.css('height')) * 810 / 858));
+				//character.css('margin-top', (parseInt($('#eff_area').css('height')) - parseInt(character.css('height'))) / 2);
+				character.css('left', 50);
+				//console.log(character.css('width') + ", " + character.css('height'));
+				$('#eff_area').append(character);
+
+				var nico = $('<img src="../src/nico.png" />');
+				nico.css('width', "100%");
+				nico.css('height', "100%");
+				nico.hover(
+					function(e) {
+						var mouseX = e.clientX;
+						var mouseY = e.clientY;
+
+						if (mouseX >= parseInt(nico.css('width')) * 0.1 + parseInt(character.css('margin-left')) + parseInt($('#eff_area').css('left')) && 
+							mouseX <= parseInt(nico.css('width')) * 0.93 + parseInt(character.css('margin-left')) + parseInt($('#eff_area').css('left')) && 
+							mouseY >= parseInt(nico.css('height')) * 0.04 + parseInt(character.css('margin-top')) + parseInt($('#eff_area').css('top')) &&
+							mouseY <= parseInt(nico.css('height')) * 0.946 + parseInt(character.css('margin-top')) + parseInt($('#eff_area').css('top'))) {
+							$(this).css('cursor', 'pointer');
+						}
+					},
+
+					function(e) {
+
+					}
+				);
+				character.append(nico);
+
+				//console.log(nico.css('width') + ", " + nico.css('height'));
+				//console.log(parseInt(nico.css('width')) * 0.1 + parseInt(character.css('margin-left')) + parseInt($('#eff_area').css('left')));
+				nico.bind({
+					mousedown: function(e) {
+						var mouseX = e.clientX;
+						var mouseY = e.clientY;
+
+						if (mouseX >= parseInt(nico.css('width')) * 0.1 + parseInt(character.css('margin-left')) + parseInt($('#eff_area').css('left')) && 
+							mouseX <= parseInt(nico.css('width')) * 0.93 + parseInt(character.css('margin-left')) + parseInt($('#eff_area').css('left')) && 
+							mouseY >= parseInt(nico.css('height')) * 0.04 + parseInt(character.css('margin-top')) + parseInt($('#eff_area').css('top')) &&
+							mouseY <= parseInt(nico.css('height')) * 0.946 + parseInt(character.css('margin-top')) + parseInt($('#eff_area').css('top'))) {
+							var randomNumber = parseInt(Math.random() * $('.nico_audio_touch').length);
+							var main = $('.nico_audio_main');
+							for (var i = 0; i < main.length; ++i) {
+								main[i].pause();
+							}
+							var touch = $('.nico_audio_touch');
+							for (var i = 0; i < touch.length; ++i) {
+								touch[i].pause();
+							}
+							$('.nico_audio_touch')[randomNumber].play();
+							new subtitle(words_touch[randomNumber]);
+						}
+					}
+				});
+			}
+
+			function subtitle(content) {
+				var toRemove = $('#words');
+				toRemove.remove();
+				var words = $('<div>' + content + '</div>');
+				words.attr('id', 'words');
+				words.css('padding', 10);
+				words.css('font-size', '1.2em');
+				words.css('width', parseInt($('#eff_area').css('width')) * 0.25);
+				words.css('height', parseInt($('#eff_area').css('height')) - parseInt($('#nico_ch').css('height')) - 10);
+				console.log(50 + 0.5 * parseInt($('#nico_ch').css('width')));
+				words.css('position', 'absolute');
+				words.css('left', 50 + 0.5 * parseInt($('#nico_ch').css('width')) - parseInt($('#eff_area').css('width')) * 0.125)
+				words.css('top', 20);
+				words.css('background-color', '#fff');
+				words.css('filter', 'Alpha(Opacity=30)');
+				words.css('opacity', '0.5');
+				words.css('border-radius', 5);
+				words.css('box-shadow', '3px 3px 10px #000');
+				words.css('font-family', 'shaonv');
+				words.css('border', '1px solid #000');
+				$('#eff_area').append(words);
+
+				console.log(words.css('width') + ", " + words.css('height'));
+			}
+
+			function mButtons() {
+				var tButtons = $('<div />');
+				tButtons.attr('id', 'myButtons');
+				tButtons.css('float', 'right');
+				tButtons.css('width', parseInt($("#eff_area").css('width')) * 0.25);
+				tButtons.css('height', parseInt($("#eff_area").css('height')) * 0.6);
+				tButtons.css('margin-top', parseInt($("#eff_area").css('height')) * 0.2);
+				tButtons.css('margin-bottom', parseInt($("#eff_area").css('height')) * 0.2);
+				tButtons.css('margin-right', parseInt($("#eff_area").css('width')) * 0.1);
+				$('#eff_area').append(tButtons);
+			}
+
+			function mButton(arg) {
+				var tButton = $('<div>' + arg.content + '</div>');
+				tButton.attr('id', arg.id);
+				tButton.css('color', '#fff');
+				//tButton.css('float', 'right');
+				//tButton.css('border', '1px solid #000');
+				tButton.css('font-family', 'shaonv');
+				tButton.css('background-color', arg.background_color);
+				tButton.css('border-radius', '10px 0 10px 0');
+				tButton.css('margin-top', parseInt($("#eff_area").css('height')) * 0.1);
+				tButton.css('width', parseInt($("#eff_area").css('width')) * 0.25);
+				tButton.css('height', 40);
+				console.log('button-width: ' + tButton.css('width') + ' button-height: ' + tButton.css('height'));
+				tButton.css('text-align', 'center');
+				tButton.css('line-height', 40 + "px");
+				tButton.css('box-shadow', '3px 3px 10px #555')
+				tButton.css('cursor', 'pointer');
+				tButton.css('filter', 'Alpha(Opacity=30)');
+				tButton.css('opacity', '0.7');
+				//console.log(tButton.css('width') + ", " + tButton.css('height'));
+				$('#myButtons').append(tButton);
+			}
+
+			var effarea = new effArea();
+			var nico = new Nico();
+			var subTitle = new subtitle(words_main[randomNumber]);
+			var mbuttons = new mButtons();
+			var mbutton_1 = new mButton({id: 'basic_information', content: '基  本  信  息', background_color: '#fe4365'});
+			var mbutton_2 = new mButton({id: 'other', content: '其          他', background_color: '#458994'});
+
+			$('basic_information').bind({
+				onmouseup: function(e) {
+
+				}
+			});
+		</script>
+	</body>
+</html>
