@@ -42,7 +42,6 @@ document.body.onresize = function() {
 	} else if (totop[0].getAttribute("id") == "totop_rightdown") {
 		totop[0].style.top = (document.body.clientHeight - 70) + "px";
 		totop[0].style.left = (document.body.clientWidth - 70) + "px";
-		console.log(totop[0].style.cssText);
 	}
 };
 
