@@ -158,6 +158,7 @@
 					var start = parseInt(json.images[0].id), end = parseInt(json.images[stepLength - 1].id);
 					for (var k = 0; k < fileLength; ++k) {
 						var photo = $($('.photoArea')[k]);
+						$('#mTopLoadText').remove();
 						$($('.stream_photo')[k]).css('display', 'block');
 						var index = extractNum(photo.attr('id'));
 						if (start > index || index > end) {
@@ -194,7 +195,6 @@
 						$(rows[i]).css('width', 120);
 					}
 				}
-				$('#mTopLoadText').remove();
 				initialize(json);
 			});
 
