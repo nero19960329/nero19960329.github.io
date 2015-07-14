@@ -297,11 +297,8 @@
 					var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
 					if (scrollFlag == true && scrollTop > $('html').height() - $(window).height() - 500) {
 						if (jsonNum <= jsonMax) {
-							console.log("jsonNum: " + jsonNum);
 							scrollFlag = false;
-							//$('#mBottomLoadText').css('display', 'block');
 							setBottomLoadText();
-							//debugger;
 							$.getJSON("https://nero19960329.github.io/json/srcdata_" + jsonNum + ".json", function(json) {
 								console.log(json);
 								stepLength = json.images.length;
@@ -319,18 +316,11 @@
 							++jsonNum;
 						}
 					}
-
-					//console.log(scrollTop);
-					if (scrollTop > $('html').height() - $(window).height() - 200) {
-						//console.log('bottom!');
-						//setBottomLoadText();
-					}
 				}
 			});
 
 			function setRows() {
 				$('#stream').css('margin-left', $('body').width() * 0.06);
-				//$('#stream').css('margin-right', $('body').width() * 0.05);
 				var rows = $('.row');
 				for (var i = 0; i < rows.length; ++i) {
 					if ($('body').width() <= 800) {

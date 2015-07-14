@@ -14,11 +14,6 @@ function DisplayWindow(arg) {
 		changedWidth = mWindowWidth * 0.75 - 20;
 		changedHeight = arg.height * (mWindowWidth * 0.75 - 20) / arg.width;
 	}
-	/*if (changedHeight < 600) {
-		mWindowHeight = 600;
-	} else {
-		mWindowHeight = changedHeight + 20;
-	}*/
 	if (changedHeight > 600) {
 		changedWidth = changedWidth * 600 / changedHeight;
 		changedHeight = 600;
