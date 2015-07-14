@@ -219,6 +219,7 @@
 							setBottomLoadText();
 							//debugger;
 							$.getJSON("https://nero19960329.github.io/json/srcdata_" + jsonNum + ".json", function(json) {
+								console.log(json);
 								stepLength = json.images.length;
 								fileLength += stepLength;
 								for (var k = 0; k < stepLength; ++k) {
