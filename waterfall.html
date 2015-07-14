@@ -103,6 +103,41 @@
 
 			$('header').css('margin-left', ($(window).width() - $('h1').width()) / 2);
 
+			if (navigator.geolocation) {
+				console.log("geolocation ok!");
+				navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {
+			        enableHighAcuracy: true,
+			        timeout: 5000,
+			        maximumAge: 3000
+			    });
+
+				function locationError(error) {
+					switch(error.code){
+		               case error.TIMEOUT:
+		                    console.log('超时');
+		                    break;
+		               case error.PERMISSION_DENIED:
+		                    console.log('用户拒绝提供地理位置');
+		                    break;
+		               case error.POSITION_UNAVAILABLE:
+		                    console.log('地理位置不可用');
+		                    break;
+		               default:
+		                    break;
+		          }
+				};
+
+			    function locationSuccess(position) {
+			    	console.log("success!");
+			    	var coords = position.coords;
+			    	var latlng = new google.maps.LatLng(
+			    		coords.latitude,
+			    		coords.longitude
+			    		)
+			    	console.log(latlng);
+			    };
+			}
+
 			function setBottomLoadText() {
 				var mBottomLoadText = $('<div id="mBottomLoadText">正在加载中. . .</div>');
 				mBottomLoadText.css('position', 'absolute');
