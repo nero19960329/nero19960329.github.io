@@ -119,7 +119,7 @@
 					var allArea = $('<li class="allArea"></li>');
 					var photoArea = $('<div class="photoArea" id="photoArea_' + i + '"></div>');
 					var photo = $('<img class="stream_photo" id="photo_' + i + '" src="src/photo/' + srcFileName[i] + '" />');
-					photo.css('display', 'block');
+					photo.css('display', 'none');
 					var rWidth;
 					if ($('body').width() <= 800) {
 						rWidth = 120;
@@ -151,6 +151,7 @@
 					var start = parseInt(json.images[0].id), end = parseInt(json.images[stepLength - 1].id);
 					for (var k = 0; k < fileLength; ++k) {
 						var photo = $($('.photoArea')[k]);
+						$($('.stream_photo')[k]).css('display', 'block');
 						var index = extractNum(photo.attr('id'));
 						if (start > index || index > end) {
 							continue;
