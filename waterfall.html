@@ -293,6 +293,8 @@
 									srcFileName[i] = json.images[k].name;
 									naturalWidth[i] = parseInt(json.images[k].width);
 									naturalHeight[i] = parseInt(json.images[k].height);
+									imageLatitude[i] = parseInt(json.images[i].latitude);
+									imageLongitude[i] = parseInt(json.images[i].longitude);
 								}
 								initialize(json);
 							});
