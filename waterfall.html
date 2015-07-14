@@ -93,6 +93,8 @@
 			var srcFileName = new Array();
 			var naturalWidth = new Array();
 			var naturalHeight = new Array();
+			var imageLatitude = new Array();
+			var imageLongitude = new Array();
 			var nowHeight = new Array(4);
 			var scrollFlag = false;			// false表示还没加载完，true表示已经加载完
 			var locallatitude, locallongitude, locationFlag = false;
@@ -228,6 +230,7 @@
 						if (start > index || index > end) {
 							continue;
 						}
+						console.log("index = " + index + ", k = " + k);
 						(function(ind) {
 							photo.bind({
 								mouseup: function(e) {
@@ -237,8 +240,8 @@
 											width: naturalWidth[ind], 
 											height: naturalHeight[ind], 
 											srcPath: srcFileName[ind],
-											latitude: json.images[ind].latitude,
-											longitude: json.images[ind].longitude
+											latitude: imageLatitude[ind],
+											longitude: imageLongitude[ind]
 										});
 									}
 								}
@@ -258,6 +261,8 @@
 					srcFileName[i] = json.images[i].name;
 					naturalWidth[i] = parseInt(json.images[i].width);
 					naturalHeight[i] = parseInt(json.images[i].height);
+					imageLatitude[i] = parseInt(json.images[i].latitude);
+					imageLongitude[i] = parseInt(json.images[i].longitude);
 				}
 				var stream = $('#stream');
 				var rows = $('.row');
