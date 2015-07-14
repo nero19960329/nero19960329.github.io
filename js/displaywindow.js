@@ -118,7 +118,7 @@ function DisplayWindow(arg) {
 
 	var mGeoArea = $('<div>' +  + '</div');
 	if (locationFlag == true) {
-		mGeoArea.html('' + getDistance({latitude: locallatitude, longitude: locallongitude}, {latitude: arg.latitude, longitude: arg.longitude}));
+		mGeoArea.html('距离您' + parseInt(getDistance({latitude: locallatitude, longitude: locallongitude}, {latitude: arg.latitude, longitude: arg.longitude})) + '千米');
 	} else {
 		mGeoArea.html('获取地理位置失败！');
 	}
