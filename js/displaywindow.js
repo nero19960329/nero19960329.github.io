@@ -175,7 +175,7 @@ function DisplayWindow(arg) {
 				createmText(json);
 				var mPrePageButton = $('<div>上一页</div>');
 				mPrePageButton.css('position', 'absolute');
-				mPrePageButton.css('left', parseInt(mTextArea.css('width')) * 0.5 - 100);
+				mPrePageButton.css('left', parseInt(mTextArea.css('width')) * 0.5 - 80);
 				mPrePageButton.css('top', 450);
 				mPrePageButton.css('cursor', 'pointer');
 				mPrePageButton.bind({
@@ -198,7 +198,7 @@ function DisplayWindow(arg) {
 				});
 				var mNextPageButton = $('<div>下一页</div>');
 				mNextPageButton.css('position', 'absolute');
-				mNextPageButton.css('left', parseInt(mTextArea.css('width')) * 0.5 + 100);
+				mNextPageButton.css('left', parseInt(mTextArea.css('width')) * 0.5 + 80);
 				mNextPageButton.css('top', 450);
 				mNextPageButton.css('cursor', 'pointer');
 				mNextPageButton.bind({
