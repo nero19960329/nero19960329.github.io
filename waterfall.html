@@ -243,14 +243,14 @@
 			});
 
 			function setRows() {
-				$('#stream').css('margin-left', $('body').width() * 0.05);
+				$('#stream').css('margin-left', $('body').width() * 0.06);
 				//$('#stream').css('margin-right', $('body').width() * 0.05);
 				var rows = $('.row');
 				for (var i = 0; i < rows.length; ++i) {
 					if ($('body').width() <= 800) {
 						$(rows[i]).css('width', 120);
 					} else {
-						$(rows[i]).css('width', parseInt($('body').width() * 0.2));
+						$(rows[i]).css('width', parseInt($('body').width() * 0.22 - 40));
 					}
 				}
 			}
