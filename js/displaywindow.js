@@ -109,23 +109,30 @@ function DisplayWindow(arg) {
 	var mPhoto = $('<img src="src/photo/' + arg.srcPath + '"/>');
 	mPhoto.css('position', 'absolute');
 
-	/*if (arg.width <= mPhotoArea.width()) {
-		mPhoto.css('left', (mPhotoArea.width() - arg.width) / 2);
-	} else {
-		mPhoto.css('left', 10);
-		mPhoto.css('width', mPhotoArea.width() - 20);
-		changedHeight = arg.height * (mPhotoArea.width() - 20) / arg.width;
-	}*/
 	mPhoto.css('left', (mPhotoArea.width() - changedWidth) / 2);
 	mPhoto.css('width', changedWidth);
 	mPhoto.css('height', changedHeight);
-	//if (changedHeight <= mPhotoArea.height()) {
-		mPhoto.css('top', (mPhotoArea.height() - changedHeight) / 2);
-	//} else {
-	//	mPhoto.css('top', 20);
-	//}
+	mPhoto.css('top', (mPhotoArea.height() - changedHeight) / 2);
 	mPhoto.css('display', 'none');
 	mPhotoArea.append(mPhoto);
+
+	var mGeoArea = $('<div>' +  + '</div');
+	if (locationFlag == true) {
+		mGeoArea.html('' + getDistance({latitude: locallatitude, longitude: locallongitude}, {latitude: arg.latitude, longitude: arg.longitude}));
+	} else {
+		mGeoArea.html('获取地理位置失败！');
+	}
+	mGeoArea.css('position', 'absolute');
+	mGeoArea.css('width', mWindowWidth * 0.21 - 20);
+	mGeoArea.css('height', 100);
+	mGeoArea.css('padding', 10);
+	mGeoArea.css('left', mWindowWidth * 0.77);
+	mGeoArea.css('top', 10);
+	mGeoArea.css('font-family', 'Microsoft YaHei');
+	mGeoArea.css('font-size', '0.9em');
+	mGeoArea.css('text-align', 'center');
+	mGeoArea.css('line-height', '80px');
+	mWindow.append(mGeoArea);
 
 	var mTextArea = $('<div></div>');
 	mTextArea.css('position', 'absolute');
@@ -134,7 +141,6 @@ function DisplayWindow(arg) {
 	mTextArea.css('padding', 10);
 	mTextArea.css('font-family', 'Microsoft YaHei');
 	mTextArea.css('font-size', '0.7em');
-	mTextArea.css('')
 	mTextArea.css('left', mWindowWidth * 0.77);
 	mTextArea.css('top', 100);
 	mTextArea.css('background-color', '#f2f2f5');
