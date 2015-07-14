@@ -28,6 +28,18 @@
 				background-image: url("src/waterfall_head_background.jpg");
 			}
 
+			#mTopLoadText {
+				font-family: "Microsoft YaHei";
+				text-align: center;
+				margin-top: 50px;
+				color: #888;
+			}
+
+			#mBottomLoadText {
+				font-family: "Microsoft YaHei";
+				text-align: center;
+			}
+
 			h2 {
 				color: #fff;
 				text-shadow: 3px 3px 10px #000;
@@ -67,12 +79,14 @@
 			<img id="headPic" src="src/waterfall_head.jpg"/>
 			<h2>王小寒</h2>
 		</header>
+		<div id="mTopLoadText">正在加载中. . .</div>
 		<div id="stream">
 			<ul class="row"></ul>
 			<ul class="row"></ul>
 			<ul class="row"></ul>
 			<ul class="row"></ul>
 		</div>
+		<div id="mBottomLoadText">正在加载中. . .</div>
 
 		<script type="text/javascript">
 			var fileLength = 0, stepLength;
@@ -89,6 +103,7 @@
 			}
 
 			$('header').css('margin-left', ($(window).width() - $('h1').width()) / 2);
+			$('#mBottomLoadText').css('display', 'none');
 
 			function extractNum(str) {
 				return parseInt(str.replace(/[^0-9]/ig,""));
@@ -102,14 +117,6 @@
 					}
 				}
 				return index;
-			}
-
-			function setBottomLoadText() {
-				var mBottomLoadText = $('<div>正在加载中. . .</div>');
-				//mBottomLoadText.css('position', 'absolute');
-				//mBottomLoadText.css('left', $(window).width() - 5);
-				//mBottomLoadText.css('top', $('html').height() - 50);
-				$('html').append(mBottomLoadText);
 			}
 
 			function initialize(json) {
@@ -187,6 +194,7 @@
 						$(rows[i]).css('width', 120);
 					}
 				}
+				$('#mTopLoadText').remove();
 				initialize(json);
 			});
 
@@ -197,6 +205,8 @@
 						if (jsonNum <= jsonMax) {
 							console.log("jsonNum: " + jsonNum);
 							scrollFlag = false;
+							$('#mBottomLoadText').css('display', 'block');
+							//debugger;
 							$.getJSON("https://nero19960329.github.io/json/srcdata_" + jsonNum + ".json", function(json) {
 								stepLength = json.images.length;
 								fileLength += stepLength;
@@ -206,6 +216,7 @@
 									naturalWidth[i] = parseInt(json.images[k].width);
 									naturalHeight[i] = parseInt(json.images[k].height);
 								}
+								$('#mBottomLoadText').css('display', 'none');
 								initialize(json);
 							});
 							++jsonNum;
