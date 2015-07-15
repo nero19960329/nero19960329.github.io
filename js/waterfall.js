@@ -1,11 +1,11 @@
 var fileLength = 0, stepLength;
-var srcFileName = new Array();
-var naturalWidth = new Array();
-var naturalHeight = new Array();
-var imageLatitude = new Array();
-var imageLongitude = new Array();
-var nowHeight = new Array(4);
-var scrollFlag = false;			// false表示还没加载完，true表示已经加载完
+var srcFileName = new Array();		// 图片的文件名
+var naturalWidth = new Array();		// 图片的原始宽度
+var naturalHeight = new Array();	// 图片的原始高度
+var imageLatitude = new Array();	// 图片的纬度
+var imageLongitude = new Array();	// 图片的经度
+var nowHeight = new Array(4);		// 当前列的高度
+var scrollFlag = false;				// false表示还没加载完，true表示已经加载完
 var locallatitude, locallongitude, locationFlag = false;
 var jsonNum = 1, jsonMax = 3;
 
@@ -45,6 +45,62 @@ if (navigator.geolocation) {
         locallongitude = position.coords.longitude;
     };
 }
+
+// 获取页面刚加载时的json数据
+//$.getJSON("https://nero19960329.github.io/json/srcdata_0.json", function(json) {
+$.getJSON("json/srcdata_0.json", function(json) {
+	stepLength = json.images.length;
+	fileLength += stepLength;
+	for (var k = 0; k < stepLength; ++k) {
+		var i = parseInt(json.images[k].id);
+		srcFileName[i] = json.images[i].name;
+		naturalWidth[i] = parseInt(json.images[i].width);
+		naturalHeight[i] = parseInt(json.images[i].height);
+		imageLatitude[i] = parseInt(json.images[i].latitude);
+		imageLongitude[i] = parseInt(json.images[i].longitude);
+	}
+	var stream = $('#stream');
+	var rows = $('.row');
+	for (var i = 0; i < rows.length; ++i) {
+		if ($('body').width() <= 1024) {
+			$(rows[i]).css('width', 120);
+		}
+	}
+	initialize(json);
+});
+
+$(window).bind({
+	// 屏幕快滑到底端时开始加载后续的json数据
+	scroll: function() {
+		var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
+		if (scrollFlag == true && scrollTop > $('html').height() - $(window).height() - 500) {
+			if (jsonNum <= jsonMax) {
+				scrollFlag = false;
+				setBottomLoadText();
+				//$.getJSON("https://nero19960329.github.io/json/srcdata_" + jsonNum + ".json", function(json) {
+				$.getJSON("json/srcdata_" + jsonNum + ".json", function(json) {
+					stepLength = json.images.length;
+					fileLength += stepLength;
+					for (var k = 0; k < stepLength; ++k) {
+						var i = parseInt(json.images[k].id);
+						srcFileName[i] = json.images[k].name;
+						naturalWidth[i] = parseInt(json.images[k].width);
+						naturalHeight[i] = parseInt(json.images[k].height);
+						imageLatitude[i] = parseInt(json.images[k].latitude);
+						imageLongitude[i] = parseInt(json.images[k].longitude);
+					}
+					initialize(json);
+				});
+				++jsonNum;
+			}
+		}
+	},
+	
+	// 重置浏览器长宽时，动态设置所有控件
+	resize: function() {
+		setAllWidgets();
+	}
+});
 
 // 获得A,B两地之间的距离
 function getDistance(A, B) {
@@ -165,57 +221,6 @@ function initialize(json) {
 	});
 }
 
-// 获取页面刚加载时的json数据
-//$.getJSON("https://nero19960329.github.io/json/srcdata_0.json", function(json) {
-$.getJSON("json/srcdata_0.json", function(json) {
-	stepLength = json.images.length;
-	fileLength += stepLength;
-	for (var k = 0; k < stepLength; ++k) {
-		var i = parseInt(json.images[k].id);
-		srcFileName[i] = json.images[i].name;
-		naturalWidth[i] = parseInt(json.images[i].width);
-		naturalHeight[i] = parseInt(json.images[i].height);
-		imageLatitude[i] = parseInt(json.images[i].latitude);
-		imageLongitude[i] = parseInt(json.images[i].longitude);
-	}
-	var stream = $('#stream');
-	var rows = $('.row');
-	for (var i = 0; i < rows.length; ++i) {
-		if ($('body').width() <= 1024) {
-			$(rows[i]).css('width', 120);
-		}
-	}
-	initialize(json);
-});
-
-$(window).bind({
-	// 屏幕快滑到底端时开始加载后续的json数据
-	scroll: function() {
-		var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
-		if (scrollFlag == true && scrollTop > $('html').height() - $(window).height() - 500) {
-			if (jsonNum <= jsonMax) {
-				scrollFlag = false;
-				setBottomLoadText();
-				//$.getJSON("https://nero19960329.github.io/json/srcdata_" + jsonNum + ".json", function(json) {
-				$.getJSON("json/srcdata_" + jsonNum + ".json", function(json) {
-					stepLength = json.images.length;
-					fileLength += stepLength;
-					for (var k = 0; k < stepLength; ++k) {
-						var i = parseInt(json.images[k].id);
-						srcFileName[i] = json.images[k].name;
-						naturalWidth[i] = parseInt(json.images[k].width);
-						naturalHeight[i] = parseInt(json.images[k].height);
-						imageLatitude[i] = parseInt(json.images[k].latitude);
-						imageLongitude[i] = parseInt(json.images[k].longitude);
-					}
-					initialize(json);
-				});
-				++jsonNum;
-			}
-		}
-	}
-});
-
 // 设置row的宽度
 function setRows() {
 	$('#stream').css('margin-left', $('body').width() * 0.06);
@@ -276,8 +281,3 @@ function setPartWidgets(json) {
 		}
 	}
 }
-
-// 重置浏览器长宽时，动态设置所有控件
-$(window).resize(function() {
-	setAllWidgets();
-});
