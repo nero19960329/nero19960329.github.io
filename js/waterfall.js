@@ -270,6 +270,12 @@ function setAllWidgets() {
 			photo.css('width', rowWidth);
 		}
 
+		// 图片加载有错误时
+		if (photo.parent().children('div')) {
+			$($('#stream .row .allArea')[i]).css('height', 100);
+			return;
+		}
+
 		if (photo.height() > 500) {
 			$($('#stream .row .allArea')[i]).css('height', 500);
 		} else {
@@ -289,11 +295,18 @@ function setPartWidgets(json) {
 		if (start > index || index > end) {
 			continue;
 		}
+
 		if (naturalWidth[index] < rowWidth) {
 			photo.css('margin-left', (rowWidth - naturalWidth[index]) / 2);
 			photo.css('margin-right', (rowWidth - naturalWidth[index]) / 2);
 		} else {
 			photo.css('width', rowWidth);
+		}
+		
+		// 图片加载有错误时
+		if (photo.parent().children('div')) {
+			$($('#stream .row .allArea')[k]).css('height', 100);
+			return;
 		}
 
 		if (photo.height() > 500) {
