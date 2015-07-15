@@ -7,7 +7,6 @@ var imageLongitude = new Array();
 var nowHeight = new Array(4);
 var scrollFlag = false;			// false表示还没加载完，true表示已经加载完
 var locallatitude, locallongitude, locationFlag = false;
-
 var jsonNum = 1, jsonMax = 3;
 
 for (var i = 0; i < 4; ++i) {
@@ -43,11 +42,9 @@ if (navigator.geolocation) {
     function locationSuccess(position) {
     	locationFlag = true;
         // 估算的纬度 -90~90
-        locallatitude = position.coords.latitude;   
-        //console.log(position.coords.latitude); 
+        locallatitude = position.coords.latitude;
         // 估算的经度 -180~180
         locallongitude = position.coords.longitude;
-        //console.log(position.coords.longitude);
     };
 }
 
@@ -72,10 +69,7 @@ function setBottomLoadText() {
 	var mBottomLoadText = $('<div id="mBottomLoadText"><img src="src/waterfall_loading.gif" style="width: 20px; height: 20px;"/>正在加载中. . .</div>');
 	mBottomLoadText.css('position', 'absolute');
 	mBottomLoadText.css('left', $(window).width() / 2 - 50);
-	//mBottomLoadText.css('top', $(window).height() - 200);
 	mBottomLoadText.css('top', $('html').height() - 50);
-	//mBottomLoadText.css('top', 100);
-
 	$('html').append(mBottomLoadText);
 }
 
@@ -83,10 +77,7 @@ function setBottomErrorText() {
 	var mBottomLoadText = $('<div id="mBottomLoadText"><img src="src/waterfall_loading.gif" style="width: 20px; height: 20px;"/>正在加载中. . .</div>');
 	mBottomLoadText.css('position', 'absolute');
 	mBottomLoadText.css('left', $(window).width() / 2 - 50);
-	//mBottomLoadText.css('top', $(window).height() - 200);
 	mBottomLoadText.css('top', $('html').height() - 50);
-	//mBottomLoadText.css('top', 100);
-
 	$('html').append(mBottomLoadText);
 }
 
@@ -150,7 +141,6 @@ function initialize(json) {
 			if (start > index || index > end) {
 				continue;
 			}
-			console.log("index = " + index + ", k = " + k);
 			(function(ind) {
 				photo.bind({
 					mouseup: function(e) {
@@ -172,7 +162,8 @@ function initialize(json) {
 	});
 }
 
-$.getJSON("https://nero19960329.github.io/json/srcdata_0.json", function(json) {
+//$.getJSON("https://nero19960329.github.io/json/srcdata_0.json", function(json) {
+$.getJSON("json/srcdata_0.json", function(json) {
 	stepLength = json.images.length;
 	fileLength += stepLength;
 	for (var k = 0; k < stepLength; ++k) {
@@ -200,8 +191,8 @@ $(window).bind({
 			if (jsonNum <= jsonMax) {
 				scrollFlag = false;
 				setBottomLoadText();
-				$.getJSON("https://nero19960329.github.io/json/srcdata_" + jsonNum + ".json", function(json) {
-					console.log(json);
+				//$.getJSON("https://nero19960329.github.io/json/srcdata_" + jsonNum + ".json", function(json) {
+				$.getJSON("json/srcdata_" + jsonNum + ".json", function(json) {
 					stepLength = json.images.length;
 					fileLength += stepLength;
 					for (var k = 0; k < stepLength; ++k) {
