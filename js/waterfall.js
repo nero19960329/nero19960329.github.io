@@ -191,6 +191,7 @@ function initialize(json) {
 	var count = stepLength;
 	$("img").load(function() {
 		--count;
+		console.log("count = " + count + " load");
 		if (count != 0) {
 			return;
 		}
@@ -227,6 +228,10 @@ function initialize(json) {
 	});
 	$("img").error(function() {
 		--count;
+		console.log("count = " + count + " error");
+		if (count == 0) {
+			setPartWidgets(json);
+		}
 		//$(this).replaceWith("加载失败！");
 	});
 }
