@@ -229,9 +229,38 @@ function initialize(json) {
 	$("img").error(function() {
 		--count;
 		console.log("count = " + count + " error");
-		if (count == 0) {
-			setPartWidgets(json);
+		if (count != 0) {
+			return;
 		}
+		setPartWidgets(json);
+		var start = parseInt(json.images[0].id), end = parseInt(json.images[stepLength - 1].id);
+		for (var k = 0; k < fileLength; ++k) {
+			var photo = $($('.photoArea')[k]);
+			$('#mTopLoadText').remove();
+			$('#mBottomLoadText').remove();
+			$($('.stream_photo')[k]).css('display', 'block');
+			var index = extractNum(photo.attr('id'));
+			if (start > index || index > end) {
+				continue;
+			}
+			(function(ind) {
+				photo.bind({
+					mouseup: function(e) {
+						if (e.which == 1) {
+							new DisplayWindow({
+								id: ind, 
+								width: naturalWidth[ind], 
+								height: naturalHeight[ind], 
+								srcPath: srcFileName[ind],
+								latitude: imageLatitude[ind],
+								longitude: imageLongitude[ind]
+							});
+						}
+					}
+				});
+			})(index);
+		}
+		scrollFlag = true;
 		//$(this).replaceWith("加载失败！");
 	});
 }
