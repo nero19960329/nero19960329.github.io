@@ -176,7 +176,7 @@ function initialize(json) {
 			if (changedHeight > 500) {
 				changedHeight = 500;
 			}
-			nowHeight[r] += changedHeight;
+			nowHeight[r] += (changedHeight + 20);
 		}
 		allArea.append(photoArea);
 		photoArea.append(photo);
