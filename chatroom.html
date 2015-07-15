@@ -45,9 +45,11 @@
 	</head>
 	<body>
 		<img src="1.jpg" />
+		<img />
 		<script type="text/javascript">
 			$("img").error(function() {
-				$("img").replaceWith("加载失败！");
+				console.log($(this));
+				$(this).replaceWith("加载失败！");
 			});
 		</script>
 	</body>
