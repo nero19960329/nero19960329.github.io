@@ -102,8 +102,13 @@ function DisplayWindow(arg) {
 	mWindow.append(mPhotoArea);
 
 	var mPhoto = $('<img src="src/photo/' + arg.srcPath + '"/>');
+	mPhoto.error(function() {
+		var mPhotoError = $('<div class="photo_big_error">加载失败！</div>');
+		mPhotoError.css('position', 'absolute');
+		mPhotoError.css('top', (mPhotoArea.height() - 20) / 2)
+		mPhotoArea.append(mPhotoError);
+	});
 	mPhoto.css('position', 'absolute');
-
 	mPhoto.css('left', (mPhotoArea.width() - changedWidth) / 2);
 	mPhoto.css('width', changedWidth);
 	mPhoto.css('height', changedHeight);
@@ -111,7 +116,7 @@ function DisplayWindow(arg) {
 	mPhoto.css('display', 'none');
 	mPhotoArea.append(mPhoto);
 
-	var mGeoArea = $('<div>' +  + '</div');
+	var mGeoArea = $('<div />');
 	if (locationFlag == true) {
 		mGeoArea.html('距离您' + parseInt(getDistance({latitude: locallatitude, longitude: locallongitude}, {latitude: arg.latitude, longitude: arg.longitude})) + '千米');
 	} else {
@@ -129,7 +134,7 @@ function DisplayWindow(arg) {
 	mGeoArea.css('line-height', '80px');
 	mWindow.append(mGeoArea);
 
-	var mTextArea = $('<div></div>');
+	var mTextArea = $('<div />');
 	mTextArea.css('position', 'absolute');
 	mTextArea.css('width', mWindowWidth * 0.21 - 20);
 	mTextArea.css('height', 450);
