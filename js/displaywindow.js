@@ -60,12 +60,6 @@ function DisplayWindow(arg) {
 	mWindow.css('height', 0);
 	mWindow.css('left', windowWidth / 2);
 	mWindow.css('top', windowHeight / 2);
-	openWindow();
-	mWindow.css('width', mWindowWidth);
-	mWindow.css('height', mWindowHeight);
-	mWindow.css('left', (windowWidth - mWindowWidth) / 2);
-	mWindow.css('top', mWindowTop);
-	$('html').append(mWindow);
 
 	var mCloseButton = $('<div />');
 	mCloseButton.css('position', 'absolute');
@@ -105,7 +99,8 @@ function DisplayWindow(arg) {
 	mPhoto.error(function() {
 		var mPhotoError = $('<div class="photo_big_error">加载失败！</div>');
 		mPhotoError.css('position', 'absolute');
-		mPhotoError.css('top', (mPhotoArea.height() - 20) / 2);
+		mPhotoError.css('top', (mPhotoArea.height() - 21) / 2);
+		mPhotoError.css('left', (mPhotoArea.height() - 80) / 2);
 		mPhotoArea.append(mPhotoError);
 		mPhoto.css('display', 'none');
 	});
@@ -147,6 +142,13 @@ function DisplayWindow(arg) {
 	mTextArea.css('background-color', '#f2f2f5');
 	mWindow.append(mTextArea);
 	createLoadingText();
+	
+	openWindow();
+	mWindow.css('width', mWindowWidth);
+	mWindow.css('height', mWindowHeight);
+	mWindow.css('left', (windowWidth - mWindowWidth) / 2);
+	mWindow.css('top', mWindowTop);
+	$('html').append(mWindow);
 
 	function createmText(json) {
 		var commentnum = json.comments.length;
@@ -257,7 +259,6 @@ function DisplayWindow(arg) {
 			top: mWindowTop * 0.95,
 		}, 150, function() {
 			if (isError(mPhoto) == false) {
-				debugger;
 				mPhoto.css('display', 'block');
 			}
 		});
