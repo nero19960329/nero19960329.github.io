@@ -136,11 +136,11 @@ function setBottomLoadText() {
 
 // 设置底部的加载失败文字
 function setBottomErrorText() {
-	var mBottomLoadText = $('<div id="mBottomLoadText">加载失败！</div>');
-	mBottomLoadText.css('position', 'absolute');
-	mBottomLoadText.css('left', $(window).width() / 2 - 50);
-	mBottomLoadText.css('top', $('html').height() - 50);
-	$('html').append(mBottomLoadText);
+	var mBottomErrorText = $('<div id="mBottomErrorText">加载失败！</div>');
+	mBottomErrorText.css('position', 'absolute');
+	mBottomErrorText.css('left', $(window).width() / 2 - 50);
+	mBottomErrorText.css('top', $('html').height() - 50);
+	$('html').append(mBottomErrorText);
 }
 
 // 取得str中的数字
@@ -189,6 +189,10 @@ function setClickListener(json) {
 	}
 }
 
+function isError(photo) {
+	return photo.parent().children('div');
+}
+
 // 初始化图片以及边框
 function initialize(json) {
 	for (var k = 0; k < stepLength; ++k) {
@@ -232,7 +236,7 @@ function initialize(json) {
 		--count;
 		//debugger;
 		console.log($(this).parent());
-		$(this).parent().append($('<div>加载失败！</div>'));
+		$(this).parent().append($('<div class="photo_error">加载失败！</div>'));
 		if (count != 0) {
 			return;
 		}
@@ -271,7 +275,8 @@ function setAllWidgets() {
 		}
 
 		// 图片加载有错误时
-		if (photo.parent().children('div')) {
+		if (isError(photo)) {
+			photo.css('display', 'none');
 			$($('#stream .row .allArea')[i]).css('height', 100);
 			return;
 		}
@@ -304,7 +309,8 @@ function setPartWidgets(json) {
 		}
 		
 		// 图片加载有错误时
-		if (photo.parent().children('div')) {
+		if (isError(photo)) {
+			photo.css('display', 'none');
 			$($('#stream .row .allArea')[k]).css('height', 100);
 			return;
 		}

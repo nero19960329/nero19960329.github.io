@@ -20,14 +20,11 @@ header {
 }
 
 #mTopLoadText {
-	font-family: "Microsoft YaHei";
 	text-align: center;
 	margin-top: 50px;
-	text-shadow: 3px 3px 10px #000;
-	color: #888;
 }
 
-#mBottomLoadText {
+#mTopLoadText, #BottomLoadText, #mBottomErrorText, .photo_error {
 	font-family: "Microsoft YaHei";
 	text-shadow: 3px 3px 10px #000;
 	color: #888;
