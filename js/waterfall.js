@@ -233,10 +233,11 @@ function initialize(json) {
 		if (count != 0) {
 			return;
 		}
+		console.log($(this).parent());
+		$(this).parent().append($('<div>加载失败！</div>'));
 		setPartWidgets(json);
 		setClickListener(json);
 		scrollFlag = true;
-		$(this).parent().append($('<div>加载失败！</div>'));
 		//$(this).replaceWith("加载失败！");
 	});
 }
