@@ -107,7 +107,6 @@ function DisplayWindow(arg) {
 		mPhotoError.css('position', 'absolute');
 		mPhotoError.css('top', (mPhotoArea.height() - 20) / 2);
 		mPhotoArea.append(mPhotoError);
-		mPhotoErrorFlag = true;
 		mPhoto.css('display', 'none');
 	});
 	mPhoto.css('position', 'absolute');
