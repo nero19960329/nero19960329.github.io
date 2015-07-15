@@ -233,6 +233,7 @@ function initialize(json) {
 		if (count != 0) {
 			return;
 		}
+		debugger;
 		console.log($(this).parent());
 		$(this).parent().append($('<div>加载失败！</div>'));
 		setPartWidgets(json);
