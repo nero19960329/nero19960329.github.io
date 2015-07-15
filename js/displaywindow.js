@@ -171,7 +171,8 @@ function DisplayWindow(arg) {
 		mTextPages = json.commentpages[arg.id];
 		console.log("textpages: " + mTextPages);
 		if (mTextPages != 0) {;
-			$.getJSON("https://nero19960329.github.io/json/commentdata_" + arg.id + "_0.json", function(json) {
+			//$.getJSON("https://nero19960329.github.io/json/commentdata_" + arg.id + "_0.json", function(json) {
+			$.getJSON("json/commentdata_" + arg.id + "_0.json", function(json) {
 				$('#mLoadingText').remove();
 				console.log(json);
 				createmText(json);
