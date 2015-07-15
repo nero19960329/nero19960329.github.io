@@ -230,12 +230,12 @@ function initialize(json) {
 	});
 	$("img").error(function() {
 		--count;
+		//debugger;
+		console.log($(this).parent());
+		$(this).parent().append($('<div>加载失败！</div>'));
 		if (count != 0) {
 			return;
 		}
-		debugger;
-		console.log($(this).parent());
-		$(this).parent().append($('<div>加载失败！</div>'));
 		setPartWidgets(json);
 		setClickListener(json);
 		scrollFlag = true;
