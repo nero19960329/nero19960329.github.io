@@ -192,6 +192,9 @@ function DisplayWindow(arg) {
 						$.getJSON("json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
 							$('#mLoadingText').remove();
 							createmText(json);
+						}).fail(function() {
+							$('#mLoadingLoadText').remove();
+							setCommentErrorText();
 						});
 					}
 				});
@@ -214,6 +217,9 @@ function DisplayWindow(arg) {
 						$.getJSON("json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
 							$('#mLoadingText').remove();
 							createmText(json);
+						}).fail(function() {
+							$('#mLoadingLoadText').remove();
+							setCommentErrorText();
 						});
 					}
 				});
@@ -232,6 +238,8 @@ function DisplayWindow(arg) {
 			mText.css('margin-bottom', 20);
 			mTextArea.append(mText);
 		}
+	}).fail(function() {
+		setCommentErrorText();
 	});
 
 	function openWindow() {
@@ -268,5 +276,10 @@ function DisplayWindow(arg) {
 			mWindow.remove();
 		});
 		fog.remove();
+	}
+
+	function setCommentErrorText() {
+		var mCommentErrorText = $('<div id="mCommentErrorText">正在加载中. . .</div>');
+		mTextArea.append(mCommentErrorText);
 	}
 }

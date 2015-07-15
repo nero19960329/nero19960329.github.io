@@ -67,6 +67,9 @@ $.getJSON("json/srcdata_0.json", function(json) {
 		}
 	}
 	initialize(json);
+}).fail(function() {
+	$('#mTopLoadText').remove();
+	setBottomErrorText();
 });
 
 $(window).bind({
@@ -90,6 +93,9 @@ $(window).bind({
 						imageLongitude[i] = parseInt(json.images[k].longitude);
 					}
 					initialize(json);
+				}).fail(function() {
+					$('#mBottomLoadText').remove();
+					setBottomErrorText();
 				});
 				++jsonNum;
 			}
@@ -130,7 +136,7 @@ function setBottomLoadText() {
 
 // 设置底部的加载失败文字
 function setBottomErrorText() {
-	var mBottomLoadText = $('<div id="mBottomLoadText"><img src="src/waterfall_loading.gif" style="width: 20px; height: 20px;"/>正在加载中. . .</div>');
+	var mBottomLoadText = $('<div id="mBottomLoadText">加载失败！</div>');
 	mBottomLoadText.css('position', 'absolute');
 	mBottomLoadText.css('left', $(window).width() / 2 - 50);
 	mBottomLoadText.css('top', $('html').height() - 50);
