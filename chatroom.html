@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="libs/firebase.js"></script>
+	<head>
+		<title>myChatroom~</title>
+		<script type="text/javascript">
+			var ref = new Firebase('https://mchatroom.firebaseio.com/web/saving-data/fireblog');
+			var usersRef = ref.child("users");
+			usersRef.set({
+				alanisaresome: {
+					date_of_birth: "Jun 23, 1912",
+					full_name: "Alan Turing"
+				},
+				gracehop: {
+					date_of_birth: "December 9, 1906",
+					full_name: "Grace Hopper"
+				}
+			});
+			
+			/*ref.on("value", function(snapshot) {
+				console.log(snapshot.val());
+			}, function(errorobject) {
+				console.log("The read failed: " + errorobject.code);
+			});*/
+
+			/*usersRef.orderByKey().on("child_added", function(snapshot) {
+				console.log(snapshot.key());
+			});*/
+
+			/*usersRef.set({
+				nico: {
+					date_of_birth: "Mar 29, 1996",
+					full_name: "Yazawa Nico"
+				}
+			});*/
+
+			usersRef.on("child_added", function(snapshot) {
+				var newPost = snapshot.val();
+				console.log("date_of_birth: " + newPost.date_of_birth);
+				console.log("full_name: " + newPost.full_name);
+			});
+		</script>
+	</head>
+	<body>
+	
+	</body>
+</html>

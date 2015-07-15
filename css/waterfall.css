@@ -1,0 +1,74 @@
+html {
+	background-image: url("../src/waterfall_background.jpg");
+}
+
+body {
+	min-width: 1024px;
+}
+
+header {
+	text-align: center;
+	font-family: 'Microsoft YaHei';
+	background: #fff;
+	border-radius: 10px;
+	box-shadow: 3px 3px 10px #888;
+	margin-left: 15%;
+	margin-right: 15%;
+	padding: 20px;
+	margin-top: 1%;
+	background-image: url("../src/waterfall_head_background.jpg");
+}
+
+#mTopLoadText {
+	font-family: "Microsoft YaHei";
+	text-align: center;
+	margin-top: 50px;
+	text-shadow: 3px 3px 10px #000;
+	color: #888;
+}
+
+#mBottomLoadText {
+	font-family: "Microsoft YaHei";
+	text-shadow: 3px 3px 10px #000;
+	color: #888;
+}
+
+header h2, header div {
+	color: #fff;
+	text-shadow: 3px 3px 10px #000;
+}
+
+#headPic {
+	border-radius: 50%;
+	margin-bottom: 20px;
+	margin-top: 40px;
+}
+
+#stream {
+	margin-top: 3%;
+}
+
+#stream .row {
+	float: left;
+	margin: 0 20px;
+	margin-bottom: 100px;
+	padding: 0;
+}
+
+#stream .row .allArea {
+	list-style: none;
+	box-shadow: 3px 3px 10px #000;
+	margin-bottom: 20px;
+	overflow: hidden;
+}
+
+#stream .row .photoArea:hover {
+	animation: toTransparent 0.5s;
+	cursor: pointer;
+	animation-fill-mode: forwards;	/*定格画面在最后一帧*/
+}
+
+@keyframes toTransparent {
+	0% {opacity: 1;}
+	100% {opacity: 0.8;}
+}
