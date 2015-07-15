@@ -256,6 +256,7 @@ function DisplayWindow(arg) {
 			top: mWindowTop * 0.95,
 		}, 150, function() {
 			if (isError(mPhoto) == false) {
+				debugger;
 				mPhoto.css('display', 'block');
 			}
 		});
