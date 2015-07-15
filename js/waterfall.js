@@ -159,6 +159,36 @@ function getMinIndex() {
 	return index;
 }
 
+function setClickListener(json) {
+	var start = parseInt(json.images[0].id), end = parseInt(json.images[stepLength - 1].id);
+	for (var k = 0; k < fileLength; ++k) {
+		var photo = $($('.photoArea')[k]);
+		$('#mTopLoadText').remove();
+		$('#mBottomLoadText').remove();
+		$($('.stream_photo')[k]).css('display', 'block');
+		var index = extractNum(photo.attr('id'));
+		if (start > index || index > end) {
+			continue;
+		}
+		(function(ind) {
+			photo.bind({
+				mouseup: function(e) {
+					if (e.which == 1) {
+						new DisplayWindow({
+							id: ind, 
+							width: naturalWidth[ind], 
+							height: naturalHeight[ind], 
+							srcPath: srcFileName[ind],
+							latitude: imageLatitude[ind],
+							longitude: imageLongitude[ind]
+						});
+					}
+				}
+			});
+		})(index);
+	}
+}
+
 // 初始化图片以及边框
 function initialize(json) {
 	for (var k = 0; k < stepLength; ++k) {
@@ -196,34 +226,7 @@ function initialize(json) {
 			return;
 		}
 		setPartWidgets(json);
-
-		var start = parseInt(json.images[0].id), end = parseInt(json.images[stepLength - 1].id);
-		for (var k = 0; k < fileLength; ++k) {
-			var photo = $($('.photoArea')[k]);
-			$('#mTopLoadText').remove();
-			$('#mBottomLoadText').remove();
-			$($('.stream_photo')[k]).css('display', 'block');
-			var index = extractNum(photo.attr('id'));
-			if (start > index || index > end) {
-				continue;
-			}
-			(function(ind) {
-				photo.bind({
-					mouseup: function(e) {
-						if (e.which == 1) {
-							new DisplayWindow({
-								id: ind, 
-								width: naturalWidth[ind], 
-								height: naturalHeight[ind], 
-								srcPath: srcFileName[ind],
-								latitude: imageLatitude[ind],
-								longitude: imageLongitude[ind]
-							});
-						}
-					}
-				});
-			})(index);
-		}
+		setClickListener(json);
 		scrollFlag = true;
 	});
 	$("img").error(function() {
@@ -233,33 +236,7 @@ function initialize(json) {
 			return;
 		}
 		setPartWidgets(json);
-		var start = parseInt(json.images[0].id), end = parseInt(json.images[stepLength - 1].id);
-		for (var k = 0; k < fileLength; ++k) {
-			var photo = $($('.photoArea')[k]);
-			$('#mTopLoadText').remove();
-			$('#mBottomLoadText').remove();
-			$($('.stream_photo')[k]).css('display', 'block');
-			var index = extractNum(photo.attr('id'));
-			if (start > index || index > end) {
-				continue;
-			}
-			(function(ind) {
-				photo.bind({
-					mouseup: function(e) {
-						if (e.which == 1) {
-							new DisplayWindow({
-								id: ind, 
-								width: naturalWidth[ind], 
-								height: naturalHeight[ind], 
-								srcPath: srcFileName[ind],
-								latitude: imageLatitude[ind],
-								longitude: imageLongitude[ind]
-							});
-						}
-					}
-				});
-			})(index);
-		}
+		setClickListener(json);
 		scrollFlag = true;
 		//$(this).replaceWith("加载失败！");
 	});
