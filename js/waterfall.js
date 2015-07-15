@@ -165,7 +165,9 @@ function setClickListener(json) {
 		var photo = $($('.photoArea')[k]);
 		$('#mTopLoadText').remove();
 		$('#mBottomLoadText').remove();
-		$($('.stream_photo')[k]).css('display', 'block');
+		if (isError($('.stream_photo')[k]) == false) {
+			$($('.stream_photo')[k]).css('display', 'block');
+		}
 		var index = extractNum(photo.attr('id'));
 		if (start > index || index > end) {
 			continue;
@@ -275,7 +277,7 @@ function setAllWidgets() {
 		}
 
 		// 图片加载有错误时
-		if (isError(photo)) {
+		if (isError(photo) == true) {
 			photo.css('display', 'none');
 			$($('#stream .row .allArea')[i]).css('height', 100);
 			return;
@@ -309,7 +311,7 @@ function setPartWidgets(json) {
 		}
 		
 		// 图片加载有错误时
-		if (isError(photo)) {
+		if (isError(photo) == true) {
 			photo.css('display', 'none');
 			$($('#stream .row .allArea')[k]).css('height', 100);
 			return;
