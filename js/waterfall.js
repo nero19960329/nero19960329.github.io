@@ -165,7 +165,7 @@ function setClickListener(json) {
 		var photo = $($('.photoArea')[k]);
 		$('#mTopLoadText').remove();
 		$('#mBottomLoadText').remove();
-		if (isError($('.stream_photo')[k]) == false) {
+		if (isError($($('.stream_photo')[k])) == false) {
 			$($('.stream_photo')[k]).css('display', 'block');
 		}
 		var index = extractNum(photo.attr('id'));
