@@ -13,8 +13,6 @@ for (var i = 0; i < 4; ++i) {
 	nowHeight[i] = 0;
 }
 
-$('header').css('margin-left', ($(window).width() - $('h1').width()) / 2);
-
 if (navigator.geolocation) {
 	console.log("geolocation ok!");
 	navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {
@@ -48,8 +46,8 @@ if (navigator.geolocation) {
     };
 }
 
+// 获得A,B两地之间的距离
 function getDistance(A, B) {
-	//debugger;
 	var PI = 3.1415926;
 	var p1 = A.latitude * PI / 180, p2 = B.latitude * PI / 180;
 	var a1 = A.longitude * PI / 180, a2 = B.longitude * PI / 180;
@@ -65,6 +63,7 @@ function getDistance(A, B) {
 	return distance;
 }
 
+// 设置底部的加载文字
 function setBottomLoadText() {
 	var mBottomLoadText = $('<div id="mBottomLoadText"><img src="src/waterfall_loading.gif" style="width: 20px; height: 20px;"/>正在加载中. . .</div>');
 	mBottomLoadText.css('position', 'absolute');
@@ -73,6 +72,7 @@ function setBottomLoadText() {
 	$('html').append(mBottomLoadText);
 }
 
+// 设置底部的加载失败文字
 function setBottomErrorText() {
 	var mBottomLoadText = $('<div id="mBottomLoadText"><img src="src/waterfall_loading.gif" style="width: 20px; height: 20px;"/>正在加载中. . .</div>');
 	mBottomLoadText.css('position', 'absolute');
@@ -81,10 +81,12 @@ function setBottomErrorText() {
 	$('html').append(mBottomLoadText);
 }
 
+// 取得str中的数字
 function extractNum(str) {
 	return parseInt(str.replace(/[^0-9]/ig,""));
 }
 
+// 获得当前row中高度最小的那个row的下标
 function getMinIndex() {
 	var index = 0;
 	for (var i = 1; i < 4; ++i) {
@@ -95,6 +97,7 @@ function getMinIndex() {
 	return index;
 }
 
+// 初始化图片以及边框
 function initialize(json) {
 	for (var k = 0; k < stepLength; ++k) {
 		var i = parseInt(json.images[k].id);
@@ -162,6 +165,7 @@ function initialize(json) {
 	});
 }
 
+// 获取页面刚加载时的json数据
 //$.getJSON("https://nero19960329.github.io/json/srcdata_0.json", function(json) {
 $.getJSON("json/srcdata_0.json", function(json) {
 	stepLength = json.images.length;
@@ -185,6 +189,7 @@ $.getJSON("json/srcdata_0.json", function(json) {
 });
 
 $(window).bind({
+	// 屏幕快滑到底端时开始加载后续的json数据
 	scroll: function() {
 		var scrollTop = document.documentElement.scrollTop || window.pageYOffset || document.body.scrollTop;
 		if (scrollFlag == true && scrollTop > $('html').height() - $(window).height() - 500) {
@@ -211,6 +216,7 @@ $(window).bind({
 	}
 });
 
+// 设置row的宽度
 function setRows() {
 	$('#stream').css('margin-left', $('body').width() * 0.06);
 	var rows = $('.row');
@@ -223,6 +229,7 @@ function setRows() {
 	}
 }
 
+// 动态设置所有的控件
 function setAllWidgets() {
 	setRows();
 	var rowWidth = parseInt($('#stream .row').css('width'));
@@ -244,6 +251,7 @@ function setAllWidgets() {
 	}
 }
 
+// 只设置新加入的与json数据有关的控件
 function setPartWidgets(json) {
 	setRows();
 	var rowWidth = parseInt($('#stream .row').css('width'));
@@ -269,6 +277,7 @@ function setPartWidgets(json) {
 	}
 }
 
+// 重置浏览器长宽时，动态设置所有控件
 $(window).resize(function() {
 	setAllWidgets();
 });
