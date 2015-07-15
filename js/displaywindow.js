@@ -60,6 +60,11 @@ function DisplayWindow(arg) {
 	mWindow.css('height', 0);
 	mWindow.css('left', windowWidth / 2);
 	mWindow.css('top', windowHeight / 2);
+	openWindow();
+	mWindow.css('width', mWindowWidth);
+	mWindow.css('height', mWindowHeight);
+	mWindow.css('left', (windowWidth - mWindowWidth) / 2);
+	mWindow.css('top', mWindowTop);
 	$('html').append(mWindow);
 
 	var mCloseButton = $('<div />');
@@ -102,6 +107,8 @@ function DisplayWindow(arg) {
 		mPhotoError.css('position', 'absolute');
 		mPhotoError.css('top', (mPhotoArea.height() - 20) / 2);
 		mPhotoArea.append(mPhotoError);
+		mPhotoErrorFlag = true;
+		mPhoto.css('display', 'none');
 	});
 	mPhoto.css('position', 'absolute');
 	mPhoto.css('left', (mPhotoArea.width() - changedWidth) / 2);
@@ -141,12 +148,6 @@ function DisplayWindow(arg) {
 	mTextArea.css('background-color', '#f2f2f5');
 	mWindow.append(mTextArea);
 	createLoadingText();
-	
-	openWindow();
-	mWindow.css('width', mWindowWidth);
-	mWindow.css('height', mWindowHeight);
-	mWindow.css('left', (windowWidth - mWindowWidth) / 2);
-	mWindow.css('top', mWindowTop);
 
 	function createmText(json) {
 		var commentnum = json.comments.length;
