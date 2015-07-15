@@ -100,7 +100,7 @@ function DisplayWindow(arg) {
 		var mPhotoError = $('<div class="photo_big_error">加载失败！</div>');
 		mPhotoError.css('position', 'absolute');
 		mPhotoError.css('top', (mPhotoArea.height() - 21) / 2);
-		mPhotoError.css('left', (mPhotoArea.height() - 80) / 2);
+		mPhotoError.css('left', (mPhotoArea.width() - 80) / 2);
 		mPhotoArea.append(mPhotoError);
 		mPhoto.css('display', 'none');
 	});
@@ -142,7 +142,7 @@ function DisplayWindow(arg) {
 	mTextArea.css('background-color', '#f2f2f5');
 	mWindow.append(mTextArea);
 	createLoadingText();
-	
+
 	openWindow();
 	mWindow.css('width', mWindowWidth);
 	mWindow.css('height', mWindowHeight);
