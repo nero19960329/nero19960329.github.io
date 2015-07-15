@@ -165,7 +165,8 @@ function DisplayWindow(arg) {
 	}
 
 	var mTextPages, nowPage = 0;
-	$.getJSON("https://nero19960329.github.io/json/commentdata.json", function(json) {
+	//$.getJSON("https://nero19960329.github.io/json/commentdata.json", function(json) {
+	$.getJSON("json/commentdata.json", function(json) {
 		console.log(json);
 		mTextPages = json.commentpages[arg.id];
 		console.log("textpages: " + mTextPages);
@@ -181,17 +182,16 @@ function DisplayWindow(arg) {
 				mPrePageButton.css('cursor', 'pointer');
 				mPrePageButton.bind({
 					mouseup: function() {
-						//$('#mLoadingText').remove();
 						if (nowPage > 0) {
 							--nowPage;
 						} else if (nowPage == 0) {
 							return;
 						}
 						createLoadingText();
-						console.log("nowPage: " + nowPage + ", mTextPages: " + mTextPages);
 						$('#mNowPage').html('<div id="mNowPage">' + (nowPage + 1) + ' / ' + mTextPages + ' 页</div>');
 						$('.mText').remove();
-						$.getJSON("https://nero19960329.github.io/json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
+						//$.getJSON("https://nero19960329.github.io/json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
+						$.getJSON("json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
 							$('#mLoadingText').remove();
 							createmText(json);
 						});
@@ -211,9 +211,9 @@ function DisplayWindow(arg) {
 						}
 						createLoadingText();
 						$('#mNowPage').html('<div id="mNowPage">' + (nowPage + 1) + ' / ' + mTextPages + ' 页</div>');
-						console.log("nowPage: " + nowPage + ", mTextPages: " + mTextPages);
 						$('.mText').remove();
-						$.getJSON("https://nero19960329.github.io/json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
+						//$.getJSON("https://nero19960329.github.io/json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
+						$.getJSON("json/commentdata_" + arg.id + "_" + nowPage + ".json", function(json) {
 							$('#mLoadingText').remove();
 							createmText(json);
 						});
