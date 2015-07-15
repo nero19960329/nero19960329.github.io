@@ -167,14 +167,11 @@ function DisplayWindow(arg) {
 	var mTextPages, nowPage = 0;
 	//$.getJSON("https://nero19960329.github.io/json/commentdata.json", function(json) {
 	$.getJSON("json/commentdata.json", function(json) {
-		console.log(json);
 		mTextPages = json.commentpages[arg.id];
-		console.log("textpages: " + mTextPages);
 		if (mTextPages != 0) {;
 			//$.getJSON("https://nero19960329.github.io/json/commentdata_" + arg.id + "_0.json", function(json) {
 			$.getJSON("json/commentdata_" + arg.id + "_0.json", function(json) {
 				$('#mLoadingText').remove();
-				console.log(json);
 				createmText(json);
 				var mPrePageButton = $('<div>上一页</div>');
 				mPrePageButton.css('position', 'absolute');
