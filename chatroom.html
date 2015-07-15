@@ -49,7 +49,7 @@
 		<script type="text/javascript">
 			$("img").error(function() {
 				console.log($(this));
-				$(this).replaceWith("加载失败！");
+				$(this).parent().append($('<div>加载失败！</div>'));
 			});
 		</script>
 	</body>

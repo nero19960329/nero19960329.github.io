@@ -221,7 +221,6 @@ function initialize(json) {
 	var count = stepLength;
 	$("img").load(function() {
 		--count;
-		console.log("count = " + count + " load");
 		if (count != 0) {
 			return;
 		}
@@ -231,13 +230,13 @@ function initialize(json) {
 	});
 	$("img").error(function() {
 		--count;
-		console.log("count = " + count + " error");
 		if (count != 0) {
 			return;
 		}
 		setPartWidgets(json);
 		setClickListener(json);
 		scrollFlag = true;
+		$(this).parent().append($('<div>加载失败！</div>'));
 		//$(this).replaceWith("加载失败！");
 	});
 }
