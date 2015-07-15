@@ -227,7 +227,7 @@ function initialize(json) {
 	});
 	$("img").error(function() {
 		--count;
-		$("img").replaceWith("加载失败！");
+		this.replaceWith("加载失败！");
 	});
 }
 
