@@ -159,6 +159,7 @@ function getMinIndex() {
 	return index;
 }
 
+// 给每个图片加入点击监听事件
 function setClickListener(json) {
 	var start = parseInt(json.images[0].id), end = parseInt(json.images[stepLength - 1].id);
 	for (var k = 0; k < fileLength; ++k) {
@@ -191,6 +192,7 @@ function setClickListener(json) {
 	}
 }
 
+// 返回这个图片是否载入有错误
 function isError(photo) {
 	return photo.parent().children('div').length != 0;
 }
@@ -236,8 +238,6 @@ function initialize(json) {
 	});
 	$("img").error(function() {
 		--count;
-		//debugger;
-		console.log($(this).parent());
 		$(this).parent().append($('<div class="photo_error">加载失败！</div>'));
 		if (count != 0) {
 			return;
@@ -245,7 +245,6 @@ function initialize(json) {
 		setPartWidgets(json);
 		setClickListener(json);
 		scrollFlag = true;
-		//$(this).replaceWith("加载失败！");
 	});
 }
 

@@ -226,7 +226,7 @@ function DisplayWindow(arg) {
 							$('#mLoadingText').remove();
 							createmText(json);
 						}).fail(function() {
-							$('#mLoadingLoadText').remove();
+							$('#mLoadingText').remove();
 							setCommentErrorText();
 						});
 					}
@@ -238,6 +238,9 @@ function DisplayWindow(arg) {
 				mTextArea.append(mNowPage);
 				mTextArea.append(mPrePageButton);
 				mTextArea.append(mNextPageButton);
+			}).fail(function() {
+				$('#mLoadingText').remove();
+				setCommentErrorText();
 			});
 		} else {
 			$('#mLoadingText').remove();
@@ -247,6 +250,7 @@ function DisplayWindow(arg) {
 			mTextArea.append(mText);
 		}
 	}).fail(function() {
+		$('#mLoadingText').remove();
 		setCommentErrorText();
 	});
 
@@ -289,7 +293,7 @@ function DisplayWindow(arg) {
 	}
 
 	function setCommentErrorText() {
-		var mCommentErrorText = $('<div id="mCommentErrorText">正在加载中. . .</div>');
+		var mCommentErrorText = $('<div id="mCommentErrorText">加载失败！</div>');
 		mTextArea.append(mCommentErrorText);
 	}
 }
