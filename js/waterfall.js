@@ -225,6 +225,10 @@ function initialize(json) {
 		}
 		scrollFlag = true;
 	});
+	$("img").error(function() {
+		--count;
+		$("img").replaceWith("加载失败！");
+	});
 }
 
 // 设置row的宽度
