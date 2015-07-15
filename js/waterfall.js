@@ -170,7 +170,7 @@ function initialize(json) {
 		}
 		var changedHeight = naturalHeight[i];
 		if (naturalWidth[i] < rWidth) {
-			nowHeight[r] += changedHeight;
+			nowHeight[r] += (changedHeight + 20);
 		} else {
 			changedHeight = naturalHeight[i] * rWidth / naturalWidth[i];
 			if (changedHeight > 500) {
