@@ -24,7 +24,7 @@ header {
 	margin-top: 50px;
 }
 
-#mTopLoadText, #BottomLoadText, #mBottomErrorText, .photo_error {
+#mTopLoadText, #mBottomLoadText, #mBottomErrorText, .photo_error {
 	font-family: "Microsoft YaHei";
 	text-shadow: 3px 3px 10px #000;
 	color: #888;
