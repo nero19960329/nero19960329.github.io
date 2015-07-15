@@ -32,7 +32,7 @@ header {
 
 .photo_error {
 	text-align: center;
-	line-height: 100%;
+	line-height: 100px;
 }
 
 header h2, header div {
