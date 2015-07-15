@@ -105,7 +105,7 @@ function DisplayWindow(arg) {
 	mPhoto.error(function() {
 		var mPhotoError = $('<div class="photo_big_error">加载失败！</div>');
 		mPhotoError.css('position', 'absolute');
-		mPhotoError.css('top', (mPhotoArea.height() - 20) / 2)
+		mPhotoError.css('top', (mPhotoArea.height() - 20) / 2);
 		mPhotoArea.append(mPhotoError);
 	});
 	mPhoto.css('position', 'absolute');
@@ -255,7 +255,9 @@ function DisplayWindow(arg) {
 			left: (windowWidth - mWindowWidth * 1.05) / 2,
 			top: mWindowTop * 0.95,
 		}, 150, function() {
-			mPhoto.css('display', 'block');
+			if (isError(mPhoto) == false) {
+				mPhoto.css('display', 'block');
+			}
 		});
 
 		mWindow.animate({

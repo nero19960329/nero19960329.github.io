@@ -24,7 +24,7 @@ header {
 	margin-top: 50px;
 }
 
-#mTopLoadText, #BottomLoadText, #mBottomErrorText, .photo_error, .photo_big_error {
+#mTopLoadText, #BottomLoadText, #mBottomErrorText, .photo_error {
 	font-family: "Microsoft YaHei";
 	text-shadow: 3px 3px 10px #000;
 	color: #888;
@@ -37,6 +37,9 @@ header {
 
 .photo_big_error {
 	text-align: center;
+	font-family: "Microsoft YaHei";
+	text-shadow: 3px 3px 10px #fff;
+	color: #888;
 }
 
 header h2, header div {
