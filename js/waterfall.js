@@ -193,7 +193,7 @@ function setClickListener(json) {
 }
 
 function isError(photo) {
-	return photo.parent().children('div');
+	return photo.parent().children('div').length != 0;
 }
 
 // 初始化图片以及边框
