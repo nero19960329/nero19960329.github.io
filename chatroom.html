@@ -1,56 +1,41 @@
 <!DOCTYPE html>
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="css/chatroom.css">
 <script type="text/javascript" src="jQuery/jquery-1.8.0.js"></script>
+<script type="text/javascript" src="libs/async-master/lib/async.js"></script>
 <script src="libs/firebase.js"></script>
 	<head>
 		<title>myChatroom~</title>
-		<script type="text/javascript">
-			/*var ref = new Firebase('https://mchatroom.firebaseio.com/web/saving-data/fireblog');
-			var usersRef = ref.child("users");
-			usersRef.set({
-				alanisaresome: {
-					date_of_birth: "Jun 23, 1912",
-					full_name: "Alan Turing"
-				},
-				gracehop: {
-					date_of_birth: "December 9, 1906",
-					full_name: "Grace Hopper"
-				}
-			});
-			
-			ref.on("value", function(snapshot) {
-				console.log(snapshot.val());
-			}, function(errorobject) {
-				console.log("The read failed: " + errorobject.code);
-			});
-
-			usersRef.orderByKey().on("child_added", function(snapshot) {
-				console.log(snapshot.key());
-			});
-
-			usersRef.set({
-				nico: {
-					date_of_birth: "Mar 29, 1996",
-					full_name: "Yazawa Nico"
-				}
-			});
-
-			usersRef.on("child_added", function(snapshot) {
-				var newPost = snapshot.val();
-				console.log("date_of_birth: " + newPost.date_of_birth);
-				console.log("full_name: " + newPost.full_name);
-			});*/
-		</script>
 	</head>
 	<body>
-		<img src="1.jpg" />
-		<img />
-		<script type="text/javascript">
-			$("img").error(function() {
-				console.log($(this));
-				$(this).parent().append($('<div>加载失败！</div>'));
-			});
-		</script>
+		<div id="chat_allArea">
+			<div id="chat_nickname">
+				<span>昵称：</span>
+				<input type="text" spellcheck="false" value="Enter your nickname..." onclick="clearNick()" onblur="handleNick()" onfocus="colorChangeNick()" />
+				<span id="chat_nickOKButton" onclick="confirmNick()">确  认</span>
+			</div>
+			<div id="chat_roomArea"></div>
+			<div id="chat_mainArea">
+				<div id="chat_leftArea">
+					<div id="chat_roomNum">
+						房间号
+					</div>
+					<div id="chat_chatArea"></div>
+					<textarea id="chat_inputArea" spellcheck="false" onclick="clearInput()">Type something...</textarea>
+					<div id="chat_sendButton">发送</div>
+				</div>
+				<div id="chat_rightArea">
+					<div id="chat_closeArea">
+						<img id="chat_closeButton" src="src/closebutton_normal.png" />
+					</div>
+					<div id="chat_userlist">
+						<div id="chat_listtitle">当前用户列表</div>
+						<ul id="chat_list"></ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript" src="js/chatroom.js"></script>
 	</body>
 </html>
