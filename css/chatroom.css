@@ -46,8 +46,8 @@ html {
 
 #chat_roomArea, #chat_mainArea {
 	float: left;
-	margin-top: 20px;
 	height: 500px;
+	margin-top: 20px;
 	/*border: 1px solid #fff;*/
 }
 
@@ -57,6 +57,15 @@ html {
 	background: url("../src/background_2.jpg");
 	opacity: 0.7;
 	box-shadow: 3px 3px 10px #000;
+}
+
+.chat_rooms {
+	list-style-type: none;
+	line-height: 300%;
+}
+
+.chat_rooms:hover {
+	cursor: pointer;
 }
 
 #chat_leftArea, #chat_rightArea {

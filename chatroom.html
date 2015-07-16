@@ -3,7 +3,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <link rel="stylesheet" type="text/css" href="css/chatroom.css">
 <script type="text/javascript" src="jQuery/jquery-1.8.0.js"></script>
-<script type="text/javascript" src="libs/async-master/lib/async.js"></script>
 <script src="libs/firebase.js"></script>
 	<head>
 		<title>myChatroom~</title>
@@ -15,25 +14,11 @@
 				<input type="text" spellcheck="false" value="Enter your nickname..." onclick="clearNick()" onblur="handleNick()" onfocus="colorChangeNick()" />
 				<span id="chat_nickOKButton" onclick="confirmNick()">确  认</span>
 			</div>
-			<div id="chat_roomArea"></div>
-			<div id="chat_mainArea">
-				<div id="chat_leftArea">
-					<div id="chat_roomNum">
-						房间号
-					</div>
-					<div id="chat_chatArea"></div>
-					<textarea id="chat_inputArea" spellcheck="false" onclick="clearInput()">Type something...</textarea>
-					<div id="chat_sendButton">发送</div>
-				</div>
-				<div id="chat_rightArea">
-					<div id="chat_closeArea">
-						<img id="chat_closeButton" src="src/closebutton_normal.png" />
-					</div>
-					<div id="chat_userlist">
-						<div id="chat_listtitle">当前用户列表</div>
-						<ul id="chat_list"></ul>
-					</div>
-				</div>
+			<div id="chat_roomArea">
+				<ul id="chat_roomlist">
+					<li class="chat_rooms" onclick="toRoom1()">房间1</li>
+					<li class="chat_rooms" onclick="toRoom2()">房间2</li>
+				</ul>
 			</div>
 		</div>
 		<script type="text/javascript" src="js/chatroom.js"></script>

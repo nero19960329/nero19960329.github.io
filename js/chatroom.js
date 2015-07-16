@@ -1,3 +1,49 @@
+var roomNumber = -1;
+
+var usersRef;
+var messagesRef;
+var nicknameRef;
+var messageField;
+var nameField;
+var messageList;
+
+var userAdded;
+var userRemoved;
+var messageAdded;
+
+function reDeploy(roomNum) {
+	if (roomNumber == roomNum) {
+		return;
+	}
+	if ($('#chat_confirmedNick').length != 0) {
+		$('#chat_confirmedNick').remove();
+		$('#chat_nickname').append($('<input type="text" spellcheck="false" value="Enter your nickname..." onclick="clearNick()" onblur="handleNick()" onfocus="colorChangeNick()" />'));
+		$('#chat_nickname').append($('<span id="chat_nickOKButton" onclick="confirmNick()">确  认</span>'));
+		nicknameRef.remove();
+	}
+	try {
+		usersRef.off('child_added', userAdded);
+		usersRef.off('child_removed', userRemoved);
+		messagesRef.off('child_added', messageAdded);
+	} catch(e) {
+		console.log(e);
+	}
+	$('#chat_mainArea').remove();
+	generateMainArea(roomNum);
+	setDynamicWidgets();
+	setStaticWidgets();
+	setReference(roomNum);
+	setDataInteract();
+}
+
+function toRoom1() {
+	reDeploy(0);
+}
+
+function toRoom2() {
+	reDeploy(1);
+}
+
 $(document).bind({
 	ready: function() {
 		setDynamicWidgets();
@@ -5,8 +51,90 @@ $(document).bind({
 	}
 });
 
+function generateMainArea(roomNum) {
+	var mainArea = $('<div id="chat_mainArea"></div>');
+	var leftArea = $('<div id="chat_leftArea"></div>');
+	var roomNum = $('<div id="chat_roomNum">房间' + (roomNum + 1) + '</div>');
+	var chatArea = $('<div id="chat_chatArea"></div>');
+	var inputArea = $('<textarea id="chat_inputArea" spellcheck="false" onclick="clearInput()">Type something...</textarea>');
+	var sendButton = $('<div id="chat_sendButton">发送</div>');
+	leftArea.append(roomNum);
+	leftArea.append(chatArea);
+	leftArea.append(inputArea);
+	leftArea.append(sendButton);
+	var rightArea = $('<div id="chat_rightArea"></div>');
+	var closeArea = $('<div id="chat_closeArea"></div>');
+	var closeButton = $('<img id="chat_closeButton" src="src/closebutton_normal.png" />');
+	var chat_userlist = $('<div id="chat_userlist"></div>');
+	var listtitle = $('<div id="chat_listtitle">当前用户列表</div>');
+	var chat_list = $('<ul id="chat_list"></ul>');
+	chat_userlist.append(listtitle);
+	chat_userlist.append(chat_list);
+	rightArea.append(closeArea);
+	rightArea.append(chat_userlist);
+	closeArea.append(closeButton);
+	mainArea.append(leftArea);
+	mainArea.append(rightArea);
+	$('#chat_allArea').append(mainArea);
+
+	messageField = $('#chat_inputArea');
+	nameField = $('#chat_nickname input');
+	messageList = $('#chat_chatArea');
+
+	messageField.keypress(function(e) {
+		if (e.keyCode == 13) {
+			sendMessage();
+			return false;
+		}
+	});
+
+	nameField.keypress(function(e) {
+		if (e.keyCode == 13) {
+			confirmNick();
+		}
+	});
+}
+
+function setReference(num) {
+	usersRef = new Firebase('https://nicochatroom.firebaseio.com/room' + num + '/users');
+	messagesRef = new Firebase('https://nicochatroom.firebaseio.com/room' + num + '/messages');
+}
+
+function setDataInteract() {
+	userAdded = usersRef.on('child_added', function(snapshot) {
+		var newuser = $('<li>' + snapshot.val().username + '</li>');
+		$('#chat_list').append(newuser);
+	});
+
+	userRemoved = usersRef.on('child_removed', function(snapshot) {
+		var outuser = $('#chat_list li:contains(' + snapshot.val().username + ')');
+		outuser.remove();
+	});
+
+	messageAdded = messagesRef.limitToLast(15).on('child_added', function(snapshot) {
+		console.log("getMessage");
+
+		var data = snapshot.val();
+		var username = data.name || "anonymous";
+		username = username + "："
+		var message = data.text;
+
+		var messageElement = $('<div id="chat_message">');
+		var nameElement = $('<strong id="chat_username"></strong>');
+		nameElement.text(username);
+		messageElement.text(message).prepend(nameElement);
+		messageList.append(messageElement);
+		messageList[0].scrollTop = messageList[0].scrollHeight;
+	});
+}
+
 // 确定昵称
 function confirmNick() {
+	if (typeof(usersRef) === 'undefined') {
+		alert("您还未进入任何聊天室！请进入聊天室后设置昵称");
+		return;
+	}
+
 	var nickname = $('#chat_nickname input').attr('value');
 	if (nickname === 'Enter your nickname...') {
 		nickname = "";
@@ -34,7 +162,7 @@ function confirmNick() {
 			} else {
 				$('#chat_nickname input').replaceWith('<span id="chat_confirmedNick">' + nickname + '</span>');
 				// 把用户名上传至服务器
-				var nicknameRef = usersRef.push({username: nickname});
+				nicknameRef = usersRef.push({username: nickname});
 				nicknameRef.onDisconnect().remove();
 				$('#chat_nickOKButton').remove();
 			}
@@ -152,42 +280,3 @@ function sendMessage() {
 	messageField.val('');
 	messageField.attr('value', '');
 }
-
-var usersRef = new Firebase('https://nicochatroom.firebaseio.com/room0/users');
-var messagesRef = new Firebase('https://nicochatroom.firebaseio.com/room0/messages');
-var messageField = $('#chat_inputArea');
-var nameField = $('#chat_nickname input');
-var messageList = $('#chat_chatArea');
-
-usersRef.on('child_added', function(snapshot) {
-	console.log("child_added: " + snapshot.val().username);
-	var newuser = $('<li>' + snapshot.val().username + '</li>');
-	$('#chat_list').append(newuser);
-});
-
-usersRef.on('child_removed', function(snapshot) {
-	console.log("removed: " + snapshot.val().username);
-	var outuser = $('#chat_list li:contains(' + snapshot.val().username + ')');
-	outuser.remove();
-});
-
-messageField.keypress(function(e) {
-	if (e.keyCode == 13) {
-		sendMessage();
-		return false;
-	}
-});
-
-messagesRef.limitToLast(15).on('child_added', function(snapshot) {
-	var data = snapshot.val();
-	var username = data.name || "anonymous";
-	username = username + "："
-	var message = data.text;
-
-	var messageElement = $('<div id="chat_message">');
-	var nameElement = $('<strong id="chat_username"></strong>');
-	nameElement.text(username);
-	messageElement.text(message).prepend(nameElement);
-	messageList.append(messageElement);
-	messageList[0].scrollTop = messageList[0].scrollHeight;
-});
