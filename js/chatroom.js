@@ -15,12 +15,6 @@ function reDeploy(roomNum) {
 	if (roomNumber == roomNum) {
 		return;
 	}
-	if ($('#chat_confirmedNick').length != 0) {
-		$('#chat_confirmedNick').remove();
-		$('#chat_nickname').append($('<input type="text" spellcheck="false" value="Enter your nickname..." onclick="clearNick()" onblur="handleNick()" onfocus="colorChangeNick()" />'));
-		$('#chat_nickname').append($('<span id="chat_nickOKButton" onclick="confirmNick()">确  认</span>'));
-		nicknameRef.remove();
-	}
 	try {
 		usersRef.off('child_added', userAdded);
 		usersRef.off('child_removed', userRemoved);
@@ -33,6 +27,10 @@ function reDeploy(roomNum) {
 	setDynamicWidgets();
 	setStaticWidgets();
 	setReference(roomNum);
+	if ($('#chat_confirmedNick').length != 0) {
+		var nickname = $('#chat_confirmedNick').html();
+		handleSameNick(nickname);
+	}
 	setDataInteract();
 }
 
@@ -128,6 +126,35 @@ function setDataInteract() {
 	});
 }
 
+function handleSameNick(nickname) {
+	usersRef.once('value', function(snapshot) {
+		var sameFlag = false;
+		var userlist = snapshot.val();
+		for (var p in userlist) {
+			if (userlist[p].username === nickname) {
+				sameFlag = true;
+				break;
+			}
+		}
+		if (sameFlag === true) {
+			alert("您的昵称与聊天室内其他用户冲突！请更换");
+
+			if ($('#chat_confirmedNick').length != 0) {
+				$('#chat_confirmedNick').remove();
+				$('#chat_nickname').append($('<input type="text" spellcheck="false" value="Enter your nickname..." onclick="clearNick()" onblur="handleNick()" onfocus="colorChangeNick()" />'));
+				$('#chat_nickname').append($('<span id="chat_nickOKButton" onclick="confirmNick()">确  认</span>'));
+				nicknameRef.remove();
+			}
+		} else {
+			$('#chat_nickname input').replaceWith('<span id="chat_confirmedNick">' + nickname + '</span>');
+			// 把用户名上传至服务器
+			nicknameRef = usersRef.push({username: nickname});
+			nicknameRef.onDisconnect().remove();
+			$('#chat_nickOKButton').remove();
+		}
+	});
+}
+
 // 确定昵称
 function confirmNick() {
 	if (typeof(usersRef) === 'undefined') {
@@ -145,28 +172,10 @@ function confirmNick() {
 	}
 
 	if (nickname == "") {
-		$('#chat_nickname input').replaceWith('<span id="chat_confirmedNick">anonymous</span>');
+		alert("请输入昵称！");
 	} else {
 		// 考虑重名的情况
-		usersRef.once('value', function(snapshot) {
-			var sameFlag = false;
-			var userlist = snapshot.val();
-			for (var p in userlist) {
-				if (userlist[p].username === nickname) {
-					sameFlag = true;
-					break;
-				}
-			}
-			if (sameFlag === true) {
-				alert("您的昵称与聊天室内其他用户冲突！请更换");
-			} else {
-				$('#chat_nickname input').replaceWith('<span id="chat_confirmedNick">' + nickname + '</span>');
-				// 把用户名上传至服务器
-				nicknameRef = usersRef.push({username: nickname});
-				nicknameRef.onDisconnect().remove();
-				$('#chat_nickOKButton').remove();
-			}
-		});
+		handleSameNick(nickname);
 	}
 }
 
