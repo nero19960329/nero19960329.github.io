@@ -30,6 +30,7 @@ function reDeploy(roomNum) {
 	if ($('#chat_confirmedNick').length != 0) {
 		var nickname = $('#chat_confirmedNick').html();
 		handleSameNick(nickname);
+		nicknameRef.remove();
 	}
 	setDataInteract();
 }
@@ -143,7 +144,6 @@ function handleSameNick(nickname) {
 				$('#chat_confirmedNick').remove();
 				$('#chat_nickname').append($('<input type="text" spellcheck="false" value="Enter your nickname..." onclick="clearNick()" onblur="handleNick()" onfocus="colorChangeNick()" />'));
 				$('#chat_nickname').append($('<span id="chat_nickOKButton" onclick="confirmNick()">确  认</span>'));
-				nicknameRef.remove();
 			}
 		} else {
 			$('#chat_nickname input').replaceWith('<span id="chat_confirmedNick">' + nickname + '</span>');
