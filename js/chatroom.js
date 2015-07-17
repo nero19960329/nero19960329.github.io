@@ -1,16 +1,18 @@
 var roomNumber = -1;
 
-var usersRef;
-var messagesRef;
-var nicknameRef;
-var messageField;
-var nameField;
-var messageList;
+var usersRef;			// 用户列表引用
+var messagesRef;		// 消息列表引用
+var nicknameRef;		// 昵称的引用
+var userAdded;			// 用户增加的事件绑定
+var userRemoved;		// 用户移除的时间绑定
+var messageAdded;		// 消息增加的时间绑定
 
-var userAdded;
-var userRemoved;
-var messageAdded;
+var messageField;		// 输入消息域
+var nameField;			// 输入昵称域
+var messageList;		// 显示聊天消息的域
 
+
+// 对全局进行布局、在切换房间时查看重名、一些变量的赋值
 function setAllthings(roomNum) {
 	generateMainArea(roomNum);
 	setDynamicWidgets();
@@ -24,6 +26,7 @@ function setAllthings(roomNum) {
 	setDataInteract();
 }
 
+// 切换房间时进行的重新部署
 function reDeploy(roomNum) {
 	if (roomNumber == roomNum) {
 		return;
@@ -63,6 +66,7 @@ $(document).bind({
 	}
 });
 
+// 动态生成聊天窗口
 function generateMainArea(roomNum) {
 	var mainArea = $('<div id="chat_mainArea"></div>');
 	mainArea.animate({
@@ -97,6 +101,7 @@ function generateMainArea(roomNum) {
 	nameField = $('#chat_nickname input');
 	messageList = $('#chat_chatArea');
 
+	// 回车发消息
 	messageField.keypress(function(e) {
 		if (e.keyCode == 13) {
 			sendMessage();
@@ -104,6 +109,7 @@ function generateMainArea(roomNum) {
 		}
 	});
 
+	// 回车确定昵称
 	nameField.keypress(function(e) {
 		if (e.keyCode == 13) {
 			confirmNick();
@@ -111,6 +117,7 @@ function generateMainArea(roomNum) {
 	});
 }
 
+// 关闭聊天窗口动画
 function closeMainwindow() {
 	$('#chat_mainArea').animate({
 		width: 0,
@@ -126,6 +133,7 @@ function setReference(num) {
 	messagesRef = new Firebase('https://nicochatroom.firebaseio.com/room' + num + '/messages');
 }
 
+// 初始化数据交互
 function setDataInteract() {
 	userAdded = usersRef.on('child_added', function(snapshot) {
 		var newuser = $('<li>' + snapshot.val().username + '</li>');
@@ -139,7 +147,7 @@ function setDataInteract() {
 
 	messageAdded = messagesRef.limitToLast(15).on('child_added', function(snapshot) {
 		var data = snapshot.val();
-		var username = data.name || "anonymous";
+		var username = data.name;
 		username = username + "："
 		var message = data.text;
 
@@ -152,6 +160,7 @@ function setDataInteract() {
 	});
 }
 
+// 重名情况的处理
 function handleSameNick(nickname) {
 	usersRef.once('value', function(snapshot) {
 		var sameFlag = false;
@@ -239,6 +248,7 @@ function colorChangeInput() {
 	$('#chat_inputArea').css('color', '#000');
 }
 
+// 动态排版
 function setDynamicWidgets() {
 	$('#chat_roomArea').css('width', $('#chat_allArea').width() * 0.25 - 20);
 	$('#chat_mainArea').css('width', $('#chat_allArea').width() * 0.75 - 20);
@@ -248,6 +258,7 @@ function setDynamicWidgets() {
 	$('#chat_inputArea').css('width', $('#chat_leftArea').width() - 5);
 }
 
+// 静态排版
 function setStaticWidgets() {
 	$('#chat_closeButton').hover(
 		function(e) {
@@ -291,6 +302,7 @@ function setStaticWidgets() {
 	});
 }
 
+// 发送消息
 function sendMessage() {
 	var nickname;
 	// 昵称已经确认
