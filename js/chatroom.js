@@ -11,18 +11,7 @@ var userAdded;
 var userRemoved;
 var messageAdded;
 
-function reDeploy(roomNum) {
-	if (roomNumber == roomNum) {
-		return;
-	}
-	try {
-		usersRef.off('child_added', userAdded);
-		usersRef.off('child_removed', userRemoved);
-		messagesRef.off('child_added', messageAdded);
-	} catch(e) {
-		console.log(e);
-	}
-	$('#chat_mainArea').remove();
+function setAllthings(roomNum) {
 	generateMainArea(roomNum);
 	setDynamicWidgets();
 	setStaticWidgets();
@@ -33,6 +22,30 @@ function reDeploy(roomNum) {
 		nicknameRef.remove();
 	}
 	setDataInteract();
+}
+
+function reDeploy(roomNum) {
+	if (roomNumber == roomNum) {
+		return;
+	}
+	try {
+		usersRef.off('child_added', userAdded);
+		usersRef.off('child_removed', userRemoved);
+		messagesRef.off('child_added', messageAdded);
+	} catch(e) {
+		//console.log(e);
+	}
+	if ($('#chat_mainArea').length == 0) {
+		setAllthings(roomNum);
+	} else {
+		$('#chat_mainArea').animate({
+			width: 0,
+			height: 0
+		}, 150, function() {
+			$('#chat_mainArea').remove();
+			setAllthings(roomNum);
+		});
+	}
 }
 
 function toRoom1() {
@@ -52,6 +65,10 @@ $(document).bind({
 
 function generateMainArea(roomNum) {
 	var mainArea = $('<div id="chat_mainArea"></div>');
+	mainArea.animate({
+		width: $('#chat_allArea').width() * 0.75 - 20,
+		height: 500
+	}, 150);
 	var leftArea = $('<div id="chat_leftArea"></div>');
 	var roomNum = $('<div id="chat_roomNum">房间' + (roomNum + 1) + '</div>');
 	var chatArea = $('<div id="chat_chatArea"></div>');
@@ -63,7 +80,7 @@ function generateMainArea(roomNum) {
 	leftArea.append(sendButton);
 	var rightArea = $('<div id="chat_rightArea"></div>');
 	var closeArea = $('<div id="chat_closeArea"></div>');
-	var closeButton = $('<img id="chat_closeButton" src="src/closebutton_normal.png" />');
+	var closeButton = $('<img id="chat_closeButton" src="src/closebutton_normal.png" onclick="closeMainwindow()" />');
 	var chat_userlist = $('<div id="chat_userlist"></div>');
 	var listtitle = $('<div id="chat_listtitle">当前用户列表</div>');
 	var chat_list = $('<ul id="chat_list"></ul>');
@@ -94,6 +111,16 @@ function generateMainArea(roomNum) {
 	});
 }
 
+function closeMainwindow() {
+	$('#chat_mainArea').animate({
+		width: 0,
+		height: 0
+	}, 150, function() {
+		$('#chat_mainArea').remove();
+		nicknameRef.remove();
+	});
+}
+
 function setReference(num) {
 	usersRef = new Firebase('https://nicochatroom.firebaseio.com/room' + num + '/users');
 	messagesRef = new Firebase('https://nicochatroom.firebaseio.com/room' + num + '/messages');
@@ -111,8 +138,6 @@ function setDataInteract() {
 	});
 
 	messageAdded = messagesRef.limitToLast(15).on('child_added', function(snapshot) {
-		console.log("getMessage");
-
 		var data = snapshot.val();
 		var username = data.name || "anonymous";
 		username = username + "："
