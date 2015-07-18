@@ -108,16 +108,23 @@ function songlistDisappear() {
 	var songs = $('#songlist div');
 	var songlength = songs.length;
 	for (var i = 0; i < songlength; ++i) {
-		var flydistance = parseInt($(songs[i]).css('left')) + parseInt($(songs[i]).css('width'));
-		// 从上往下依次飞出 采用了delay方法
-		$(songs[i])
-		.stop(true, true)
-		.delay(i * 40)
-		.animate({
-			left: -flydistance
-		}, 200, function() {
-			this.remove();
-		});
+		(function(index) {
+			var flydistance = parseInt($(songs[index]).css('left')) + parseInt($(songs[index]).css('width'));
+			// 从上往下依次飞出 采用了delay方法
+			$(songs[index])
+			.stop(true, true)
+			.delay(index * 40)
+			.animate({
+				left: -flydistance
+			}, 200, function() {
+				console.log("callback!!");
+				console.log("index = " + index + " songlength = " + songlength);
+				this.remove();
+				if (index == songlength - 1) {
+					$('#songlist').remove();
+				}
+			});
+		})(i);
 	}
 }
 
