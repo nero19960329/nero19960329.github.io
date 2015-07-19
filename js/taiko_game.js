@@ -134,11 +134,12 @@ function songlistDisappear() {
 					//songAudio = $('<audio id="songAudio" src="../src/game/taiko-normal-hitnormal.wav" />');
 					gamearea.append(songAudio);
 					var songAudio_dom = document.getElementById("songAudio");
-					songAudio.load(function() {
+					songAudio_dom.onloadstart = function() {
+						loadingtext.remove();
 						songAudio_dom.play();
 						deployGamewidgets();
 						generateWidgets();
-					});
+					}
 					
 					songAudio_dom.onended = function() {
 						setTimeout(gametoolsDisappear, 2000);
