@@ -129,15 +129,16 @@ function songlistDisappear() {
 				this.remove();
 				if (index == songlength - 1) {
 					$('#songlist').remove();
-					deployGamewidgets();
+					gamearea.append(loadingtext);
 					songAudio = $('<audio id="songAudio" src="../src/game/songs/fripSide - Late in autumn.mp3" type="audio/mp3" />');
 					//songAudio = $('<audio id="songAudio" src="../src/game/taiko-normal-hitnormal.wav" />');
 					gamearea.append(songAudio);
+					var songAudio_dom = document.getElementById("songAudio");
 					songAudio.load(function() {
 						songAudio_dom.play();
+						deployGamewidgets();
 						generateWidgets();
 					});
-					var songAudio_dom = document.getElementById("songAudio");
 					
 					songAudio_dom.onended = function() {
 						setTimeout(gametoolsDisappear, 2000);
