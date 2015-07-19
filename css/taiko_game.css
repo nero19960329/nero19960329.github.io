@@ -162,6 +162,7 @@ html {
 
 #targetMiddle {
 	position: absolute;
+	left: 1320px;
 	top: 160px;
 	width: 2px;
 	height: 150px;
@@ -181,11 +182,67 @@ html {
 
 .widget {
 	position: absolute;
-	top: 190px;
-	left: 1280px;
-	width: 80px;
-	height: 80px;
 	border-radius: 50%;
-	background-image: url("../src/game/widget.jpg");
+	/*background-image: url("../src/game/widget.jpg");*/
 	z-index: 3;
+}
+
+.comboText {
+	position: absolute;
+	z-index: 16;
+}
+
+#finalscoreArea {
+	position: absolute;
+	z-index: 1;
+	left: -650px;
+	top: 10px;
+	width: 640px;
+	height: 60px;
+	background-color: rgb(220, 200, 160);
+	border-radius: 5px;
+	font-size: 3.2em;
+	color: rgb(173, 149, 105);
+	box-shadow: 3px 3px 10px #000;
+}
+
+.finalscore {
+	position: absolute;
+	z-index: 2;
+	top: 15px;
+}
+
+#detailArea {
+	position: absolute;
+	z-index: 1;
+	left: -650px;
+	top: 100px;
+	background-color: rgb(60, 120, 200);
+	font-size: 3.2em;
+	box-shadow: 3px 3px 10px #000;
+	border-radius: 5px;
+	width: 640px;
+	height: 300px;
+	color: rgb(45, 90, 200);
+}
+
+#backButton {
+	position: absolute;
+	z-index: 1;
+	left: -110px;
+	top: 450px;
+	background-color: rgb(255, 0, 0);
+	width: 100px;
+	height: 40px;
+	border-radius: 0 5px 5px 0;
+	color: #fff;
+	opacity: 0.5;
+	cursor: pointer;
+	text-align: center;
+	font-size: 1em;
+	line-height: 40px;
+}
+
+#backButton:hover {
+	opacity: 1;
 }
