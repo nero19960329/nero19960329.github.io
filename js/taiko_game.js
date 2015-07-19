@@ -134,7 +134,9 @@ function songlistDisappear() {
 					//songAudio = $('<audio id="songAudio" src="../src/game/taiko-normal-hitnormal.wav" />');
 					gamearea.append(songAudio);
 					var songAudio_dom = document.getElementById("songAudio");
-					songAudio_dom.onloadstart = function() {
+
+					// canplaythrough 指该音频可以无缓冲地流畅播放
+					songAudio_dom.oncanplaythrough = function() {
 						loadingtext.remove();
 						songAudio_dom.play();
 						deployGamewidgets();
