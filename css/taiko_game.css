@@ -83,6 +83,7 @@ html {
 	font-size: 1.2em;
 	border: 1px solid #000;
 	box-shadow: 3px 3px 10px #000;
+	z-index: 1;
 }
 
 .difficultyButtons {
@@ -96,6 +97,7 @@ html {
 	line-height: 30px;
 	text-align: center;
 	cursor: pointer;
+	z-index: 2;
 }
 
 .difficultyButtons:hover {

@@ -24,7 +24,7 @@ $('#gamearea').bind({
 			}, 500, function() {
 				coverimage.remove();
 				page_status = 1;
-				background_selectstage = $('<img id="bg_selectstage" src="../src/game/temp_selectstage.jpg" />');
+				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/0.jpg" />');
 				gamearea.append(loadingtext);
 				background_selectstage.load(function() {
 					gamearea.append(background_selectstage);
@@ -117,6 +117,14 @@ function setSonghover(index) {
 	song.bind({
 		mouseup: function(e) {
 			songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer);
+			background_selectstage.remove();
+			background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/' + index + '.jpg" />');
+			gamearea.append(loadingtext);
+			background_selectstage.load(function() {
+				loadingtext.remove();
+				background_selectstage.css('left', 0);
+				gamearea.append(background_selectstage);
+			})
 			$('.difficultyButtons').remove();
 			difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
 			difficultyButtons[1] = $('<div class="difficultyButtons">Medium</div>');
@@ -240,17 +248,6 @@ var queuetop = 0;
 var flyspeed = 0.5;					// 鼓点的飞行速度，每毫秒移动的像素数
 
 function generateWidgets(buttonIndex) {
-	/*var offset = 462;
-	for (var i = 0; i < 2000; ++i) {
-		var randomType = parseInt(Math.random() * 4);
-		(function(index) {
-			widgetType[index] = 4;
-			//setTimeout(setoneWidget(index, widgetType[index]), offset + (index + 2) * 60000 / 16.25 - (1280 - 70) / flyspeed + 20 * flyspeed);	// 因为人有反应时间，所以加了与飞行速度相关的延时
-			//setTimeout(setMiddleLine, offset + (index + 2.25) * 60000 / 32.5 - (1320 - 110) / flyspeed);
-			isClicked[index] = false;
-			inrange[index] = 0;
-		})(i);
-	}*/
 	$.getJSON("https://nero19960329.github.io/json/game/detail/braveshine" + (buttonIndex + 1) + ".json", function(json) {
 		var firstType = parseInt(json.widgets[0].type), firstLeft;
 		if (firstType === 0 || firstType === 1 || firstType === 4) {
