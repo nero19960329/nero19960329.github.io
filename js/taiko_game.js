@@ -12,6 +12,7 @@ coverimage.load(function() {
 });
 
 var background_selectstage;
+var songdata = new Array();
 
 $('#gamearea').bind({
 	mouseup: function() {
@@ -23,14 +24,23 @@ $('#gamearea').bind({
 			}, 500, function() {
 				coverimage.remove();
 				page_status = 1;
-				background_selectstage = $('<img id="bg_selectstage" src="../src/game/temp_selectstage.jpg" />')
+				background_selectstage = $('<img id="bg_selectstage" src="../src/game/temp_selectstage.jpg" />');
+				gamearea.append(loadingtext);
 				background_selectstage.load(function() {
 					gamearea.append(background_selectstage);
 					background_selectstage
 					.animate({
 						left: 0
 					}, 500, function() {
-						displaySelectstage();
+						$.getJSON("https://nero19960329.github.io/json/game/songs/braveshine.json", function(json) {
+							loadingtext.remove();
+							console.log(json);
+							songdata[0] = json;
+							displaySelectstage();
+						}).fail(function() {
+
+						});
+						//displaySelectstage();
 					});
 				});
 			});
@@ -39,13 +49,16 @@ $('#gamearea').bind({
 });
 var songlist = $('<div id="songlist"></div>');
 var insertSongs = new Array();
-insertSongs[0] = "late in autumn";
+insertSongs[0] = "Brave Shine (TV size)";
 insertSongs[1] = "紅蓮の弓矢";
 insertSongs[2] = "自由の翼";
 insertSongs[3] = "僕らは今のなかで";
 insertSongs[4] = "きっと青春が聞こえる";
 insertSongs[5] = "aLIEz";
 var songAudio;
+
+var songDetailArea;
+var difficultyButtons = new Array(4);
 
 // var background_selectstage = $('<img id="bg_selectstage" src="../src/game/temp_selectstage.jpg" />')
 // background_selectstage.load(function() {
@@ -59,6 +72,8 @@ var songAudio;
 // });
 
 function displaySelectstage() {
+	songDetailArea = $('<div id="songDetailArea" ></div>');
+	gamearea.append(songDetailArea);
 	for (var i = 0; i < insertSongs.length; ++i) {
 		setSonghover(i);
 	}
@@ -101,8 +116,26 @@ function setSonghover(index) {
 	);
 	song.bind({
 		mouseup: function(e) {
-			page_status = 2;
-			songlistDisappear();
+			songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer);
+			$('.difficultyButtons').remove();
+			difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
+			difficultyButtons[1] = $('<div class="difficultyButtons">Medium</div>');
+			difficultyButtons[2] = $('<div class="difficultyButtons">Hard</div>');
+			difficultyButtons[3] = $('<div class="difficultyButtons">Expert</div>');
+			for (var i = 0; i < 4; ++i) {
+				difficultyButtons[i].css('top', 85 + 60 * i);
+				(function(buttonIndex) {
+					difficultyButtons[i].bind({
+						mouseup: function() {
+							page_status = 2;
+							songlistDisappear(index, buttonIndex);
+						}
+					});
+				})(i);
+				gamearea.append(difficultyButtons[i]);
+			}
+			//page_status = 2;
+			//songlistDisappear();
 		}
 	});
 	songlist.append(song);
@@ -113,9 +146,13 @@ function setSonghover(index) {
 	}, 500);
 }
 
-function songlistDisappear() {
+function songlistDisappear(songIndex, buttonIndex) {
 	var songs = $('#songlist div');
 	var songlength = songs.length;
+	songDetailArea.remove();
+	for (var i = 0; i < 4; ++i) {
+		difficultyButtons[i].remove();
+	}
 	for (var i = 0; i < songlength; ++i) {
 		(function(index) {
 			var flydistance = parseInt($(songs[index]).css('left')) + parseInt($(songs[index]).css('width'));
@@ -130,7 +167,8 @@ function songlistDisappear() {
 				if (index == songlength - 1) {
 					$('#songlist').remove();
 					gamearea.append(loadingtext);
-					songAudio = $('<audio id="songAudio" src="../src/game/songs/fripSide - Late in autumn.mp3" type="audio/mp3" />');
+					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '" />')
+					//songAudio = $('<audio id="songAudio" src="../src/game/songs/fripSide - Late in autumn.mp3" type="audio/mp3" />');
 					//songAudio = $('<audio id="songAudio" src="../src/game/taiko-normal-hitnormal.wav" />');
 					gamearea.append(songAudio);
 					var songAudio_dom = document.getElementById("songAudio");
@@ -138,9 +176,8 @@ function songlistDisappear() {
 					// canplaythrough 指该音频可以无缓冲地流畅播放
 					songAudio_dom.oncanplaythrough = function() {
 						loadingtext.remove();
-						songAudio_dom.play();
 						deployGamewidgets();
-						generateWidgets();
+						generateWidgets(buttonIndex);
 					}
 					
 					songAudio_dom.onended = function() {
@@ -185,10 +222,10 @@ function deployGamewidgets() {
 
 var drum_in = new Array(20), drum_out = new Array(20), drum_in_big = new Array(20), drum_out_big = new Array(20);
 for (var i = 0; i < 20; ++i) {
-	drum_in[i] = $('<audio class="drum_in" src="../src/game/taiko-normal-hitnormal.wav" />');
-	drum_out[i] = $('<audio class="drum_out" src="../src/game/taiko-normal-hitclap.wav" />');
-	drum_in_big[i] = $('<audio class="drum_in_big" src="../src/game/taiko-normal-hitfinish.wav" />');
-	drum_out_big[i] = $('<audio class="drum_out_big" src="../src/game/taiko-normal-hitwhistle.wav" />');
+	drum_in[i] = $('<audio class="drum_in" src="../src/game/taiko-normal-hitnormal.wav" volume="0.5" />');
+	drum_out[i] = $('<audio class="drum_out" src="../src/game/taiko-normal-hitclap.wav" volume="0.5" />');
+	drum_in_big[i] = $('<audio class="drum_in_big" src="../src/game/taiko-normal-hitfinish.wav" volume="0.5" />');
+	drum_out_big[i] = $('<audio class="drum_out_big" src="../src/game/taiko-normal-hitwhistle.wav" volume="0.5" />');
 	gamearea.append(drum_in[i]);
 	gamearea.append(drum_out[i]);
 	gamearea.append(drum_in_big[i]);
@@ -196,24 +233,59 @@ for (var i = 0; i < 20; ++i) {
 }
 
 var widgetQueue = new Array();
-var widgetType = new Array();		// 鼓点类型，0：小红、1：小蓝、2：大红、3：大蓝
+var widgetType = new Array();		// 鼓点类型，0：小红、1：小蓝、2：大红、3：大蓝、4：黄
 var isClicked = new Array();
 var inrange = new Array();
 var queuetop = 0;
-var flyspeed = 0.3;					// 鼓点的飞行速度，每毫秒移动的像素数
+var flyspeed = 0.5;					// 鼓点的飞行速度，每毫秒移动的像素数
 
-function generateWidgets() {
-	var offset = 462;
+function generateWidgets(buttonIndex) {
+	/*var offset = 462;
 	for (var i = 0; i < 2000; ++i) {
 		var randomType = parseInt(Math.random() * 4);
 		(function(index) {
-			widgetType[index] = randomType;
-			setTimeout(setoneWidget(index, widgetType[index]), offset + (index + 4.5) * 60000 / 65 - (1280 - 70) / flyspeed + 20 * flyspeed);	// 因为人有反应时间，所以加了与飞行速度相关的延时
-			setTimeout(setMiddleLine, offset + (index + 2.25) * 60000 / 32.5 - (1320 - 110) / flyspeed);
+			widgetType[index] = 4;
+			//setTimeout(setoneWidget(index, widgetType[index]), offset + (index + 2) * 60000 / 16.25 - (1280 - 70) / flyspeed + 20 * flyspeed);	// 因为人有反应时间，所以加了与飞行速度相关的延时
+			//setTimeout(setMiddleLine, offset + (index + 2.25) * 60000 / 32.5 - (1320 - 110) / flyspeed);
 			isClicked[index] = false;
-			inrange[index] = false;
+			inrange[index] = 0;
 		})(i);
-	}
+	}*/
+	$.getJSON("https://nero19960329.github.io/json/game/detail/braveshine" + (buttonIndex + 1) + ".json", function(json) {
+		var firstType = parseInt(json.widgets[0].type), firstLeft;
+		if (firstType === 0 || firstType === 1 || firstType === 4) {
+			firstLeft = 1280;
+		} else {
+			firstLeft = 1260;
+		}
+
+		if ((firstLeft - 235) / flyspeed - parseInt(json.widgets[0].start) > 0) {
+			setTimeout("document.getElementById('songAudio').play()", ((firstLeft - 235) / flyspeed - parseInt(json.widgets[0].start)));
+			var length = json.widgets.length;
+			for (var i = 0; i < length; ++i) {
+				(function(index) {
+					widgetType[index] = parseInt(json.widgets[index].type);
+					setTimeout(setoneWidget(index, widgetType[index], json), parseInt(json.widgets[index].start) - parseInt(json.widgets[0].start) + 40 * flyspeed);
+					isClicked[index] = false;
+					inrange[index] = 0;
+				})(i);
+			}
+		} else {
+			document.getElementById('songAudio').play();
+			var length = json.widgets.length;
+			for (var i = 0; i < length; ++i) {
+				(function(index) {
+					widgetType[index] = parseInt(json.widgets[index].type);
+					setTimeout(setoneWidget(index, widgetType[index], json), parseInt(json.widgets[index].start) + 40 * flyspeed);
+					isClicked[index] = false;
+					inrange[index] = 0;
+				})(i);
+			}
+		}
+
+	}).fail(function() {
+
+	});
 }
 
 function setMiddleLine() {
@@ -227,62 +299,107 @@ function setMiddleLine() {
 	});
 }
 
-function setoneWidget(index, type) {
+var combo = 0, maxCombo = 0;
+function setoneWidget(index, type, json) {
 	// 在setTimeout函数中传递参数的方法
 	return function() {
 		widgetQueue[index] = $('<div class="widget" />');
-		if (type === 0) {
-			widgetQueue[index].css('background-image', 'url("../src/game/widget_red.jpg")');
-			widgetQueue[index].css('left', 1280);
-			widgetQueue[index].css('top', 190);
-			widgetQueue[index].css('width', 80);
-			widgetQueue[index].css('height', 80);
-		} else if (type === 1) {
-			widgetQueue[index].css('background-image', 'url("../src/game/widget_blue.jpg")');
-			widgetQueue[index].css('left', 1280);
-			widgetQueue[index].css('top', 190);
-			widgetQueue[index].css('width', 80);
-			widgetQueue[index].css('height', 80);
-		} else if (type === 2) {
-			widgetQueue[index].css('background-image', 'url("../src/game/widget_red_big.jpg")');
-			widgetQueue[index].css('left', 1270);
-			widgetQueue[index].css('top', 180);
-			widgetQueue[index].css('width', 100);
-			widgetQueue[index].css('height', 100);
-		} else if (type === 3) {
-			widgetQueue[index].css('background-image', 'url("../src/game/widget_blue_big.jpg")');
-			widgetQueue[index].css('left', 1270);
-			widgetQueue[index].css('top', 180);
-			widgetQueue[index].css('width', 100);
-			widgetQueue[index].css('height', 100);
-		}
-		gamearea.append(widgetQueue[index]);
-		var wleft = parseInt(widgetQueue[index].css('left'));
-		var wtop = parseInt(widgetQueue[index].css('top'));
-		var wwidth = parseInt(widgetQueue[index].css('width'));
-		var wheight = parseInt(widgetQueue[index].css('wheight'));
-		widgetQueue[index]
-		.animate({
-			left: 245
-		}, (wleft - 245) / flyspeed, "linear", function() {
-			inrange[index] = true;
-		});
+		if (type != 4) {
+			if (type === 0) {
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_red.jpg")');
+				widgetQueue[index].css('left', 1280);
+				widgetQueue[index].css('top', 195);
+				widgetQueue[index].css('width', 80);
+				widgetQueue[index].css('height', 80);
+			} else if (type === 1) {
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_blue.jpg")');
+				widgetQueue[index].css('left', 1280);
+				widgetQueue[index].css('top', 195);
+				widgetQueue[index].css('width', 80);
+				widgetQueue[index].css('height', 80);
+			} else if (type === 2) {
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_red_big.jpg")');
+				widgetQueue[index].css('left', 1270);
+				widgetQueue[index].css('top', 185);
+				widgetQueue[index].css('width', 100);
+				widgetQueue[index].css('height', 100);
+			} else if (type === 3) {
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_blue_big.jpg")');
+				widgetQueue[index].css('left', 1270);
+				widgetQueue[index].css('top', 185);
+				widgetQueue[index].css('width', 100);
+				widgetQueue[index].css('height', 100);
+			}
 
-		widgetQueue[index]
-		.animate({
-			left: 155
-		}, 90 / flyspeed, "linear", function() {
-			inrange[index] = false;
-			if (isClicked[queuetop] === false) {
-				widgetQueue[queuetop]
+			gamearea.append(widgetQueue[index]);
+			var wleft = parseInt(widgetQueue[index].css('left'));
+			widgetQueue[index]
+			.animate({
+				left: 245
+			}, (wleft - 245) / flyspeed, "linear", function() {
+				inrange[index] = 1;
+			});
+			widgetQueue[index]
+			.animate({
+				left: 225
+			}, 20 / flyspeed, "linear", function() {
+				inrange[index] = 2;
+			});
+			widgetQueue[index]
+			.animate({
+				left: 175
+			}, 50 / flyspeed, "linear", function() {
+				inrange[index] = 1;
+			});
+			widgetQueue[index]
+			.animate({
+				left: 155
+			}, 20 / flyspeed, "linear", function() {
+				if (isClicked[index] === false) {
+					inrange[index] = 0;
+					widgetQueue[index]
+					.animate({
+						left: 70
+					}, 85 / flyspeed, "linear", function() {
+						this.remove();
+					});
+					queuetop++;
+					combo = 0;
+					removeComboText();
+				}
+			});
+		} else {
+			//widgetQueue[index].css('background-image', 'url("../src/game/widget_yellow.jpg")');
+			widgetQueue[index].css('background-color', 'rgb(233, 171, 8)');
+			widgetQueue[index].css('left', 1280);
+			widgetQueue[index].css('top', 195);
+			widgetQueue[index].css('width', (json.widgets[index].end - json.widgets[index].start) * flyspeed);
+			widgetQueue[index].css('height', 80);
+			widgetQueue[index].css('border-radius', 40);
+
+			gamearea.append(widgetQueue[index]);
+			var wleft = parseInt(widgetQueue[index].css('left'));
+			var wwidth = parseInt(widgetQueue[index].css('width'));
+			widgetQueue[index]
+			.animate({
+				left: 245
+			}, (wleft - 245) / flyspeed, "linear", function() {
+				inrange[index] = 2;
+			});
+			widgetQueue[index]
+			.animate({
+				left: 155 - wwidth
+			}, (90 + wwidth) / flyspeed, "linear", function() {
+				inrange[index] = 0;
+				widgetQueue[index]
 				.animate({
-					left: 70
+					left: 70 - wwidth
 				}, 85 / flyspeed, "linear", function() {
 					this.remove();
 				});
-			}
-			queuetop++;
-		});
+				queuetop++;
+			});
+		}
 	}
 }
 
@@ -297,7 +414,6 @@ function plusinloop(i) {
 var left_in = $('<div id="left_in"></div>');
 var keys = new Array(70, 74, 68, 75);
 var playinIndex = 0, playoutIndex = 0;
-var combo = 0, maxCombo = 0;
 var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
@@ -307,7 +423,7 @@ $('html').bind({
 				if (e.keyCode === keys[i]) {
 					console.log("queuetop: " + queuetop + " inrange = " + inrange[queuetop] + " type = " + widgetType[queuetop]);
 					if (i < 2) {
-						if (inrange[queuetop] === true) {
+						if (inrange[queuetop] > 0) {
 							isClicked[queuetop] = true;
 							if (widgetType[queuetop] === 0 || widgetType[queuetop] === 2) {
 								if (widgetType[queuetop] === 0) {
@@ -315,10 +431,18 @@ $('html').bind({
 								} else {
 									document.getElementsByClassName('drum_in_big')[playinIndex].play();
 								}
+
+								if (inrange[queuetop] === 1) {
+									console.log("good");
+								} else {
+									console.log("perfect");
+								}
+
 								widgetDisappear(queuetop);
-								++queuetop;
 								++combo;
 								setComboText();
+								inrange[queuetop] = 0;
+								++queuetop;
 							} else if (widgetType[queuetop] === 1 || widgetType[queuetop] === 3) {
 								widgetQueue[queuetop].remove();
 								if (maxCombo < combo) {
@@ -326,8 +450,17 @@ $('html').bind({
 								}
 								combo = 0;
 								removeComboText();
+								inrange[queuetop] = 0;
+								++queuetop;
+							} else {
+								if (i === 0 || i === 1) {
+									document.getElementsByClassName('drum_in')[playinIndex].play();
+									playinIndex = plusinloop(playinIndex);
+								} else {
+									document.getElementsByClassName('drum_out')[playinIndex].play();
+									playinIndex = plusinloop(playinIndex);
+								}
 							}
-							inrange[queuetop] = false;
 						}
 						if (i === 0) {
 
@@ -335,7 +468,7 @@ $('html').bind({
 
 						}
 					} else {
-						if (inrange[queuetop] === true) {
+						if (inrange[queuetop] > 0) {
 							isClicked[queuetop] = true;
 							if (widgetType[queuetop] === 0 || widgetType[queuetop] === 2) {
 								widgetQueue[queuetop].remove();
@@ -344,18 +477,35 @@ $('html').bind({
 								}
 								combo = 0;
 								removeComboText();
+								inrange[queuetop] = 0;
+								++queuetop;
 							} else if (widgetType[queuetop] === 1 || widgetType[queuetop] === 3) {
 								if (widgetType[queuetop] === 1) {
 									document.getElementsByClassName('drum_out')[playinIndex].play();
 								} else {
 									document.getElementsByClassName('drum_out_big')[playinIndex].play();
 								}
+
+								if (inrange[queuetop] === 1) {
+									console.log("good");
+								} else {
+									console.log("perfect");
+								}
+
 								widgetDisappear(queuetop);
-								++queuetop;
 								++combo;
 								setComboText();
+								inrange[queuetop] = 0;
+								++queuetop;
+							} else {
+								if (i === 0 || i === 1) {
+									document.getElementsByClassName('drum_in')[playinIndex].play();
+									playinIndex = plusinloop(playinIndex);
+								} else {
+									document.getElementsByClassName('drum_out')[playinIndex].play();
+									playinIndex = plusinloop(playinIndex);
+								}
 							}
-							inrange[queuetop] = false;
 						}
 						if (i === 2) {
 
@@ -365,25 +515,6 @@ $('html').bind({
 					}
 					playinIndex = plusinloop(playinIndex);
 				}
-			}
-
-			// A
-			if (e.keyCode === 65) {
-				/*//songAudio = $('<audio id="songAudio" src="../src/game/songs/fripSide - Late in autumn.mp3" type="audio/mp3" />');
-				songAudio = $('<audio id="songAudio" src="../src/game/taiko-normal-hitnormal.wav" />');
-				gamearea.append(songAudio);
-				songAudio.load({
-					console.log("load!");
-				})
-				var songAudio_dom = document.getElementById("songAudio");
-				songAudio_dom.addEventListener("loadstart", function() {
-					songAudio_dom.play();
-					generateWidgets();
-				});
-				songAudio_dom.onended = function() {
-					setTimeout(gametoolsDisappear, 2000);
-					setTimeout(displayScore, 2500)
-				};*/
 			}
 		}
 	},
@@ -492,6 +623,7 @@ function gametoolsDisappear() {
 		drum_in_big[i].remove();
 		drum_out_big[i].remove();
 	}
+	$('.comboText').remove();
 	songAudio.remove();
 }
 
