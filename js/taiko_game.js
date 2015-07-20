@@ -359,7 +359,7 @@ function setoneWidget(index, type, json) {
 			.animate({
 				left: 225
 			}, 10 / flyspeed, "linear", function() {
-				console.log(document.getElementById('songAudio').currentTime);
+				console.log("type: " + type + " time: " + document.getElementById('songAudio').currentTime * 1000);
 				if (type === 0 || type === 2) {
 					document.getElementsByClassName('drum_in')[playinIndex].play();
 					playinIndex = plusinloop(playinIndex);
