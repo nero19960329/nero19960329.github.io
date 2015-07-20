@@ -170,12 +170,45 @@ html {
 
 #left_in {
 	position: absolute;
+	background-image: url("../src/game/left_in.png");
 	left: 40px;
-	top: 201px;
+	top: 200px;
 	width: 35px;
 	height: 70px;
-	z-index: 4;
-	background-image: url("../src/game/left_in.jpg");
+	z-index: 14;
+}
+
+#right_in {
+	position: absolute;
+	background-image: url("../src/game/right_in.png");
+	left: 40px;
+	left: 75px;
+	top: 200px;
+	width: 35px;
+	height: 70px;
+	z-index: 14;
+}
+
+#left_out {
+	position: absolute;
+	background-image: url("../src/game/left_out.png");
+	left: 40px;
+	left: 20px;
+	top: 180px;
+	width: 55px;
+	height: 110px;
+	z-index: 14;
+}
+
+#right_out {
+	position: absolute;
+	background-image: url("../src/game/right_out.png");
+	left: 40px;
+	left: 75px;
+	top: 180px;
+	width: 55px;
+	height: 110px;
+	z-index: 14;
 }
 
 #targetIn {

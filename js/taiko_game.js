@@ -48,16 +48,17 @@ $('#gamearea').bind({
 });
 var songlist = $('<div id="songlist"></div>');
 var insertSongs = new Array();
-insertSongs[0] = "Brave Shine (TV size)";
-insertSongs[1] = "sister's noise(TV size)";
+insertSongs[0] = "Brave Shine (TV Size)";
+insertSongs[1] = "sister's noise(TV Size)";
 insertSongs[2] = "硝子の花園";
-insertSongs[3] = "僕らは今のなかで";
+insertSongs[3] = "Butter-Fly(TV Size)";
 insertSongs[4] = "きっと青春が聞こえる";
 insertSongs[5] = "aLIEz";
 var jsonName = new Array();
 jsonName[0] = "braveshine";
 jsonName[1] = "fripSide-sister'snoise";
 jsonName[2] = "NanjouYoshinoKusudaAina-GarasunoHanazono";
+jsonName[3] = "WadaKouji-Butter-Fly";
 var songAudio;
 
 var songDetailArea;
@@ -441,13 +442,23 @@ function setoneWidget(index, type, json, difficulty) {
 			});
 		} else {
 			//widgetQueue[index].css('background-image', 'url("../src/game/widget_yellow.jpg")');
-			widgetQueue[index].css('background-color', 'rgb(233, 171, 8)');
+			widgetQueue[index].css('background-color', 'rgb(243, 242, 57)');
 			widgetQueue[index].css('left', 1280);
 			widgetQueue[index].css('top', 195);
 			widgetQueue[index].css('width', (json.widgets[index].end - json.widgets[index].start) * flyspeed[difficulty]);
 			widgetQueue[index].css('height', 80);
 			widgetQueue[index].css('border-radius', 40);
 
+			var yellowWidget = $('<div class="widget" />');
+			yellowWidget.css('background-image', 'url("../src/game/widget_yellow.png")');
+			yellowWidget.css('left', 1280);
+			yellowWidget.css('top', 195);
+			yellowWidget.css('width', 80);
+			yellowWidget.css('height', 80);
+			yellowWidget.css('border-radius', 40);
+			yellowWidget.css('z-index', 9);
+
+			gamearea.append(yellowWidget);
 			gamearea.append(widgetQueue[index]);
 			var wleft = parseInt(widgetQueue[index].css('left'));
 			var wwidth = parseInt(widgetQueue[index].css('width'));
@@ -475,6 +486,12 @@ function setoneWidget(index, type, json, difficulty) {
 					this.remove();
 				});
 				queuetop++;
+			});
+			yellowWidget
+			.animate({
+				left: 70
+			}, (1280 - 70) / flyspeed[difficulty], "linear", function() {
+				this.remove();
 			});
 		}
 	}
@@ -512,7 +529,7 @@ function plusinloop(i) {
 	}
 }
 
-var left_in = $('<div id="left_in"></div>');
+var left_in, right_in, left_out, right_out;
 var keys = new Array(70, 74, 68, 75);
 var playinIndex = 0, playoutIndex = 0;
 var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
@@ -557,16 +574,13 @@ $('html').bind({
 								if (i === 0 || i === 1) {
 									document.getElementsByClassName('drum_in')[playinIndex].play();
 									playinIndex = plusinloop(playinIndex);
+									yellowWidgetDisappear();
 								} else {
 									document.getElementsByClassName('drum_out')[playinIndex].play();
 									playinIndex = plusinloop(playinIndex);
+									yellowWidgetDisappear();
 								}
 							}
-						}
-						if (i === 0) {
-
-						} else {
-
 						}
 					} else {
 						if (inrange[queuetop] > 0) {
@@ -602,17 +616,33 @@ $('html').bind({
 								if (i === 0 || i === 1) {
 									document.getElementsByClassName('drum_in')[playinIndex].play();
 									playinIndex = plusinloop(playinIndex);
+									yellowWidgetDisappear();
 								} else {
 									document.getElementsByClassName('drum_out')[playinIndex].play();
 									playinIndex = plusinloop(playinIndex);
+									yellowWidgetDisappear();
 								}
 							}
 						}
 						if (i === 2) {
-
+							left_out = $('<div id="left_out"></div>');
 						} else {
-
+							right_out = $('<div id="right_out"></div>');
 						}
+					}
+
+					if (i === 0) {
+						left_in = $('<div id="left_in"></div>');
+						gamearea.append(left_in);
+					} else if (i === 1) {
+						right_in = $('<div id="right_in"></div>');
+						gamearea.append(right_in);
+					} else if (i === 2) {
+						left_out = $('<div id="left_out"></div>');
+						gamearea.append(left_out);
+					} else {
+						right_out = $('<div id="right_out"></div>');
+						gamearea.append(right_out);
 					}
 					playinIndex = plusinloop(playinIndex);
 				}
@@ -623,7 +653,13 @@ $('html').bind({
 	keyup: function(e) {
 		if (page_status === 2) {
 			if (e.keyCode === keys[0]) {
-				//left_in.remove();
+				left_in.remove();
+			} else if (e.keyCode === keys[1]) {
+				right_in.remove();
+			} else if (e.keyCode === keys[2]) {
+				left_out.remove();
+			} else if (e.keyCode === keys[3]) {
+				right_out.remove();
 			}
 		}
 	}
@@ -725,6 +761,33 @@ function widgetDisappear(qtop) {
 	});
 }
 
+function yellowWidgetDisappear() {
+	var yellowDisappear = $('<div class="widget" />');
+	yellowDisappear.css('background-image', 'url("../src/game/widget_yellow.png")');
+	yellowDisappear.css('left', 190);
+	yellowDisappear.css('top', 190);
+	yellowDisappear.css('width', 80);
+	yellowDisappear.css('height', 80);
+	yellowDisappear.css('border-radius', 40);
+	yellowDisappear.css('z-index', 9);
+	gamearea.append(yellowDisappear);
+	yellowDisappear
+	.animate({
+		top: 90,
+		opacity: 0.8
+	}, 200, "easeOutQuart", function() {
+		yellowDisappear.css('z-index', 20);
+	});
+	yellowDisappear
+	.animate({
+		left: 20,
+		top: 467,
+		opacity: 0
+	}, 500, "easeInQuad", function() {
+		yellowDisappear.remove();
+	});
+}
+
 function FadeOut(obj) {
 	obj.animate({
 		opacity: 0
@@ -756,12 +819,10 @@ function getDigits(num) {
 }
 
 var score = 290644;
-//var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 var finalscoreArea;
 var finalscore;
 var detailArea;
 var backButton;
-//displayScore();
 function displayScore() {
 	finalscoreArea = $('<div id="finalscoreArea">Score</div>');
 	finalscore = new Array(6);
