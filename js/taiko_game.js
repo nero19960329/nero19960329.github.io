@@ -314,8 +314,10 @@ function generateWidgets(songIndex, buttonIndex) {
 			var middleCount = (lastTime - offset) * parseFloat(songdata[songIndex].bpm) / 60000;
 			for (var i = 0; i < middleCount / 4; ++i) {
 				(function(index) {
-					//console.log(offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 240) / flyspeed[buttonIndex]);
-					setTimeout(setMiddleLine(buttonIndex), offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1314 - 234) / flyspeed[buttonIndex]);
+					if (offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1314 - 234) / flyspeed[buttonIndex] < 0) {
+						return;
+					}
+					setTimeout(setMiddleLine(buttonIndex), offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 240) / flyspeed[buttonIndex]);
 				})(i);
 			}
 		}
@@ -332,7 +334,7 @@ function setMiddleLine(difficulty) {
 		targetMiddle
 		.animate({
 			left: 110
-		}, (1314 - 110) / flyspeed[difficulty], "linear", function() {
+		}, (1320 - 110) / flyspeed[difficulty], "linear", function() {
 			this.remove();
 		});
 	}
