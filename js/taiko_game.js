@@ -34,7 +34,6 @@ $('#gamearea').bind({
 					}, 500, function() {
 						$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[0] + ".json", function(json) {
 							loadingtext.remove();
-							console.log(json);
 							songdata[0] = json;
 							displaySelectstage();
 						}).fail(function() {
@@ -61,6 +60,7 @@ jsonName[1] = "fripSide-sister'snoise"
 var songAudio;
 
 var songDetailArea;
+var autoCheckbox;
 var difficultyButtons = new Array(4);
 
 // var background_selectstage = $('<img id="bg_selectstage" src="../src/game/temp_selectstage.jpg" />')
@@ -92,13 +92,18 @@ function displaySelectstage() {
 		}
 		$(songs[i]).css('top', i * 70);
 	}
+	//autoCheckbox = $('<form><input type="checkbox" id="autoCheckbox" value="auto" /></form>');
+	//gamearea.append(autoCheckbox);
 }
+
+var autoFlag;
 
 function setSonghover(index) {
 	var song = $('<div id="song_' + index + '">' + insertSongs[index] + '</div>');
 	song.hover(
 		function(e) {
 			song
+			.stop(true)
 			.animate({
 				left: 40
 			}, 150);
@@ -111,6 +116,7 @@ function setSonghover(index) {
 
 		function(e) {
 			song
+			.stop(true)
 			.animate({
 				left: 10
 			}, 200);
@@ -119,12 +125,12 @@ function setSonghover(index) {
 	);
 	song.bind({
 		mouseup: function(e) {
+			$('.difficultyButtons').remove();
 			gamearea.append(loadingtext);
 			$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[index] + ".json", function(json) {
 				loadingtext.remove();
-				console.log(json);
 				songdata[index] = json;
-				songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer);
+				songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer + "<br /><div id='autoDiv'><input type='checkbox' id='autoCheckbox' value='auto' />auto</div>");
 				background_selectstage.remove();
 				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/' + songdata[index].wave + '.jpg" />');
 				gamearea.append(loadingtext);
@@ -133,7 +139,6 @@ function setSonghover(index) {
 					background_selectstage.css('left', 0);
 					gamearea.append(background_selectstage);
 				})
-				$('.difficultyButtons').remove();
 				difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
 				difficultyButtons[1] = $('<div class="difficultyButtons">Normal</div>');
 				difficultyButtons[2] = $('<div class="difficultyButtons">Hard</div>');
@@ -144,6 +149,7 @@ function setSonghover(index) {
 						difficultyButtons[i].bind({
 							mouseup: function() {
 								page_status = 2;
+								autoFlag = ($('#autoCheckbox').attr('checked') === 'checked');
 								songlistDisappear(index, buttonIndex);
 							}
 						});
@@ -164,6 +170,7 @@ function setSonghover(index) {
 		left: 10	
 	}, 500);
 }
+var combo, maxCombo;
 
 function songlistDisappear(songIndex, buttonIndex) {
 	var songs = $('#songlist div');
@@ -196,6 +203,9 @@ function songlistDisappear(songIndex, buttonIndex) {
 					songAudio_dom.oncanplaythrough = function() {
 						loadingtext.remove();
 						deployGamewidgets();
+						combo = 0;
+						maxCombo = 0;
+						$('.difficultyButtons').remove();
 						generateWidgets(songIndex, buttonIndex);
 					}
 					
@@ -255,22 +265,20 @@ var widgetQueue = new Array();
 var widgetType = new Array();		// 鼓点类型，0：小红、1：小蓝、2：大红、3：大蓝、4：黄
 var isClicked = new Array();
 var inrange = new Array();
-var queuetop = 0;
+var queuetop;
 var flyspeed = new Array(0.3, 0.5, 0.7, 0.9);					// 鼓点的飞行速度，每毫秒移动的像素数
 
 function generateWidgets(songIndex, buttonIndex) {
-	console.log("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json");
 	$.getJSON("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json", function(json) {
-		console.log(json);
+		queuetop = 0;
 		var firstType = parseInt(json.widgets[0].type), firstLeft;
 		if (firstType === 0 || firstType === 1 || firstType === 4) {
 			firstLeft = 1280;
 		} else {
 			firstLeft = 1260;
 		}
-		console.log(parseFloat(songdata[songIndex].bpm));
 		if ((firstLeft - 235) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
-			setTimeout("document.getElementById('songAudio').play()", ((firstLeft - 235) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
+			setTimeout("document.getElementById('songAudio').play()", ((firstLeft - 200) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
 			var length = json.widgets.length;
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
@@ -283,10 +291,9 @@ function generateWidgets(songIndex, buttonIndex) {
 			var lastTime = parseInt(json.widgets[length - 1].start);
 			var offset = parseInt(json.widgets[0].start);
 			var middleCount = (lastTime - offset) * parseFloat(songdata[songIndex].bpm) / 60000;
-			//console.log("middleCount = " + middleCount);
 			for (var i = 0; i < middleCount / 4; ++i) {
 				(function(index) {
-					setTimeout(setMiddleLine, index * 60000 * 4 / parseFloat(songdata[songIndex].bpm));
+					setTimeout(setMiddleLine(buttonIndex), index * 60000 * 4 / parseFloat(songdata[songIndex].bpm));
 				})(i);
 			}
 		} else {
@@ -295,7 +302,7 @@ function generateWidgets(songIndex, buttonIndex) {
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
 					widgetType[index] = parseInt(json.widgets[index].type);
-					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - (firstLeft - 200) / flyspeed[buttonIndex]);
+					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - (firstLeft - 175) / flyspeed[buttonIndex]);
 					isClicked[index] = false;
 					inrange[index] = 0;
 				})(i);
@@ -303,12 +310,12 @@ function generateWidgets(songIndex, buttonIndex) {
 			var lastTime = parseInt(json.widgets[length - 1].start);
 			var offset = parseInt(json.widgets[0].start);
 			var middleCount = (lastTime - offset) * parseFloat(songdata[songIndex].bpm) / 60000;
-			/*for (var i = 0; i < middleCount / 4; ++i) {
+			for (var i = 0; i < middleCount / 4; ++i) {
 				(function(index) {
-					console.log(offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 240) / flyspeed[buttonIndex]);
-					setTimeout(setMiddleLine, offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 240) / flyspeed[buttonIndex]);
+					//console.log(offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 240) / flyspeed[buttonIndex]);
+					setTimeout(setMiddleLine(buttonIndex), offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 232) / flyspeed[buttonIndex]);
 				})(i);
-			}*/
+			}
 		}
 
 	}).fail(function() {
@@ -317,21 +324,23 @@ function generateWidgets(songIndex, buttonIndex) {
 }
 
 function setMiddleLine(difficulty) {
-	var targetMiddle = $('<div id="targetMiddle" />');
-	gamearea.append(targetMiddle);
-	targetMiddle
-	.animate({
-		left: 235
-	}, (1320 - 235) / flyspeed[difficulty], "linear");
-	targetMiddle
-	.animate({
-		left: 110
-	}, (235 - 110) / flyspeed[difficulty], "linear", function() {
-		this.remove();
-	});
+	return function() {
+		var targetMiddle = $('<div id="targetMiddle" />');
+		gamearea.append(targetMiddle);
+		targetMiddle
+		.animate({
+			left: 235
+		}, (1320 - 235) / flyspeed[difficulty], "linear");
+		targetMiddle
+		.animate({
+			left: 110
+		}, (235 - 110) / flyspeed[difficulty], "linear", function() {
+			this.remove();
+		});
+	}
 }
 
-var combo = 0, maxCombo = 0;
+var hits_yellow;
 function setoneWidget(index, type, json, difficulty) {
 	// 在setTimeout函数中传递参数的方法
 	return function() {
@@ -373,28 +382,43 @@ function setoneWidget(index, type, json, difficulty) {
 			});
 			widgetQueue[index]
 			.animate({
-				left: 235
-			}, 10 / flyspeed[difficulty], "linear", function() {
+				left: 225
+			}, 20 / flyspeed[difficulty], "linear", function() {
 				inrange[index] = 2;
 			});
 			widgetQueue[index]
 			.animate({
-				left: 225
+				left: 200
+			}, 25 / flyspeed[difficulty], "linear", function() {
+				console.log(document.getElementById("songAudio").currentTime);
+				if (autoFlag === true) {
+					var e = jQuery.Event("keydown");
+					if (type === 0 || type === 2) {
+						e.keyCode = 70;
+					} else {
+						e.keyCode = 68;
+					}
+					$('html').trigger(e);
+				}
+			});
+			widgetQueue[index]
+			.animate({
+				left: 190
 			}, 10 / flyspeed[difficulty], "linear", function() {
-				/*console.log("type: " + type + " time: " + document.getElementById('songAudio').currentTime * 1000);
-				if (type === 0 || type === 2) {
-					document.getElementsByClassName('drum_in')[playinIndex].play();
-					playinIndex = plusinloop(playinIndex);
-				} else {
-					document.getElementsByClassName('drum_out')[playinIndex].play();
-					playinIndex = plusinloop(playinIndex);
-				}*/
-				inrange[index] = 2;
+				if (autoFlag === true) {
+					var e = jQuery.Event("keyup");
+					if (type === 0 || type === 2) {
+						e.keyCode = 70;
+					} else {
+						e.keyCode = 68;
+					}
+					$('html').trigger(e);
+				}
 			});
 			widgetQueue[index]
 			.animate({
 				left: 175
-			}, 50 / flyspeed[difficulty], "linear", function() {
+			}, 15 / flyspeed[difficulty], "linear", function() {
 				inrange[index] = 1;
 			});
 			widgetQueue[index]
@@ -431,21 +455,51 @@ function setoneWidget(index, type, json, difficulty) {
 				left: 245
 			}, (wleft - 245) / flyspeed[difficulty], "linear", function() {
 				inrange[index] = 2;
+				if (autoFlag === true) {
+					hits_yellow = setInterval(onehit(70), 100);
+				}
 			});
 			widgetQueue[index]
 			.animate({
-				left: 155 - wwidth
-			}, (90 + wwidth) / flyspeed[difficulty], "linear", function() {
+				left: 175 - wwidth
+			}, (70 + wwidth) / flyspeed[difficulty], "linear", function() {
+				if (autoFlag === true) {
+					clearInterval(hits_yellow);
+				}
 				inrange[index] = 0;
 				widgetQueue[index]
 				.animate({
 					left: 70 - wwidth
-				}, 85 / flyspeed[difficulty], "linear", function() {
+				}, 105 / flyspeed[difficulty], "linear", function() {
 					this.remove();
 				});
 				queuetop++;
 			});
 		}
+	}
+}
+
+function onehit(keycode) {
+	return function() {
+		console.log("onehit!");
+		onehit_down(keycode);
+		setTimeout(onehit_up(keycode), 10);
+	}
+}
+
+function onehit_down(keycode) {
+	console.log("onehitdown! " + keycode);
+	var e = jQuery.Event("keydown");
+	e.keyCode = keycode;
+	$('html').trigger(e);
+}
+
+function onehit_up(keycode) {
+	return function() {
+		console.log("onehitup! " + keycode);
+		var e = jQuery.Event("keyup");
+		e.keyCode = keycode;
+		$('html').trigger(e);
 	}
 }
 
@@ -464,11 +518,10 @@ var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
 		if (page_status === 2) {
-
 			// 分别是F、J、D、K键
 			for (var i = 0; i < 4; ++i) {
 				if (e.keyCode === keys[i]) {
-					console.log("queuetop: " + queuetop + " inrange = " + inrange[queuetop] + " type = " + widgetType[queuetop]);
+					//console.log("queuetop: " + queuetop + " inrange = " + inrange[queuetop] + " type = " + widgetType[queuetop]);
 					if (i < 2) {
 						if (inrange[queuetop] > 0) {
 							isClicked[queuetop] = true;
@@ -630,14 +683,24 @@ function setComboText() {
 }
 
 function widgetDisappear(qtop) {
-	widgetQueue[qtop]
-	.stop()
-	.animate({
-		top: 90,
-		opacity: 0.8
-	}, 200, "easeOutQuart", function() {
-		widgetQueue[qtop].css('z-index', 20);
-	});
+	if (widgetQueue[qtop].is(":animated")) {
+		widgetQueue[qtop]
+		.stop(true)
+		.animate({
+			top: 90,
+			opacity: 0.8
+		}, 200, "easeOutQuart", function() {
+			widgetQueue[qtop].css('z-index', 20);
+		});
+	} else {
+		widgetQueue[qtop]
+		.animate({
+			top: 90,
+			opacity: 0.8
+		}, 200, "easeOutQuart", function() {
+			widgetQueue[qtop].css('z-index', 20);
+		});
+	}
 	widgetQueue[qtop]
 	.animate({
 		left: 20,
@@ -754,7 +817,6 @@ function displayScore() {
 					}, 500, function() {
 						$.getJSON("https://nero19960329.github.io/json/game/songs/braveshine.json", function(json) {
 							loadingtext.remove();
-							console.log(json);
 							songdata[0] = json;
 							displaySelectstage();
 						}).fail(function() {
