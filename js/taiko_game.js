@@ -248,7 +248,9 @@ var queuetop = 0;
 var flyspeed = 0.5;					// 鼓点的飞行速度，每毫秒移动的像素数
 
 function generateWidgets(songIndex, buttonIndex) {
+	console.log("https://nero19960329.github.io/json/game/detail/braveshine" + (buttonIndex + 1) + ".json");
 	$.getJSON("https://nero19960329.github.io/json/game/detail/braveshine" + (buttonIndex + 1) + ".json", function(json) {
+		console.log(json);
 		var firstType = parseInt(json.widgets[0].type), firstLeft;
 		if (firstType === 0 || firstType === 1 || firstType === 4) {
 			firstLeft = 1280;
@@ -271,9 +273,9 @@ function generateWidgets(songIndex, buttonIndex) {
 			var offset = 544;
 			var middleCount = (lastTime - offset) * parseFloat(songdata[songIndex].bpm) / 60000;
 			//console.log("middleCount = " + middleCount);
-			for (var i = 0; i < middleCount; ++i) {
+			for (var i = 0; i < middleCount / 4; ++i) {
 				(function(index) {
-					setTimeout(setMiddleLine, index * 60000 / parseFloat(songdata[songIndex].bpm));
+					setTimeout(setMiddleLine, index * 60000 * 4 / parseFloat(songdata[songIndex].bpm));
 				})(i);
 			}
 		} else {
