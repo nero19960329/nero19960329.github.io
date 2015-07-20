@@ -256,7 +256,7 @@ var widgetType = new Array();		// 鼓点类型，0：小红、1：小蓝、2：�
 var isClicked = new Array();
 var inrange = new Array();
 var queuetop = 0;
-var flyspeed = new Array(0.3, 0.55, 0.8, 1.05);					// 鼓点的飞行速度，每毫秒移动的像素数
+var flyspeed = new Array(0.3, 0.5, 0.7, 0.9);					// 鼓点的飞行速度，每毫秒移动的像素数
 
 function generateWidgets(songIndex, buttonIndex) {
 	console.log("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json");
@@ -338,25 +338,25 @@ function setoneWidget(index, type, json, difficulty) {
 		widgetQueue[index] = $('<div class="widget" />');
 		if (type != 4) {
 			if (type === 0) {
-				widgetQueue[index].css('background-image', 'url("../src/game/widget_red.jpg")');
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_red.png")');
 				widgetQueue[index].css('left', 1280);
 				widgetQueue[index].css('top', 195);
 				widgetQueue[index].css('width', 80);
 				widgetQueue[index].css('height', 80);
 			} else if (type === 1) {
-				widgetQueue[index].css('background-image', 'url("../src/game/widget_blue.jpg")');
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_blue.png")');
 				widgetQueue[index].css('left', 1280);
 				widgetQueue[index].css('top', 195);
 				widgetQueue[index].css('width', 80);
 				widgetQueue[index].css('height', 80);
 			} else if (type === 2) {
-				widgetQueue[index].css('background-image', 'url("../src/game/widget_red_big.jpg")');
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_red_big.png")');
 				widgetQueue[index].css('left', 1270);
 				widgetQueue[index].css('top', 185);
 				widgetQueue[index].css('width', 100);
 				widgetQueue[index].css('height', 100);
 			} else if (type === 3) {
-				widgetQueue[index].css('background-image', 'url("../src/game/widget_blue_big.jpg")');
+				widgetQueue[index].css('background-image', 'url("../src/game/widget_blue_big.png")');
 				widgetQueue[index].css('left', 1270);
 				widgetQueue[index].css('top', 185);
 				widgetQueue[index].css('width', 100);
@@ -381,14 +381,14 @@ function setoneWidget(index, type, json, difficulty) {
 			.animate({
 				left: 225
 			}, 10 / flyspeed[difficulty], "linear", function() {
-				console.log("type: " + type + " time: " + document.getElementById('songAudio').currentTime * 1000);
+				/*console.log("type: " + type + " time: " + document.getElementById('songAudio').currentTime * 1000);
 				if (type === 0 || type === 2) {
 					document.getElementsByClassName('drum_in')[playinIndex].play();
 					playinIndex = plusinloop(playinIndex);
 				} else {
 					document.getElementsByClassName('drum_out')[playinIndex].play();
 					playinIndex = plusinloop(playinIndex);
-				}
+				}*/
 				inrange[index] = 2;
 			});
 			widgetQueue[index]
