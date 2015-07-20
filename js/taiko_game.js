@@ -279,7 +279,7 @@ function generateWidgets(songIndex, buttonIndex) {
 		} else {
 			firstLeft = 1260;
 		}
-		if ((firstLeft - 235) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
+		if ((firstLeft - 200) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
 			setTimeout("document.getElementById('songAudio').play()", ((firstLeft - 200) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
 			var length = json.widgets.length;
 			for (var i = 0; i < length; ++i) {
@@ -304,18 +304,18 @@ function generateWidgets(songIndex, buttonIndex) {
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
 					widgetType[index] = parseInt(json.widgets[index].type);
-					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - (firstLeft - 175) / flyspeed[buttonIndex]);
+					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - (firstLeft - 200) / flyspeed[buttonIndex]);
 					isClicked[index] = false;
 					inrange[index] = 0;
 				})(i);
 			}
 			var lastTime = parseInt(json.widgets[length - 1].start);
-			var offset = parseInt(json.widgets[0].start);
+			var offset = parseInt(songdata[songIndex].offset);
 			var middleCount = (lastTime - offset) * parseFloat(songdata[songIndex].bpm) / 60000;
 			for (var i = 0; i < middleCount / 4; ++i) {
 				(function(index) {
 					//console.log(offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 240) / flyspeed[buttonIndex]);
-					setTimeout(setMiddleLine(buttonIndex), offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 232) / flyspeed[buttonIndex]);
+					setTimeout(setMiddleLine(buttonIndex), offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1314 - 234) / flyspeed[buttonIndex]);
 				})(i);
 			}
 		}
@@ -331,12 +331,8 @@ function setMiddleLine(difficulty) {
 		gamearea.append(targetMiddle);
 		targetMiddle
 		.animate({
-			left: 235
-		}, (1320 - 235) / flyspeed[difficulty], "linear");
-		targetMiddle
-		.animate({
 			left: 110
-		}, (235 - 110) / flyspeed[difficulty], "linear", function() {
+		}, (1314 - 110) / flyspeed[difficulty], "linear", function() {
 			this.remove();
 		});
 	}
@@ -464,8 +460,8 @@ function setoneWidget(index, type, json, difficulty) {
 			var wwidth = parseInt(widgetQueue[index].css('width'));
 			widgetQueue[index]
 			.animate({
-				left: 245
-			}, (wleft - 245) / flyspeed[difficulty], "linear", function() {
+				left: 235
+			}, (wleft - 235) / flyspeed[difficulty], "linear", function() {
 				inrange[index] = 2;
 				if (autoFlag === true) {
 					hits_yellow = setInterval(onehit(70), 100);
@@ -473,8 +469,8 @@ function setoneWidget(index, type, json, difficulty) {
 			});
 			widgetQueue[index]
 			.animate({
-				left: 175 - wwidth
-			}, (70 + wwidth) / flyspeed[difficulty], "linear", function() {
+				left: 235 - wwidth
+			}, wwidth / flyspeed[difficulty], "linear", function() {
 				if (autoFlag === true) {
 					clearInterval(hits_yellow);
 				}
@@ -482,9 +478,19 @@ function setoneWidget(index, type, json, difficulty) {
 				widgetQueue[index]
 				.animate({
 					left: 70 - wwidth
-				}, 105 / flyspeed[difficulty], "linear", function() {
+				}, 160 / flyspeed[difficulty], "linear", function() {
 					this.remove();
 				});
+				if (isClicked[index] === true) {
+					++combo;
+					setComboText();
+				} else {
+					if (maxCombo < combo) {
+						maxCombo = combo;
+					}
+					combo = 0;
+					removeComboText();
+				}
 				queuetop++;
 			});
 			yellowWidget
@@ -539,10 +545,34 @@ $('html').bind({
 			// 分别是F、J、D、K键
 			for (var i = 0; i < 4; ++i) {
 				if (e.keyCode === keys[i]) {
-					//console.log("queuetop: " + queuetop + " inrange = " + inrange[queuetop] + " type = " + widgetType[queuetop]);
-					if (i < 2) {
-						if (inrange[queuetop] > 0) {
-							isClicked[queuetop] = true;
+					if (i === 0) {
+						left_in = $('<div id="left_in"></div>');
+						gamearea.append(left_in);
+					} else if (i === 1) {
+						right_in = $('<div id="right_in"></div>');
+						gamearea.append(right_in);
+					} else if (i === 2) {
+						left_out = $('<div id="left_out"></div>');
+						gamearea.append(left_out);
+					} else {
+						right_out = $('<div id="right_out"></div>');
+						gamearea.append(right_out);
+					}
+
+					if (inrange[queuetop] > 0) {
+						isClicked[queuetop] = true;
+						if (widgetType[queuetop] === 4) {
+							if (i === 0 || i === 1) {
+								document.getElementsByClassName('drum_in')[playinIndex].play();
+							} else {
+								document.getElementsByClassName('drum_out')[playinIndex].play();
+							}
+							playinIndex = plusinloop(playinIndex);
+							yellowWidgetDisappear();
+							return;
+						}
+
+						if (i < 2) {
 							if (widgetType[queuetop] === 0 || widgetType[queuetop] === 2) {
 								if (widgetType[queuetop] === 0) {
 									document.getElementsByClassName('drum_in')[playinIndex].play();
@@ -570,21 +600,8 @@ $('html').bind({
 								removeComboText();
 								inrange[queuetop] = 0;
 								++queuetop;
-							} else {
-								if (i === 0 || i === 1) {
-									document.getElementsByClassName('drum_in')[playinIndex].play();
-									playinIndex = plusinloop(playinIndex);
-									yellowWidgetDisappear();
-								} else {
-									document.getElementsByClassName('drum_out')[playinIndex].play();
-									playinIndex = plusinloop(playinIndex);
-									yellowWidgetDisappear();
-								}
 							}
-						}
-					} else {
-						if (inrange[queuetop] > 0) {
-							isClicked[queuetop] = true;
+						} else {
 							if (widgetType[queuetop] === 0 || widgetType[queuetop] === 2) {
 								widgetQueue[queuetop].remove();
 								if (maxCombo < combo) {
@@ -612,37 +629,8 @@ $('html').bind({
 								setComboText();
 								inrange[queuetop] = 0;
 								++queuetop;
-							} else {
-								if (i === 0 || i === 1) {
-									document.getElementsByClassName('drum_in')[playinIndex].play();
-									playinIndex = plusinloop(playinIndex);
-									yellowWidgetDisappear();
-								} else {
-									document.getElementsByClassName('drum_out')[playinIndex].play();
-									playinIndex = plusinloop(playinIndex);
-									yellowWidgetDisappear();
-								}
 							}
 						}
-						if (i === 2) {
-							left_out = $('<div id="left_out"></div>');
-						} else {
-							right_out = $('<div id="right_out"></div>');
-						}
-					}
-
-					if (i === 0) {
-						left_in = $('<div id="left_in"></div>');
-						gamearea.append(left_in);
-					} else if (i === 1) {
-						right_in = $('<div id="right_in"></div>');
-						gamearea.append(right_in);
-					} else if (i === 2) {
-						left_out = $('<div id="left_out"></div>');
-						gamearea.append(left_out);
-					} else {
-						right_out = $('<div id="right_out"></div>');
-						gamearea.append(right_out);
 					}
 					playinIndex = plusinloop(playinIndex);
 				}
