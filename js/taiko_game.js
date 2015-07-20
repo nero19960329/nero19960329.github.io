@@ -59,6 +59,7 @@ jsonName[1] = "fripSide-sister'snoise";
 jsonName[2] = "NanjouYoshinoKusudaAina-GarasunoHanazono";
 jsonName[3] = "WadaKouji-Butter-Fly";
 jsonName[4] = "u's-Nobrandgirls";
+jsonName[5] = "HiranoAya-Godknows";
 var songAudio;
 
 var songDetailArea;
