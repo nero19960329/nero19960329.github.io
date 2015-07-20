@@ -650,7 +650,7 @@ function setComboTextAnimation(text) {
 
 function setComboText() {
 	removeComboText();
-	var single = combo % 10, tens = ((combo - single) / 10) % 10, hundreds = ((combo - single - tens * 10) / 100) % 100;
+	var single = combo % 10, tens = ((combo - single) / 10) % 10, hundreds = parseInt(combo / 100) % 10, thousands = parseInt(combo / 1000);
 	var singleText = $('<img class="comboText" src="../src/game/score-' + single + '.png" />');
 	singleText.css('width', numberWidth[single]);
 	singleText.css('height', 0);
@@ -665,14 +665,27 @@ function setComboText() {
 		if (combo < 100) {
 			singleText.css('left', 75);
 			tensText.css('left', 75 - numberWidth[tens]);
-		} else if (combo < 1000) {
-			singleText.css('left', 75 + numberWidth[tens] / 2);
-			tensText.css('left', 75 - numberWidth[tens] / 2);
+		} else {
 			var hundredsText = $('<img class="comboText" src="../src/game/score-' + hundreds + '.png" />');
 			hundredsText.css('width', numberWidth[hundreds]);
 			hundredsText.css('height', 0);
 			hundredsText.css('top', 260);
 			hundredsText.css('left', 75 - numberWidth[tens] / 2 - numberWidth[hundreds]);
+			if (combo < 1000) {
+				singleText.css('left', 75 + numberWidth[tens] / 2);
+				tensText.css('left', 75 - numberWidth[tens] / 2);
+			} else {
+				singleText.css('left', 75 + numberWidth[tens]);
+				tensText.css('left', 75);
+				hundredsText.css('left', 75 - numberWidth[hundreds]);
+				var thousandsText = $('<img class="comboText" src="../src/game/score-' + thousands + '.png" />');
+				thousandsText.css('width', numberWidth[thousands]);
+				thousandsText.css('height', 0);
+				thousandsText.css('top', 260);
+				thousandsText.css('left', 75 - numberWidth[hundreds] - numberWidth[thousands]);
+				gamearea.append(thousandsText);
+				setComboTextAnimation(thousandsText);
+			}
 			gamearea.append(hundredsText);
 			setComboTextAnimation(hundredsText);
 		}
