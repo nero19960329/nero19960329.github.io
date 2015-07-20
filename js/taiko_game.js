@@ -24,7 +24,7 @@ $('#gamearea').bind({
 			}, 500, function() {
 				coverimage.remove();
 				page_status = 1;
-				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/0.jpg" />');
+				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/brave shine.jpg" />');
 				gamearea.append(loadingtext);
 				background_selectstage.load(function() {
 					gamearea.append(background_selectstage);
@@ -32,7 +32,7 @@ $('#gamearea').bind({
 					.animate({
 						left: 0
 					}, 500, function() {
-						$.getJSON("https://nero19960329.github.io/json/game/songs/braveshine.json", function(json) {
+						$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[0] + ".json", function(json) {
 							loadingtext.remove();
 							console.log(json);
 							songdata[0] = json;
@@ -50,11 +50,14 @@ $('#gamearea').bind({
 var songlist = $('<div id="songlist"></div>');
 var insertSongs = new Array();
 insertSongs[0] = "Brave Shine (TV size)";
-insertSongs[1] = "紅蓮の弓矢";
+insertSongs[1] = "sister's noise(TV size)";
 insertSongs[2] = "自由の翼";
 insertSongs[3] = "僕らは今のなかで";
 insertSongs[4] = "きっと青春が聞こえる";
 insertSongs[5] = "aLIEz";
+var jsonName = new Array();
+jsonName[0] = "braveshine";
+jsonName[1] = "fripSide-sister'snoise"
 var songAudio;
 
 var songDetailArea;
@@ -116,32 +119,40 @@ function setSonghover(index) {
 	);
 	song.bind({
 		mouseup: function(e) {
-			songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer);
-			background_selectstage.remove();
-			background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/' + index + '.jpg" />');
 			gamearea.append(loadingtext);
-			background_selectstage.load(function() {
+			$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[index] + ".json", function(json) {
 				loadingtext.remove();
-				background_selectstage.css('left', 0);
-				gamearea.append(background_selectstage);
-			})
-			$('.difficultyButtons').remove();
-			difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
-			difficultyButtons[1] = $('<div class="difficultyButtons">Normal</div>');
-			difficultyButtons[2] = $('<div class="difficultyButtons">Hard</div>');
-			difficultyButtons[3] = $('<div class="difficultyButtons">Expert</div>');
-			for (var i = 0; i < 4; ++i) {
-				difficultyButtons[i].css('top', 85 + 60 * i);
-				(function(buttonIndex) {
-					difficultyButtons[i].bind({
-						mouseup: function() {
-							page_status = 2;
-							songlistDisappear(index, buttonIndex);
-						}
-					});
-				})(i);
-				gamearea.append(difficultyButtons[i]);
-			}
+				console.log(json);
+				songdata[index] = json;
+				songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer);
+				background_selectstage.remove();
+				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/' + songdata[index].wave + '.jpg" />');
+				gamearea.append(loadingtext);
+				background_selectstage.load(function() {
+					loadingtext.remove();
+					background_selectstage.css('left', 0);
+					gamearea.append(background_selectstage);
+				})
+				$('.difficultyButtons').remove();
+				difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
+				difficultyButtons[1] = $('<div class="difficultyButtons">Normal</div>');
+				difficultyButtons[2] = $('<div class="difficultyButtons">Hard</div>');
+				difficultyButtons[3] = $('<div class="difficultyButtons">Expert</div>');
+				for (var i = 0; i < 4; ++i) {
+					difficultyButtons[i].css('top', 85 + 60 * i);
+					(function(buttonIndex) {
+						difficultyButtons[i].bind({
+							mouseup: function() {
+								page_status = 2;
+								songlistDisappear(index, buttonIndex);
+							}
+						});
+					})(i);
+					gamearea.append(difficultyButtons[i]);
+				}
+			}).fail(function() {
+
+			});
 			//page_status = 2;
 			//songlistDisappear();
 		}
@@ -175,7 +186,7 @@ function songlistDisappear(songIndex, buttonIndex) {
 				if (index == songlength - 1) {
 					$('#songlist').remove();
 					gamearea.append(loadingtext);
-					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '" />')
+					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.mp3" />')
 					//songAudio = $('<audio id="songAudio" src="../src/game/songs/fripSide - Late in autumn.mp3" type="audio/mp3" />');
 					//songAudio = $('<audio id="songAudio" src="../src/game/taiko-normal-hitnormal.wav" />');
 					gamearea.append(songAudio);
@@ -361,7 +372,7 @@ function setoneWidget(index, type, json) {
 			.animate({
 				left: 225
 			}, 10 / flyspeed, "linear", function() {
-				console.log("type: " + type + " time: " + document.getElementById('songAudio').currentTime * 1000);
+				//console.log("type: " + type + " time: " + document.getElementById('songAudio').currentTime * 1000);
 				if (type === 0 || type === 2) {
 					document.getElementsByClassName('drum_in')[playinIndex].play();
 					playinIndex = plusinloop(playinIndex);
@@ -644,12 +655,6 @@ function gametoolsDisappear() {
 	FadeOut(widgetarea);
 	FadeOut(targetIn);
 	FadeOut(targetBorder);
-	for (var i = 0; i < 20; ++i) {
-		drum_in[i].remove();
-		drum_out[i].remove();
-		drum_in_big[i].remove();
-		drum_out_big[i].remove();
-	}
 	$('.comboText').remove();
 	songAudio.remove();
 }
@@ -731,7 +736,7 @@ function displayScore() {
 				left: -110
 			}, 500, function() {
 				this.remove();
-				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/0.jpg" />')
+				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/brave shine.jpg" />')
 				background_selectstage.load(function() {
 					gamearea.append(background_selectstage);
 					background_selectstage
