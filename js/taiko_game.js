@@ -257,14 +257,8 @@ var flyspeed = new Array(0.3, 0.5, 0.7, 0.9);					// 鼓点的飞行速度，每
 function generateWidgets(songIndex, buttonIndex) {
 	$.getJSON("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json", function(json) {
 		queuetop = 0;
-		/*var firstType = parseInt(json.widgets[0].type), firstLeft;
-		if (firstType === 0 || firstType === 1 || firstType === 4) {
-			firstLeft = 1280;
-		} else {
-			firstLeft = 1260;
-		}*/
-		if (1080 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
-			setTimeout("document.getElementById('songAudio').play()", (1080 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
+		if (1085 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
+			setTimeout("document.getElementById('songAudio').play()", (1085 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
 			var length = json.widgets.length;
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
@@ -288,13 +282,7 @@ function generateWidgets(songIndex, buttonIndex) {
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
 					widgetType[index] = parseInt(json.widgets[index].type);
-					var thisdelta, thisType = parseInt(json.widgets[index].type);
-					if (thisType === 0 || thisType === 1 || thisType === 4) {
-						thisdelta = 1280 - 195;
-					} else {
-						thisdelta = 1260 - 185;
-					}
-					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - thisdelta / flyspeed[buttonIndex]);
+					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - 1085 / flyspeed[buttonIndex]);
 					isClicked[index] = false;
 					inrange[index] = 0;
 				})(i);
@@ -380,7 +368,7 @@ function setoneWidget(index, type, json, difficulty) {
 			.animate({
 				left: 200
 			}, 25 / flyspeed[difficulty], "linear", function() {
-				//console.log(document.getElementById("songAudio").currentTime);
+				console.log(document.getElementById("songAudio").currentTime);
 				if (autoFlag === true) {
 					var e = jQuery.Event("keydown");
 					if (type === 0 || type === 2) {
@@ -497,14 +485,12 @@ function setoneWidget(index, type, json, difficulty) {
 
 function onehit(keycode) {
 	return function() {
-		console.log("onehit!");
 		onehit_down(keycode);
 		setTimeout(onehit_up(keycode), 10);
 	}
 }
 
 function onehit_down(keycode) {
-	console.log("onehitdown! " + keycode);
 	var e = jQuery.Event("keydown");
 	e.keyCode = keycode;
 	$('html').trigger(e);
@@ -512,7 +498,6 @@ function onehit_down(keycode) {
 
 function onehit_up(keycode) {
 	return function() {
-		console.log("onehitup! " + keycode);
 		var e = jQuery.Event("keyup");
 		e.keyCode = keycode;
 		$('html').trigger(e);
@@ -543,7 +528,6 @@ $('html').bind({
 				keyCode = 0;
 			}
 		}
-		console.log(keyCode);
 		if (page_status === 2) {
 			// 分别是F、J、D、K键
 			for (var i = 0; i < 4; ++i) {
