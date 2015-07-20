@@ -127,7 +127,7 @@ function setSonghover(index) {
 			})
 			$('.difficultyButtons').remove();
 			difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
-			difficultyButtons[1] = $('<div class="difficultyButtons">Medium</div>');
+			difficultyButtons[1] = $('<div class="difficultyButtons">Normal</div>');
 			difficultyButtons[2] = $('<div class="difficultyButtons">Hard</div>');
 			difficultyButtons[3] = $('<div class="difficultyButtons">Expert</div>');
 			for (var i = 0; i < 4; ++i) {
@@ -185,7 +185,7 @@ function songlistDisappear(songIndex, buttonIndex) {
 					songAudio_dom.oncanplaythrough = function() {
 						loadingtext.remove();
 						deployGamewidgets();
-						generateWidgets(buttonIndex);
+						generateWidgets(songIndex, buttonIndex);
 					}
 					
 					songAudio_dom.onended = function() {
@@ -247,7 +247,7 @@ var inrange = new Array();
 var queuetop = 0;
 var flyspeed = 0.5;					// 鼓点的飞行速度，每毫秒移动的像素数
 
-function generateWidgets(buttonIndex) {
+function generateWidgets(songIndex, buttonIndex) {
 	$.getJSON("https://nero19960329.github.io/json/game/detail/braveshine" + (buttonIndex + 1) + ".json", function(json) {
 		var firstType = parseInt(json.widgets[0].type), firstLeft;
 		if (firstType === 0 || firstType === 1 || firstType === 4) {
@@ -255,16 +255,25 @@ function generateWidgets(buttonIndex) {
 		} else {
 			firstLeft = 1260;
 		}
-
+		console.log(parseFloat(songdata[songIndex].bpm));
 		if ((firstLeft - 235) / flyspeed - parseInt(json.widgets[0].start) > 0) {
 			setTimeout("document.getElementById('songAudio').play()", ((firstLeft - 235) / flyspeed - parseInt(json.widgets[0].start)));
 			var length = json.widgets.length;
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
 					widgetType[index] = parseInt(json.widgets[index].type);
-					setTimeout(setoneWidget(index, widgetType[index], json), parseInt(json.widgets[index].start) - parseInt(json.widgets[0].start) + 40 * flyspeed);
+					setTimeout(setoneWidget(index, widgetType[index], json), parseInt(json.widgets[index].start) - parseInt(json.widgets[0].start));
 					isClicked[index] = false;
 					inrange[index] = 0;
+				})(i);
+			}
+			var lastTime = json.widgets[length - 1].start;
+			var offset = 544;
+			var middleCount = (lastTime - offset) * parseFloat(songdata[songIndex].bpm) / 60000;
+			//console.log("middleCount = " + middleCount);
+			for (var i = 0; i < middleCount; ++i) {
+				(function(index) {
+					setTimeout(setMiddleLine, index * 60000 / parseFloat(songdata[songIndex].bpm));
 				})(i);
 			}
 		} else {
@@ -290,8 +299,12 @@ function setMiddleLine() {
 	gamearea.append(targetMiddle);
 	targetMiddle
 	.animate({
+		left: 235
+	}, (1320 - 235) / flyspeed, "linear");
+	targetMiddle
+	.animate({
 		left: 110
-	}, (1320 - 110) / flyspeed, "linear", function() {
+	}, (235 - 110) / flyspeed, "linear", function() {
 		this.remove();
 	});
 }
@@ -338,8 +351,22 @@ function setoneWidget(index, type, json) {
 			});
 			widgetQueue[index]
 			.animate({
+				left: 235
+			}, 10 / flyspeed, "linear", function() {
+				inrange[index] = 2;
+			});
+			widgetQueue[index]
+			.animate({
 				left: 225
-			}, 20 / flyspeed, "linear", function() {
+			}, 10 / flyspeed, "linear", function() {
+				console.log(document.getElementById('songAudio').currentTime);
+				if (type === 0 || type === 2) {
+					document.getElementsByClassName('drum_in')[playinIndex].play();
+					playinIndex = plusinloop(playinIndex);
+				} else {
+					document.getElementsByClassName('drum_out')[playinIndex].play();
+					playinIndex = plusinloop(playinIndex);
+				}
 				inrange[index] = 2;
 			});
 			widgetQueue[index]
@@ -415,6 +442,7 @@ var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
 		if (page_status === 2) {
+
 			// 分别是F、J、D、K键
 			for (var i = 0; i < 4; ++i) {
 				if (e.keyCode === keys[i]) {
@@ -701,14 +729,21 @@ function displayScore() {
 				left: -110
 			}, 500, function() {
 				this.remove();
-				background_selectstage = $('<img id="bg_selectstage" src="../src/game/temp_selectstage.jpg" />')
+				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/0.jpg" />')
 				background_selectstage.load(function() {
 					gamearea.append(background_selectstage);
 					background_selectstage
 					.animate({
 						left: 0
 					}, 500, function() {
-						displaySelectstage();
+						$.getJSON("https://nero19960329.github.io/json/game/songs/braveshine.json", function(json) {
+							loadingtext.remove();
+							console.log(json);
+							songdata[0] = json;
+							displaySelectstage();
+						}).fail(function() {
+
+						});
 					});
 				});
 			});
