@@ -50,13 +50,14 @@ var songlist = $('<div id="songlist"></div>');
 var insertSongs = new Array();
 insertSongs[0] = "Brave Shine (TV size)";
 insertSongs[1] = "sister's noise(TV size)";
-insertSongs[2] = "自由の翼";
+insertSongs[2] = "硝子の花園";
 insertSongs[3] = "僕らは今のなかで";
 insertSongs[4] = "きっと青春が聞こえる";
 insertSongs[5] = "aLIEz";
 var jsonName = new Array();
 jsonName[0] = "braveshine";
-jsonName[1] = "fripSide-sister'snoise"
+jsonName[1] = "fripSide-sister'snoise";
+jsonName[2] = "NanjouYoshinoKusudaAina-GarasunoHanazono";
 var songAudio;
 
 var songDetailArea;
