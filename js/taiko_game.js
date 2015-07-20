@@ -39,7 +39,6 @@ $('#gamearea').bind({
 						}).fail(function() {
 
 						});
-						//displaySelectstage();
 					});
 				});
 			});
@@ -49,32 +48,22 @@ $('#gamearea').bind({
 var songlist = $('<div id="songlist"></div>');
 var insertSongs = new Array();
 insertSongs[0] = "Brave Shine (TV Size)";
-insertSongs[1] = "sister's noise(TV Size)";
+insertSongs[1] = "Sister's noise(TV Size)";
 insertSongs[2] = "硝子の花園";
 insertSongs[3] = "Butter-Fly(TV Size)";
-insertSongs[4] = "きっと青春が聞こえる";
-insertSongs[5] = "aLIEz";
+insertSongs[4] = "No Brand Girls";
+insertSongs[5] = "God Knows";
 var jsonName = new Array();
 jsonName[0] = "braveshine";
 jsonName[1] = "fripSide-sister'snoise";
 jsonName[2] = "NanjouYoshinoKusudaAina-GarasunoHanazono";
 jsonName[3] = "WadaKouji-Butter-Fly";
+jsonName[4] = "u's-Nobrandgirls";
 var songAudio;
 
 var songDetailArea;
 var autoCheckbox;
 var difficultyButtons = new Array(4);
-
-// var background_selectstage = $('<img id="bg_selectstage" src="../src/game/temp_selectstage.jpg" />')
-// background_selectstage.load(function() {
-// 	gamearea.append(background_selectstage);
-// 	background_selectstage
-// 	.animate({
-// 		left: 0
-// 	}, 500, function() {
-// 		displaySelectstage();
-// 	});
-// });
 
 function displaySelectstage() {
 	songDetailArea = $('<div id="songDetailArea" ></div>');
@@ -94,8 +83,6 @@ function displaySelectstage() {
 		}
 		$(songs[i]).css('top', i * 70);
 	}
-	//autoCheckbox = $('<form><input type="checkbox" id="autoCheckbox" value="auto" /></form>');
-	//gamearea.append(autoCheckbox);
 }
 
 var autoFlag;
@@ -161,8 +148,6 @@ function setSonghover(index) {
 			}).fail(function() {
 
 			});
-			//page_status = 2;
-			//songlistDisappear();
 		}
 	});
 	songlist.append(song);
@@ -196,8 +181,6 @@ function songlistDisappear(songIndex, buttonIndex) {
 					$('#songlist').remove();
 					gamearea.append(loadingtext);
 					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.mp3" />')
-					//songAudio = $('<audio id="songAudio" src="../src/game/songs/fripSide - Late in autumn.mp3" type="audio/mp3" />');
-					//songAudio = $('<audio id="songAudio" src="../src/game/taiko-normal-hitnormal.wav" />');
 					gamearea.append(songAudio);
 					var songAudio_dom = document.getElementById("songAudio");
 
@@ -273,14 +256,14 @@ var flyspeed = new Array(0.3, 0.5, 0.7, 0.9);					// 鼓点的飞行速度，每
 function generateWidgets(songIndex, buttonIndex) {
 	$.getJSON("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json", function(json) {
 		queuetop = 0;
-		var firstType = parseInt(json.widgets[0].type), firstLeft;
+		/*var firstType = parseInt(json.widgets[0].type), firstLeft;
 		if (firstType === 0 || firstType === 1 || firstType === 4) {
 			firstLeft = 1280;
 		} else {
 			firstLeft = 1260;
-		}
-		if ((firstLeft - 200) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
-			setTimeout("document.getElementById('songAudio').play()", ((firstLeft - 200) / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
+		}*/
+		if (1080 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
+			setTimeout("document.getElementById('songAudio').play()", (1080 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
 			var length = json.widgets.length;
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
@@ -304,7 +287,13 @@ function generateWidgets(songIndex, buttonIndex) {
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
 					widgetType[index] = parseInt(json.widgets[index].type);
-					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - (firstLeft - 200) / flyspeed[buttonIndex]);
+					var thisdelta, thisType = parseInt(json.widgets[index].type);
+					if (thisType === 0 || thisType === 1 || thisType === 4) {
+						thisdelta = 1280 - 195;
+					} else {
+						thisdelta = 1260 - 185;
+					}
+					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - thisdelta / flyspeed[buttonIndex]);
 					isClicked[index] = false;
 					inrange[index] = 0;
 				})(i);
@@ -314,10 +303,10 @@ function generateWidgets(songIndex, buttonIndex) {
 			var middleCount = (lastTime - offset) * parseFloat(songdata[songIndex].bpm) / 60000;
 			for (var i = 0; i < middleCount / 4; ++i) {
 				(function(index) {
-					if (offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1314 - 234) / flyspeed[buttonIndex] < 0) {
+					if (offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - 1085 / flyspeed[buttonIndex] < 0) {
 						return;
 					}
-					setTimeout(setMiddleLine(buttonIndex), offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - (1320 - 240) / flyspeed[buttonIndex]);
+					setTimeout(setMiddleLine(buttonIndex), offset + (index * 60000 * 4 / parseFloat(songdata[songIndex].bpm)) - 1085 / flyspeed[buttonIndex]);
 				})(i);
 			}
 		}
@@ -390,13 +379,13 @@ function setoneWidget(index, type, json, difficulty) {
 			.animate({
 				left: 200
 			}, 25 / flyspeed[difficulty], "linear", function() {
-				console.log(document.getElementById("songAudio").currentTime);
+				//console.log(document.getElementById("songAudio").currentTime);
 				if (autoFlag === true) {
 					var e = jQuery.Event("keydown");
 					if (type === 0 || type === 2) {
-						e.keyCode = 70;
+						e.keyCode = 0;
 					} else {
-						e.keyCode = 68;
+						e.keyCode = 1;
 					}
 					$('html').trigger(e);
 				}
@@ -408,9 +397,9 @@ function setoneWidget(index, type, json, difficulty) {
 				if (autoFlag === true) {
 					var e = jQuery.Event("keyup");
 					if (type === 0 || type === 2) {
-						e.keyCode = 70;
+						e.keyCode = 0;
 					} else {
-						e.keyCode = 68;
+						e.keyCode = 1;
 					}
 					$('html').trigger(e);
 				}
@@ -466,7 +455,7 @@ function setoneWidget(index, type, json, difficulty) {
 			}, (wleft - 235) / flyspeed[difficulty], "linear", function() {
 				inrange[index] = 2;
 				if (autoFlag === true) {
-					hits_yellow = setInterval(onehit(70), 100);
+					hits_yellow = setInterval(onehit(0), 100);
 				}
 			});
 			widgetQueue[index]
@@ -543,10 +532,21 @@ var playinIndex = 0, playoutIndex = 0;
 var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
+		var keyCode;
+		if (autoFlag === true) {
+			if (e.keyCode === 0) {
+				keyCode = 70;
+			} else if (e.keyCode === 1) {
+				keyCode = 68;
+			} else {
+				keyCode = 0;
+			}
+		}
+		console.log(keyCode);
 		if (page_status === 2) {
 			// 分别是F、J、D、K键
 			for (var i = 0; i < 4; ++i) {
-				if (e.keyCode === keys[i]) {
+				if (keyCode === keys[i]) {
 					if (i === 0) {
 						left_in = $('<div id="left_in"></div>');
 						gamearea.append(left_in);
@@ -641,14 +641,24 @@ $('html').bind({
 	},
 
 	keyup: function(e) {
+		var keyCode;
+		if (autoFlag === true) {
+			if (e.keyCode === 0) {
+				keyCode = 70;
+			} else if (e.keyCode === 1) {
+				keyCode = 68;
+			} else {
+				keyCode = 0;
+			}
+		}
 		if (page_status === 2) {
-			if (e.keyCode === keys[0]) {
+			if (keyCode === keys[0]) {
 				left_in.remove();
-			} else if (e.keyCode === keys[1]) {
+			} else if (keyCode === keys[1]) {
 				right_in.remove();
-			} else if (e.keyCode === keys[2]) {
+			} else if (keyCode === keys[2]) {
 				left_out.remove();
-			} else if (e.keyCode === keys[3]) {
+			} else if (keyCode === keys[3]) {
 				right_out.remove();
 			}
 		}
@@ -796,6 +806,10 @@ function gametoolsDisappear() {
 	FadeOut(targetBorder);
 	$('.comboText').remove();
 	songAudio.remove();
+	$('#left_in').remove();
+	$('#left_out').remove();
+	$('#right_in').remove();
+	$('#right_out').remove();
 }
 
 function getDigits(num) {
