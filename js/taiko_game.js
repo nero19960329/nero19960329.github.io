@@ -5,6 +5,10 @@ var loadingtext = $('<div id="loadingtext">Now Loading...</div>');
 gamearea.append(loadingtext);
 var clickkeytext = $('<div id="clickkeytext">请点击画面</div>');
 
+var helpInformation = new Array();
+helpInformation[0] = "建议佩戴耳机进行游玩";
+helpInformation[1] = "红色鼓点对应F、J按键，蓝色鼓点对应D、K按键，黄色鼓点条可以交替持续敲击D、F、J、K中的任意键";
+
 coverimage.load(function() {
 	loadingtext.remove();
 	gamearea.append(coverimage);
@@ -191,34 +195,71 @@ function songlistDisappear(songIndex, buttonIndex) {
 				if (index == songlength - 1) {
 					$('#songlist').remove();
 					gamearea.append(loadingtext);
-					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
-					gamearea.append(songAudio);
-					var songAudio_dom = document.getElementById("songAudio");
 
-					// canplaythrough 指该音频可以无缓冲地流畅播放
-					songAudio_dom.oncanplaythrough = function() {
-						loadingtext.remove();
-						deployGamewidgets();
-						combo = 0;
-						maxCombo = 0;
-						fcFlag = true;
-						perfectCount = 0;
-						goodCount = 0;
-						wrongCount = 0;
-						score = 0;
-						basicScore = 100;
-						$('.difficultyButtons').remove();
-						setScoreText();
-						generateWidgets(songIndex, buttonIndex);
+					var count_image = 20;
+					var scoreImage = new Array(10), comboImage = new Array(10);
+					for (var j = 0; j < 10; ++j) {
+						(function(index) {
+							scoreImage[index] = $('<img class="LoadingImage" src="../src/game/default-' + index + '.png" />');
+							comboImage[index] = $('<img class="LoadingImage" src="../src/game/score-' + index + '.png" />');
+							gamearea.append(scoreImage[index]);
+							gamearea.append(comboImage[index]);
+						})(j);
 					}
-					
-					songAudio_dom.onended = function() {
-						if (fcFlag === true) {
+					$('.LoadingImage').load(function() {
+						--count_image; console.log("count_image: " + count_image);
+						if (count_image == 0) {
+							var count_icon = 8;
+							var widgetIcon = new Array(8);
+							for (var j = 0; j < 8; ++j) {
+								widgetIcon[j] = $('<img class="LoadingIcon" />');
+							}
+							widgetIcon[0].attr('src', '../src/game/widget_red.png');
+							widgetIcon[1].attr('src', '../src/game/widget_blue.png');
+							widgetIcon[2].attr('src', '../src/game/widget_red_big.png');
+							widgetIcon[3].attr('src', '../src/game/widget_blue_big.png');
+							widgetIcon[4].attr('src', '../src/game/left_in.png');
+							widgetIcon[5].attr('src', '../src/game/right_in.png');
+							widgetIcon[6].attr('src', '../src/game/left_out.png');
+							widgetIcon[7].attr('src', '../src/game/right_out.png');
+							for (var j = 0; j < 8; ++j) {
+								gamearea.append(widgetIcon[j]);
+							}
+							$('.LoadingIcon').load(function() {
+								--count_icon; console.log("coung_icon: " + count_icon);
+								if (count_icon == 0) {
+									songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
+									gamearea.append(songAudio);
+									var songAudio_dom = document.getElementById("songAudio");
 
+									// canplaythrough 指该音频可以无缓冲地流畅播放
+									songAudio_dom.oncanplaythrough = function() {
+										loadingtext.remove();
+										deployGamewidgets();
+										combo = 0;
+										maxCombo = 0;
+										fcFlag = true;
+										perfectCount = 0;
+										goodCount = 0;
+										wrongCount = 0;
+										score = 0;
+										basicScore = 100;
+										$('.difficultyButtons').remove();
+										setScoreText();
+										generateWidgets(songIndex, buttonIndex);
+									}
+									
+									songAudio_dom.onended = function() {
+										if (fcFlag === true) {
+
+										}
+										setTimeout(gametoolsDisappear, 2000);
+										setTimeout(displayScore, 2500)
+									};
+								}
+							});
 						}
-						setTimeout(gametoolsDisappear, 2000);
-						setTimeout(displayScore, 2500)
-					};
+					});
 				}
 			});
 		})(i);
@@ -641,7 +682,11 @@ $('html').bind({
 								isError[queuetop] = true;
 								wrongCount++;
 								fcFlag = false;
-								widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
+								if (widgetType[queuetop] === 1) {
+									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
+								} else {
+									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error_big.png)');
+								}
 								if (maxCombo < combo) {
 									maxCombo = combo;
 								}
@@ -655,7 +700,11 @@ $('html').bind({
 								isError[queuetop] = true;
 								wrongCount++;
 								fcFlag = false;
-								widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
+								if (widgetType[queuetop] === 0) {
+									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
+								} else {
+									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error_big.png)');
+								}
 								if (maxCombo < combo) {
 									maxCombo = combo;
 								}
@@ -836,11 +885,12 @@ function yellowWidgetDisappear() {
 	yellowDisappear.css('height', 80);
 	yellowDisappear.css('border-radius', 40);
 	yellowDisappear.css('z-index', 9);
+	yellowDisappear.css('opacity', 0);
 	gamearea.append(yellowDisappear);
 	yellowDisappear
 	.animate({
 		top: 90,
-		opacity: 0.8
+		opacity: 1
 	}, 200, "easeOutQuart", function() {
 		yellowDisappear.css('z-index', 20);
 	});
@@ -911,8 +961,12 @@ function displayScore() {
 	} else {
 		rankingText.css('background-image', 'url("../src/game/ranking-X.png")');
 	}
-
 	gamearea.append(rankingText);
+	rankingText
+	.animate({
+		opacity: 1
+	}, 1000);
+
 	gamearea.append(finalscoreArea);
 	gamearea.append(detailArea);
 	gamearea.append(backButton);

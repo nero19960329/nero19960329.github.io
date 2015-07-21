@@ -110,6 +110,14 @@ html {
 	margin-left: 150px;
 }
 
+.LoadingImage {
+	display: none;
+}
+
+.LoadingIcon {
+	display: none;
+}
+
 #drumarea {
 	position: absolute;
 	left: 0;
@@ -335,4 +343,5 @@ html {
 	top: 20px;
 	width: 370px;
 	height: 482px;
+	opacity: 0;
 }
