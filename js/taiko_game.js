@@ -1,4 +1,4 @@
-var page_status = 0;		// 当前的状态，暂定 0：封面、1：选择关卡、2：开始游戏、3：分数发布
+var page_status = 0;		// 当前的状态，暂定 0：封面、1：选择关卡、1.5：载入中、2：开始游戏、3：分数发布
 var gamearea = $('#gamearea');
 var coverimage = $('<img id="coverimage" src="../src/game/cover.jpg" />');
 var loadingtext = $('<div id="loadingtext">Now Loading...</div>');
@@ -40,6 +40,8 @@ $('#gamearea').bind({
 							loadingtext.remove();
 							songdata[0] = json;
 							displaySelectstage();
+							setSongDetail(0);
+							nowSongIndex = 0;
 						}).fail(function() {
 
 						});
@@ -71,7 +73,7 @@ songType[2] = "mp3";
 songType[3] = "mp3";
 songType[4] = "mp3";
 songType[5] = "ogg";
-var songAudio;
+var songAudio, tryAudio;
 
 var songDetailArea;
 var autoCheckbox;
@@ -97,7 +99,60 @@ function displaySelectstage() {
 	}
 }
 
-var autoFlag;
+var autoFlag, nowSongIndex;
+
+function setSongDetail(index) {
+	var song = $('<div id="song_' + index + '">' + insertSongs[index] + '</div>');
+	$('.difficultyButtons').remove();
+	gamearea.append(loadingtext);
+	$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[index] + ".json", function(json) {
+		loadingtext.remove();
+		$('.difficultyButtons').remove();
+		songdata[index] = json;
+		songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer + "<br /><div id='autoDiv'><input type='checkbox' id='autoCheckbox' value='auto' />auto</div>");
+		var bg = $('<img id="bg_selectstage" src="../src/game/cover/' + songdata[index].wave + '.jpg" />');
+		gamearea.append(loadingtext);
+		bg.load(function() {
+			background_selectstage.remove();
+			background_selectstage = bg;
+			loadingtext.remove();
+			background_selectstage.css('left', 0);
+			gamearea.append(background_selectstage);
+		})
+		difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
+		difficultyButtons[1] = $('<div class="difficultyButtons">Normal</div>');
+		difficultyButtons[2] = $('<div class="difficultyButtons">Hard</div>');
+		difficultyButtons[3] = $('<div class="difficultyButtons">Expert</div>');
+		for (var i = 0; i < 4; ++i) {
+			difficultyButtons[i].css('top', 85 + 60 * i);
+			(function(buttonIndex) {
+				difficultyButtons[i].bind({
+					mouseup: function() {
+						page_status = 1.5;
+						autoFlag = ($('#autoCheckbox').attr('checked') === 'checked');
+						songlistDisappear(index, buttonIndex);
+					}
+				});
+			})(i);
+			gamearea.append(difficultyButtons[i]);
+		}
+
+		$('#tryAudio').remove();
+		tryAudio = $('<audio id="tryAudio" src="../src/game/songs/' + songdata[index].wave + '.' + songType[index] + '" />');
+		gamearea.append(tryAudio);
+		var tryAudio_dom = document.getElementById("tryAudio");
+		tryAudio_dom.oncanplaythrough = function() {
+			tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
+			tryAudio_dom.play();
+		};
+		tryAudio_dom.onended = function() {
+			tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
+			tryAudio_dom.play();
+		}
+	}).fail(function() {
+
+	});
+}
 
 function setSonghover(index) {
 	var song = $('<div id="song_' + index + '">' + insertSongs[index] + '</div>');
@@ -126,41 +181,10 @@ function setSonghover(index) {
 	);
 	song.bind({
 		mouseup: function(e) {
-			$('.difficultyButtons').remove();
-			gamearea.append(loadingtext);
-			$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[index] + ".json", function(json) {
-				loadingtext.remove();
-				$('.difficultyButtons').remove();
-				songdata[index] = json;
-				songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer + "<br /><div id='autoDiv'><input type='checkbox' id='autoCheckbox' value='auto' />auto</div>");
-				background_selectstage.remove();
-				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/' + songdata[index].wave + '.jpg" />');
-				gamearea.append(loadingtext);
-				background_selectstage.load(function() {
-					loadingtext.remove();
-					background_selectstage.css('left', 0);
-					gamearea.append(background_selectstage);
-				})
-				difficultyButtons[0] = $('<div class="difficultyButtons">Easy</div>');
-				difficultyButtons[1] = $('<div class="difficultyButtons">Normal</div>');
-				difficultyButtons[2] = $('<div class="difficultyButtons">Hard</div>');
-				difficultyButtons[3] = $('<div class="difficultyButtons">Expert</div>');
-				for (var i = 0; i < 4; ++i) {
-					difficultyButtons[i].css('top', 85 + 60 * i);
-					(function(buttonIndex) {
-						difficultyButtons[i].bind({
-							mouseup: function() {
-								page_status = 2;
-								autoFlag = ($('#autoCheckbox').attr('checked') === 'checked');
-								songlistDisappear(index, buttonIndex);
-							}
-						});
-					})(i);
-					gamearea.append(difficultyButtons[i]);
-				}
-			}).fail(function() {
-
-			});
+			if (index != nowSongIndex) {
+				nowSongIndex = index;
+				setSongDetail(index);
+			}
 		}
 	});
 	songlist.append(song);
@@ -175,6 +199,7 @@ var perfectCount, goodCount, wrongCount;
 var score, basicScore, fullScore;
 var loadingProgress, loadingWindow, OKText;
 var OKFlag;
+var selectedSongIndex, selectedButtonIndex;
 
 function songlistDisappear(songIndex, buttonIndex) {
 	var songs = $('#songlist div');
@@ -197,7 +222,8 @@ function songlistDisappear(songIndex, buttonIndex) {
 				if (index == songlength - 1) {
 					$('#songlist').remove();
 					loadingProgress = $('<progress value="0" max="100"></progress>');
-					loadingWindow = $('<div id="loadingWindow">' + insertSongs[index] + '<br />artist: ' + songdata[index].artist + '<br /><br />红色鼓点对应F、J按键，蓝色鼓点对应D、K按键<br />黄色鼓点条可以交替持续敲击D、F、J、K中的任意键</div>');
+					//debugger;
+					loadingWindow = $('<div id="loadingWindow">' + insertSongs[songIndex] + '<br />artist: ' + songdata[songIndex].artist + '<br /><br />红色鼓点对应F、J按键，蓝色鼓点对应D、K按键<br />黄色鼓点条可以交替持续敲击D、F、J、K中的任意键</div>');
 					OKFlag = false;
 					gamearea.append(loadingProgress);
 					gamearea.append(loadingWindow);
@@ -241,6 +267,7 @@ function songlistDisappear(songIndex, buttonIndex) {
 								--count_icon;
 								loadingProgress.attr('value', 40 + (13 - count_icon) * 2);
 								if (count_icon == 0) {
+									$('#tryAudio').remove();
 									songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
 									gamearea.append(songAudio);
 									var songAudio_dom = document.getElementById("songAudio");
@@ -251,22 +278,9 @@ function songlistDisappear(songIndex, buttonIndex) {
 										OKText = $('<div id="OKText">点击回车进入游戏</div>');
 										gamearea.append(OKText);
 										loadingProgress.attr('value', 100);
-
-										loadingProgress.remove();
-										loadingWindow.remove();
-										deployGamewidgets();
-										combo = 0;
-										maxCombo = 0;
-										fcFlag = true;
-										perfectCount = 0;
-										goodCount = 0;
-										wrongCount = 0;
-										score = 0;
-										basicScore = 100;
-										$('.difficultyButtons').remove();
-										setScoreText();
-										generateWidgets(songIndex, buttonIndex);
-									}
+										selectedButtonIndex = buttonIndex;
+										selectedSongIndex = songIndex;
+									};
 									
 									songAudio_dom.onended = function() {
 										if (fcFlag === true) {
@@ -285,7 +299,6 @@ function songlistDisappear(songIndex, buttonIndex) {
 	}
 }
 
-//page_status = 2;
 var drumarea;
 var drumIn;
 var drumOut;
@@ -294,7 +307,6 @@ var widgetarea;
 var targetIn;
 var targetBorder;
 var tablecloth;
-//deployGamewidgets();
 
 function deployGamewidgets() {
 	drumarea = $('<div id="drumarea" />');
@@ -315,12 +327,12 @@ function deployGamewidgets() {
 	gamearea.append(tablecloth);
 }
 
-var drum_in = new Array(20), drum_out = new Array(20), drum_in_big = new Array(20), drum_out_big = new Array(20);
-for (var i = 0; i < 20; ++i) {
-	drum_in[i] = $('<audio class="drum_in" src="../src/game/taiko-normal-hitnormal.wav" volume="0.5" />');
-	drum_out[i] = $('<audio class="drum_out" src="../src/game/taiko-normal-hitclap.wav" volume="0.5" />');
-	drum_in_big[i] = $('<audio class="drum_in_big" src="../src/game/taiko-normal-hitfinish.wav" volume="0.5" />');
-	drum_out_big[i] = $('<audio class="drum_out_big" src="../src/game/taiko-normal-hitwhistle.wav" volume="0.5" />');
+var drum_in = new Array(10), drum_out = new Array(10), drum_in_big = new Array(10), drum_out_big = new Array(10);
+for (var i = 0; i < 10; ++i) {
+	drum_in[i] = $('<audio class="drum_in" src="../src/game/taiko-normal-hitnormal.wav" />');
+	drum_out[i] = $('<audio class="drum_out" src="../src/game/taiko-normal-hitclap.wav" />');
+	drum_in_big[i] = $('<audio class="drum_in_big" src="../src/game/taiko-normal-hitfinish.wav" />');
+	drum_out_big[i] = $('<audio class="drum_out_big" src="../src/game/taiko-normal-hitwhistle.wav" />');
 	gamearea.append(drum_in[i]);
 	gamearea.append(drum_out[i]);
 	gamearea.append(drum_in_big[i]);
@@ -334,6 +346,7 @@ var isError = new Array();
 var inrange = new Array();
 var queuetop;
 var flyspeed = new Array(0.3, 0.5, 0.7, 0.9);					// 鼓点的飞行速度，每毫秒移动的像素数
+var drum_icon;
 
 function generateWidgets(songIndex, buttonIndex) {
 	$.getJSON("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json", function(json) {
@@ -350,6 +363,9 @@ function generateWidgets(songIndex, buttonIndex) {
 			}
 		}
 		console.log("fullScore: " + fullScore);
+
+		drum_icon = $('<div id="drum_icon" />');
+		gamearea.append(drum_icon);
 
 		queuetop = 0;
 		if (1085 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
@@ -372,7 +388,6 @@ function generateWidgets(songIndex, buttonIndex) {
 				})(i);
 			}
 		} else {
-			console.log("second!!");
 			document.getElementById('songAudio').play();
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
@@ -613,7 +628,7 @@ function onehit_up(keycode) {
 }
 
 function plusinloop(i) {
-	if (i < 19) {
+	if (i < 9) {
 		return i + 1;
 	} else {
 		return 0;
@@ -626,6 +641,26 @@ var playinIndex = 0, playoutIndex = 0;
 var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
+		if (page_status === 1.5 && OKFlag === true && e.keyCode === 13) {
+			page_status = 2;
+			loadingProgress.remove();
+			loadingWindow.remove();
+			deployGamewidgets();
+			combo = 0;
+			maxCombo = 0;
+			fcFlag = true;
+			perfectCount = 0;
+			goodCount = 0;
+			wrongCount = 0;
+			score = 0;
+			basicScore = 100;
+			$('.difficultyButtons').remove();
+			setScoreText();
+			$('#OKText').remove();
+			generateWidgets(selectedSongIndex, selectedButtonIndex);
+			return;
+		}
+
 		var keyCode;
 		if (autoFlag === true) {
 			if (e.keyCode < 4) {
@@ -1039,17 +1074,18 @@ function displayScore() {
 				left: -110
 			}, 500, function() {
 				this.remove();
-				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/brave shine.jpg" />')
+				background_selectstage = $('<img id="bg_selectstage" src="../src/game/cover/' + songdata[selectedSongIndex].wave + '.jpg" />')
 				background_selectstage.load(function() {
 					gamearea.append(background_selectstage);
 					background_selectstage
 					.animate({
 						left: 0
 					}, 500, function() {
-						$.getJSON("https://nero19960329.github.io/json/game/songs/braveshine.json", function(json) {
+						$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[selectedSongIndex] + ".json", function(json) {
 							loadingtext.remove();
 							songdata[0] = json;
 							displaySelectstage();
+							setSongDetail(selectedSongIndex);
 						}).fail(function() {
 
 						});
