@@ -144,6 +144,7 @@ function setSongDetail(index) {
 		var tryAudio_dom = document.getElementsByClassName("tryAudio")[0];
 		tryAudio_dom.oncanplaythrough = function() {
 			if ($($('.tryAudio')[0]).attr('id') === 'tryAudio_' + tryAudioIndex) {
+				console.log($($('.tryAudio')[0]).attr('id'));
 				this.currentTime = parseInt(songdata[index].demostart / 1000);
 				this.play();
 			}
