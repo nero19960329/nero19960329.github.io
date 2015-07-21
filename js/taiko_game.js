@@ -211,7 +211,7 @@ function songlistDisappear(songIndex, buttonIndex) {
 						if (count_image == 0) {
 							var count_icon = 8;
 							var widgetIcon = new Array(8);
-							for (var j = 0; j < 8; ++j) {
+							for (var j = 0; j < 13; ++j) {
 								widgetIcon[j] = $('<img class="LoadingIcon" />');
 							}
 							widgetIcon[0].attr('src', '../src/game/widget_red.png');
@@ -222,7 +222,12 @@ function songlistDisappear(songIndex, buttonIndex) {
 							widgetIcon[5].attr('src', '../src/game/right_in.png');
 							widgetIcon[6].attr('src', '../src/game/left_out.png');
 							widgetIcon[7].attr('src', '../src/game/right_out.png');
-							for (var j = 0; j < 8; ++j) {
+							widgetIcon[8].attr('src', '../src/game/ranking-C.png');
+							widgetIcon[9].attr('src', '../src/game/ranking-B.png');
+							widgetIcon[10].attr('src', '../src/game/ranking-A.png');
+							widgetIcon[11].attr('src', '../src/game/ranking-S.png');
+							widgetIcon[12].attr('src', '../src/game/ranking-X.png');
+							for (var j = 0; j < 13; ++j) {
 								gamearea.append(widgetIcon[j]);
 							}
 							$('.LoadingIcon').load(function() {
