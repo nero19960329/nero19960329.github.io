@@ -173,6 +173,8 @@ function setSonghover(index) {
 var combo, maxCombo, fcFlag;
 var perfectCount, goodCount, wrongCount;
 var score, basicScore, fullScore;
+var loadingProgress, loadingWindow, OKText;
+var OKFlag;
 
 function songlistDisappear(songIndex, buttonIndex) {
 	var songs = $('#songlist div');
@@ -194,7 +196,11 @@ function songlistDisappear(songIndex, buttonIndex) {
 				this.remove();
 				if (index == songlength - 1) {
 					$('#songlist').remove();
-					gamearea.append(loadingtext);
+					loadingProgress = $('<progress value="0" max="100"></progress>');
+					loadingWindow = $('<div id="loadingWindow">' + insertSongs[index] + '<br />artist: ' + songdata[index].artist + '<br /><br />红色鼓点对应F、J按键，蓝色鼓点对应D、K按键<br />黄色鼓点条可以交替持续敲击D、F、J、K中的任意键</div>');
+					OKFlag = false;
+					gamearea.append(loadingProgress);
+					gamearea.append(loadingWindow);
 
 					var count_image = 20;
 					var scoreImage = new Array(10), comboImage = new Array(10);
@@ -207,9 +213,10 @@ function songlistDisappear(songIndex, buttonIndex) {
 						})(j);
 					}
 					$('.LoadingImage').load(function() {
-						--count_image; console.log("count_image: " + count_image);
+						--count_image;
+						loadingProgress.attr('value', (20 - count_image) * 2);
 						if (count_image == 0) {
-							var count_icon = 8;
+							var count_icon = 13;
 							var widgetIcon = new Array(8);
 							for (var j = 0; j < 13; ++j) {
 								widgetIcon[j] = $('<img class="LoadingIcon" />');
@@ -231,7 +238,8 @@ function songlistDisappear(songIndex, buttonIndex) {
 								gamearea.append(widgetIcon[j]);
 							}
 							$('.LoadingIcon').load(function() {
-								--count_icon; console.log("coung_icon: " + count_icon);
+								--count_icon;
+								loadingProgress.attr('value', 40 + (13 - count_icon) * 2);
 								if (count_icon == 0) {
 									songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
 									gamearea.append(songAudio);
@@ -239,7 +247,13 @@ function songlistDisappear(songIndex, buttonIndex) {
 
 									// canplaythrough 指该音频可以无缓冲地流畅播放
 									songAudio_dom.oncanplaythrough = function() {
-										loadingtext.remove();
+										OKFlag = true;
+										OKText = $('<div id="OKText">点击回车进入游戏</div>');
+										gamearea.append(OKText);
+										loadingProgress.attr('value', 100);
+
+										loadingProgress.remove();
+										loadingWindow.remove();
 										deployGamewidgets();
 										combo = 0;
 										maxCombo = 0;
