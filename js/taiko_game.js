@@ -5,10 +5,6 @@ var loadingtext = $('<div id="loadingtext">Now Loading...</div>');
 gamearea.append(loadingtext);
 var clickkeytext = $('<div id="clickkeytext"></div>');
 
-var helpInformation = new Array();
-helpInformation[0] = "建议佩戴耳机进行游玩";
-helpInformation[1] = "红色鼓点对应F、J按键，蓝色鼓点对应D、K按键，黄色鼓点条可以交替持续敲击D、F、J、K中的任意键";
-
 coverimage.load(function() {
 	loadingtext.remove();
 	gamearea.append(coverimage);
@@ -240,9 +236,9 @@ function songlistDisappear(songIndex, buttonIndex) {
 						--count_image;
 						loadingProgress.attr('value', (20 - count_image) * 2);
 						if (count_image == 0) {
-							var count_icon = 14;
+							var count_icon = 15;
 							var widgetIcon = new Array(8);
-							for (var j = 0; j < 14; ++j) {
+							for (var j = 0; j < 15; ++j) {
 								widgetIcon[j] = $('<img class="LoadingIcon" />');
 							}
 							widgetIcon[0].attr('src', '../src/game/widget_red.png');
@@ -259,7 +255,8 @@ function songlistDisappear(songIndex, buttonIndex) {
 							widgetIcon[11].attr('src', '../src/game/ranking-S.png');
 							widgetIcon[12].attr('src', '../src/game/ranking-X.png');
 							widgetIcon[13].attr('src', '../src/game/widgetarea.png');
-							for (var j = 0; j < 14; ++j) {
+							widgetIcon[14].attr('src', '../src/game/drum_icon.png');
+							for (var j = 0; j < 15; ++j) {
 								gamearea.append(widgetIcon[j]);
 							}
 							$('.LoadingIcon').load(function() {
