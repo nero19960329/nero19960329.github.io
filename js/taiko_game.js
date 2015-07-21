@@ -142,13 +142,13 @@ function setSongDetail(index) {
 		tryAudio = $('<audio class="tryAudio" id="tryAudio_' + tryAudioIndex + '" src="../src/game/songs/' + songdata[index].wave + '.' + songType[index] + '" />');
 		gamearea.append(tryAudio);
 		var tryAudio_dom = document.getElementsByClassName("tryAudio")[0];
-		tryAudio_dom.oncanplaythrough = function() {
-			if ($($('.tryAudio')[0]).attr('id') === 'tryAudio_' + tryAudioIndex) {
-				console.log($($('.tryAudio')[0]).attr('id'));
-				this.currentTime = parseInt(songdata[index].demostart / 1000);
-				this.play();
-			}
-		};
+		//tryAudio_dom.oncanplaythrough = function() {
+		//	if ($($('.tryAudio')[0]).attr('id') === 'tryAudio_' + tryAudioIndex) {
+		//		console.log($($('.tryAudio')[0]).attr('id'));
+				tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
+				tryAudio_dom.play();
+		//	}
+		//};
 		tryAudio_dom.onended = function() {
 			this.currentTime = parseInt(songdata[index].demostart / 1000);
 			this.play();
