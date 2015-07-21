@@ -19,7 +19,7 @@ html {
 
 #clickkeytext {
 	position: absolute;
-	left: 547.5px;
+	left: 565px;
 	top: 440px;
 	z-index: 1;
 	background-image: url("../src/game/plzclick.png");

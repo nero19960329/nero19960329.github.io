@@ -73,7 +73,7 @@ songType[2] = "mp3";
 songType[3] = "mp3";
 songType[4] = "mp3";
 songType[5] = "ogg";
-var songAudio, tryAudio;
+var songAudio, tryAudio, tryAudioIndex;
 
 var songDetailArea;
 var autoCheckbox;
@@ -137,17 +137,20 @@ function setSongDetail(index) {
 			gamearea.append(difficultyButtons[i]);
 		}
 
-		$('#tryAudio').remove();
-		tryAudio = $('<audio id="tryAudio" src="../src/game/songs/' + songdata[index].wave + '.' + songType[index] + '" />');
+		$('.tryAudio').remove(); 
+		tryAudioIndex = index;
+		tryAudio = $('<audio class="tryAudio" id="tryAudio_' + tryAudioIndex + '" src="../src/game/songs/' + songdata[index].wave + '.' + songType[index] + '" />');
 		gamearea.append(tryAudio);
-		var tryAudio_dom = document.getElementById("tryAudio");
+		var tryAudio_dom = document.getElementsByClassName("tryAudio")[0];
 		tryAudio_dom.oncanplaythrough = function() {
-			tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
-			tryAudio_dom.play();
+			if ($($('.tryAudio')[0]).attr('id') === 'tryAudio_' + tryAudioIndex) {
+				this.currentTime = parseInt(songdata[index].demostart / 1000);
+				this.play();
+			}
 		};
 		tryAudio_dom.onended = function() {
-			tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
-			tryAudio_dom.play();
+			this.currentTime = parseInt(songdata[index].demostart / 1000);
+			this.play();
 		}
 	}).fail(function() {
 
