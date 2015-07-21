@@ -60,6 +60,13 @@ jsonName[2] = "NanjouYoshinoKusudaAina-GarasunoHanazono";
 jsonName[3] = "WadaKouji-Butter-Fly";
 jsonName[4] = "u's-Nobrandgirls";
 jsonName[5] = "HiranoAya-Godknows";
+var songType = new Array();
+songType[0] = "mp3";
+songType[1] = "mp3";
+songType[2] = "mp3";
+songType[3] = "mp3";
+songType[4] = "mp3";
+songType[5] = "ogg";
 var songAudio;
 
 var songDetailArea;
@@ -119,6 +126,7 @@ function setSonghover(index) {
 			gamearea.append(loadingtext);
 			$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[index] + ".json", function(json) {
 				loadingtext.remove();
+				$('.difficultyButtons').remove();
 				songdata[index] = json;
 				songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer + "<br /><div id='autoDiv'><input type='checkbox' id='autoCheckbox' value='auto' />auto</div>");
 				background_selectstage.remove();
@@ -158,7 +166,9 @@ function setSonghover(index) {
 		left: 10	
 	}, 500);
 }
-var combo, maxCombo;
+var combo, maxCombo, fcFlag;
+var perfectCount, goodCount, wrongCount;
+var score, basicScore, fullScore;
 
 function songlistDisappear(songIndex, buttonIndex) {
 	var songs = $('#songlist div');
@@ -181,7 +191,7 @@ function songlistDisappear(songIndex, buttonIndex) {
 				if (index == songlength - 1) {
 					$('#songlist').remove();
 					gamearea.append(loadingtext);
-					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.mp3" />')
+					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
 					gamearea.append(songAudio);
 					var songAudio_dom = document.getElementById("songAudio");
 
@@ -191,11 +201,21 @@ function songlistDisappear(songIndex, buttonIndex) {
 						deployGamewidgets();
 						combo = 0;
 						maxCombo = 0;
+						fcFlag = true;
+						perfectCount = 0;
+						goodCount = 0;
+						wrongCount = 0;
+						score = 0;
+						basicScore = 100;
 						$('.difficultyButtons').remove();
+						setScoreText();
 						generateWidgets(songIndex, buttonIndex);
 					}
 					
 					songAudio_dom.onended = function() {
+						if (fcFlag === true) {
+
+						}
 						setTimeout(gametoolsDisappear, 2000);
 						setTimeout(displayScore, 2500)
 					};
@@ -250,21 +270,36 @@ for (var i = 0; i < 20; ++i) {
 var widgetQueue = new Array();
 var widgetType = new Array();		// 鼓点类型，0：小红、1：小蓝、2：大红、3：大蓝、4：黄
 var isClicked = new Array();
+var isError = new Array();
 var inrange = new Array();
 var queuetop;
 var flyspeed = new Array(0.3, 0.5, 0.7, 0.9);					// 鼓点的飞行速度，每毫秒移动的像素数
 
 function generateWidgets(songIndex, buttonIndex) {
 	$.getJSON("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json", function(json) {
+		fullScore = 0;
+		var length = json.widgets.length, bs = 0;
+		for (var i = 0; i < length; ++i) {
+			if (i % 100 === 0) {
+				bs += 100;
+			}
+			if (json.widgets[i].type != 4) {
+				fullScore += bs;
+			} else {
+				fullScore += Math.floor((parseInt(json.widgets[i].end) - parseInt(json.widgets[i].start) - 100) / 100) * (bs / 10);
+			}
+		}
+		console.log("fullScore: " + fullScore);
+
 		queuetop = 0;
 		if (1085 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
 			setTimeout("document.getElementById('songAudio').play()", (1085 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
-			var length = json.widgets.length;
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
 					widgetType[index] = parseInt(json.widgets[index].type);
 					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - parseInt(json.widgets[0].start));
 					isClicked[index] = false;
+					isError[index] = false;
 					inrange[index] = 0;
 				})(i);
 			}
@@ -277,13 +312,14 @@ function generateWidgets(songIndex, buttonIndex) {
 				})(i);
 			}
 		} else {
+			console.log("second!!");
 			document.getElementById('songAudio').play();
-			var length = json.widgets.length;
 			for (var i = 0; i < length; ++i) {
 				(function(index) {
 					widgetType[index] = parseInt(json.widgets[index].type);
 					setTimeout(setoneWidget(index, widgetType[index], json, buttonIndex), parseInt(json.widgets[index].start) - 1085 / flyspeed[buttonIndex]);
 					isClicked[index] = false;
+					isError[index] = false;
 					inrange[index] = 0;
 				})(i);
 			}
@@ -366,29 +402,15 @@ function setoneWidget(index, type, json, difficulty) {
 			});
 			widgetQueue[index]
 			.animate({
-				left: 200
-			}, 25 / flyspeed[difficulty], "linear", function() {
+				left: 195
+			}, 30 / flyspeed[difficulty], "linear", function() {
 				console.log(document.getElementById("songAudio").currentTime);
 				if (autoFlag === true) {
 					var e = jQuery.Event("keydown");
 					if (type === 0 || type === 2) {
-						e.keyCode = 0;
+						e.keyCode = index % 2;
 					} else {
-						e.keyCode = 1;
-					}
-					$('html').trigger(e);
-				}
-			});
-			widgetQueue[index]
-			.animate({
-				left: 190
-			}, 10 / flyspeed[difficulty], "linear", function() {
-				if (autoFlag === true) {
-					var e = jQuery.Event("keyup");
-					if (type === 0 || type === 2) {
-						e.keyCode = 0;
-					} else {
-						e.keyCode = 1;
+						e.keyCode = 2 + (index % 2);
 					}
 					$('html').trigger(e);
 				}
@@ -396,14 +418,25 @@ function setoneWidget(index, type, json, difficulty) {
 			widgetQueue[index]
 			.animate({
 				left: 175
-			}, 15 / flyspeed[difficulty], "linear", function() {
+			}, 20 / flyspeed[difficulty], "linear", function() {
+				if (autoFlag === true) {
+					var e = jQuery.Event("keyup");
+					if (type === 0 || type === 2) {
+						e.keyCode = index % 2;
+					} else {
+						e.keyCode = 2 + (index % 2);
+					}
+					$('html').trigger(e);
+				}
 				inrange[index] = 1;
 			});
 			widgetQueue[index]
 			.animate({
 				left: 155
 			}, 20 / flyspeed[difficulty], "linear", function() {
-				if (isClicked[index] === false) {
+				if (isClicked[index] === false || isError[index] === true) {
+					wrongCount++;
+					fcFlag = false;
 					inrange[index] = 0;
 					widgetQueue[index]
 					.animate({
@@ -413,7 +446,8 @@ function setoneWidget(index, type, json, difficulty) {
 					});
 					queuetop++;
 					combo = 0;
-					removeComboText();
+					basicScore = 100;
+					$('.comboText').remove();
 				}
 			});
 		} else {
@@ -444,7 +478,7 @@ function setoneWidget(index, type, json, difficulty) {
 			}, (wleft - 235) / flyspeed[difficulty], "linear", function() {
 				inrange[index] = 2;
 				if (autoFlag === true) {
-					hits_yellow = setInterval(onehit(0), 100);
+					hits_yellow = setInterval(twohits(0, 1), 200);
 				}
 			});
 			widgetQueue[index]
@@ -463,13 +497,20 @@ function setoneWidget(index, type, json, difficulty) {
 				});
 				if (isClicked[index] === true) {
 					++combo;
+					perfectCount++;
+					if (combo % 100 === 0) {
+						basicScore += 100;
+					}
 					setComboText();
 				} else {
 					if (maxCombo < combo) {
 						maxCombo = combo;
 					}
+					wrongCount++;
+					fcFlag = false;
 					combo = 0;
-					removeComboText();
+					basicScore = 0;
+					$('.comboText').remove();
 				}
 				queuetop++;
 			});
@@ -480,6 +521,13 @@ function setoneWidget(index, type, json, difficulty) {
 				this.remove();
 			});
 		}
+	}
+}
+
+function twohits(keycode1, keycode2) {
+	return function() {
+		setTimeout(onehit(keycode1), 0);
+		setTimeout(onehit(keycode2), 100);
 	}
 }
 
@@ -520,13 +568,13 @@ $('html').bind({
 	keydown: function(e) {
 		var keyCode;
 		if (autoFlag === true) {
-			if (e.keyCode === 0) {
-				keyCode = 70;
-			} else if (e.keyCode === 1) {
-				keyCode = 68;
+			if (e.keyCode < 4) {
+				keyCode = keys[e.keyCode];
 			} else {
 				keyCode = 0;
 			}
+		} else {
+			keyCode = e.keyCode;
 		}
 		if (page_status === 2) {
 			// 分别是F、J、D、K键
@@ -556,6 +604,8 @@ $('html').bind({
 							}
 							playinIndex = plusinloop(playinIndex);
 							yellowWidgetDisappear();
+							score += (basicScore / 10);
+							setScoreText();
 							return;
 						}
 
@@ -569,35 +619,51 @@ $('html').bind({
 
 								if (inrange[queuetop] === 1) {
 									console.log("good");
+									score += (basicScore / 2);
+									setScoreText();
+									goodCount++;
 								} else {
 									console.log("perfect");
+									score += basicScore;
+									setScoreText();
+									perfectCount++;
 								}
 
 								widgetDisappear(queuetop);
 								++combo;
+								if (combo % 100 === 0) {
+									basicScore += 100;
+								}
 								setComboText();
 								inrange[queuetop] = 0;
 								++queuetop;
 							} else if (widgetType[queuetop] === 1 || widgetType[queuetop] === 3) {
-								widgetQueue[queuetop].remove();
+								isError[queuetop] = true;
+								wrongCount++;
+								fcFlag = false;
+								widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
 								if (maxCombo < combo) {
 									maxCombo = combo;
 								}
 								combo = 0;
-								removeComboText();
+								basicScore = 100;
+								$('.comboText').remove();
 								inrange[queuetop] = 0;
-								++queuetop;
 							}
 						} else {
 							if (widgetType[queuetop] === 0 || widgetType[queuetop] === 2) {
-								widgetQueue[queuetop].remove();
+								isError[queuetop] = true;
+								wrongCount++;
+								fcFlag = false;
+								widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
 								if (maxCombo < combo) {
 									maxCombo = combo;
 								}
 								combo = 0;
-								removeComboText();
+								basicScore = 100;
+								$('.comboText').remove();
 								inrange[queuetop] = 0;
-								++queuetop;
+								//++queuetop;
 							} else if (widgetType[queuetop] === 1 || widgetType[queuetop] === 3) {
 								if (widgetType[queuetop] === 1) {
 									document.getElementsByClassName('drum_out')[playinIndex].play();
@@ -607,12 +673,21 @@ $('html').bind({
 
 								if (inrange[queuetop] === 1) {
 									console.log("good");
+									score += (basicScore / 2);
+									setScoreText();
+									goodCount++;
 								} else {
 									console.log("perfect");
+									score += basicScore;
+									setScoreText();
+									perfectCount++;
 								}
 
 								widgetDisappear(queuetop);
 								++combo;
+								if (combo % 100 === 0) {
+									basicScore += 100;
+								}
 								setComboText();
 								inrange[queuetop] = 0;
 								++queuetop;
@@ -628,13 +703,13 @@ $('html').bind({
 	keyup: function(e) {
 		var keyCode;
 		if (autoFlag === true) {
-			if (e.keyCode === 0) {
-				keyCode = 70;
-			} else if (e.keyCode === 1) {
-				keyCode = 68;
+			if (e.keyCode < 4) {
+				keyCode = keys[e.keyCode];
 			} else {
 				keyCode = 0;
 			}
+		} else {
+			keyCode = e.keyCode;
 		}
 		if (page_status === 2) {
 			if (keyCode === keys[0]) {
@@ -650,9 +725,15 @@ $('html').bind({
 	}
 });
 
-function removeComboText() {
-	if ($('.comboText').length != 0) {
-		$('.comboText').remove();
+function setScoreText() {
+	$('.scoreText').remove();
+	var digits = getDigits(score);
+	var digitText = new Array(8);
+	for (var i = 0; i < 8; ++i) {
+		digitText[i] = $('<img class="scoreText" src="../src/game/default-' + digits[i] + '.png" />');
+		digitText[i].css('left', 1230 - 41 * i);
+		digitText[i].css('width', 41);
+		gamearea.append(digitText[i]);
 	}
 }
 
@@ -670,7 +751,7 @@ function setComboTextAnimation(text) {
 }
 
 function setComboText() {
-	removeComboText();
+	$('.comboText').remove();
 	var single = combo % 10, tens = ((combo - single) / 10) % 10, hundreds = parseInt(combo / 100) % 10, thousands = parseInt(combo / 1000);
 	var singleText = $('<img class="comboText" src="../src/game/score-' + single + '.png" />');
 	singleText.css('width', numberWidth[single]);
@@ -790,6 +871,7 @@ function gametoolsDisappear() {
 	FadeOut(targetIn);
 	FadeOut(targetBorder);
 	$('.comboText').remove();
+	$('.scoreText').remove();
 	songAudio.remove();
 	$('#left_in').remove();
 	$('#left_out').remove();
@@ -798,26 +880,39 @@ function gametoolsDisappear() {
 }
 
 function getDigits(num) {
-	var digits = new Array(6);
+	var digits = new Array(8);
 	var count = 0;
-	for (var i = 0; i < 6; ++i) {
+	for (var i = 0; i < 8; ++i) {
 		digits[i] = num % 10;
 		num = parseInt(num / 10);
 	}
 	return digits;
 }
 
-var score = 290644;
 var finalscoreArea;
 var finalscore;
 var detailArea;
 var backButton;
+var perfectText, goodText, wrongText, maxComboText, rankingText;
 function displayScore() {
 	finalscoreArea = $('<div id="finalscoreArea">Score</div>');
 	finalscore = new Array(6);
 	detailArea = $('<div id="detailArea">Results</div>');
 	backButton = $('<div id="backButton">返回</div>');
-	
+	rankingText = $('<div id="rankingText"></div>');
+	if (score < fullScore * 0.5) {
+		rankingText.css('background-image', 'url("../src/game/ranking-C.png")');
+	} else if (score < fullScore * 0.8) {
+		rankingText.css('background-image', 'url("../src/game/ranking-B.png")');
+	} else if (score < fullScore * 0.9) {
+		rankingText.css('background-image', 'url("../src/game/ranking-A.png")');
+	} else if (score < fullScore * 0.98) {
+		rankingText.css('background-image', 'url("../src/game/ranking-S.png")');
+	} else {
+		rankingText.css('background-image', 'url("../src/game/ranking-X.png")');
+	}
+
+	gamearea.append(rankingText);
 	gamearea.append(finalscoreArea);
 	gamearea.append(detailArea);
 	gamearea.append(backButton);
@@ -827,8 +922,8 @@ function displayScore() {
 	}, 500, function() {
 		var digits = getDigits(score);
 		var nowleft = 180;
-		for (var i = 5; i >= 0; --i) {
-			finalscore[i] = $('<img class="finalscore" src="../src/game/score-' + digits[i] + '.png" />');
+		for (var i = 7; i >= 0; --i) {
+			finalscore[i] = $('<img class="finalscore" src="../src/game/default-' + digits[i] + '.png" />');
 			finalscore[i].css('left', nowleft);
 			nowleft += numberWidth[digits[i]];
 			gamearea.append(finalscore[i]);
@@ -846,9 +941,8 @@ function displayScore() {
 	backButton.bind({
 		mouseup: function(e) {
 			page_status = 1;
-			for (var i = 0; i < 6; ++i) {
-				finalscore[i].remove();
-			}
+			$('.finalscore').remove();
+			$('#rankingText').remove();
 			background_selectstage
 			.animate({
 				left: -1280

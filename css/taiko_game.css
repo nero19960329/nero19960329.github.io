@@ -2,6 +2,7 @@ html {
 	min-width: 1280px;
 	min-height: 547px;
 	font-family: "Microsoft YaHei";
+	overflow-x: hidden;
 }
 
 #gamearea {
@@ -265,6 +266,13 @@ html {
 	z-index: 16;
 }
 
+.scoreText {
+	position: absolute;
+	z-index: 2;
+	top: 10px;
+	height: 80px;
+}
+
 #finalscoreArea {
 	position: absolute;
 	z-index: 1;
@@ -318,4 +326,13 @@ html {
 
 #backButton:hover {
 	opacity: 1;
+}
+
+#rankingText {
+	position: absolute;
+	z-index: 1;
+	left: 900px;
+	top: 20px;
+	width: 370px;
+	height: 482px;
 }
