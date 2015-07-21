@@ -419,3 +419,30 @@ progress {
 	height: 100px;
 	background-image: url("../src/game/ranking.png");
 }
+
+#perfectTextImage, #greatTextImage, #wrongTextImage {
+	position: absolute;
+	z-index: 2;
+	left: -145px;
+	width: 135px;
+	height: 40px;
+}
+
+#perfectTextImage {
+	top: 170px;
+}
+
+#greatTextImage {
+	top: 250px;
+}
+
+#wrongTextImage {
+	top: 330px;
+}
+
+.comboTextImage {
+	position: absolute;
+	height: 50px;
+	z-index: 2;
+	opacity: 0;
+}

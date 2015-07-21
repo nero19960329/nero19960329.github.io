@@ -73,7 +73,7 @@ songType[2] = "mp3";
 songType[3] = "mp3";
 songType[4] = "mp3";
 songType[5] = "ogg";
-var songAudio, tryAudio, tryAudioIndex;
+var songAudio, tryAudio;
 
 var songDetailArea;
 var autoCheckbox;
@@ -138,17 +138,11 @@ function setSongDetail(index) {
 		}
 
 		$('.tryAudio').remove(); 
-		tryAudioIndex = index;
-		tryAudio = $('<audio class="tryAudio" id="tryAudio_' + tryAudioIndex + '" src="../src/game/songs/' + songdata[index].wave + '.' + songType[index] + '" />');
+		tryAudio = $('<audio class="tryAudio" " src="../src/game/songs/' + songdata[index].wave + '.' + songType[index] + '" />');
 		gamearea.append(tryAudio);
 		var tryAudio_dom = document.getElementsByClassName("tryAudio")[0];
-		//tryAudio_dom.oncanplaythrough = function() {
-		//	if ($($('.tryAudio')[0]).attr('id') === 'tryAudio_' + tryAudioIndex) {
-		//		console.log($($('.tryAudio')[0]).attr('id'));
-				tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
-				tryAudio_dom.play();
-		//	}
-		//};
+		tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
+		tryAudio_dom.play();
 		tryAudio_dom.onended = function() {
 			this.currentTime = parseInt(songdata[index].demostart / 1000);
 			this.play();
@@ -199,7 +193,7 @@ function setSonghover(index) {
 	}, 500);
 }
 var combo, maxCombo, fcFlag;
-var perfectCount, goodCount, wrongCount;
+var perfectCount, greatCount, wrongCount;
 var score, basicScore, fullScore;
 var loadingProgress, loadingWindow, OKText;
 var OKFlag;
@@ -246,9 +240,9 @@ function songlistDisappear(songIndex, buttonIndex) {
 						--count_image;
 						loadingProgress.attr('value', (20 - count_image) * 2);
 						if (count_image == 0) {
-							var count_icon = 13;
+							var count_icon = 14;
 							var widgetIcon = new Array(8);
-							for (var j = 0; j < 13; ++j) {
+							for (var j = 0; j < 14; ++j) {
 								widgetIcon[j] = $('<img class="LoadingIcon" />');
 							}
 							widgetIcon[0].attr('src', '../src/game/widget_red.png');
@@ -264,12 +258,13 @@ function songlistDisappear(songIndex, buttonIndex) {
 							widgetIcon[10].attr('src', '../src/game/ranking-A.png');
 							widgetIcon[11].attr('src', '../src/game/ranking-S.png');
 							widgetIcon[12].attr('src', '../src/game/ranking-X.png');
-							for (var j = 0; j < 13; ++j) {
+							widgetIcon[13].attr('src', '../src/game/widgetarea.png');
+							for (var j = 0; j < 14; ++j) {
 								gamearea.append(widgetIcon[j]);
 							}
 							$('.LoadingIcon').load(function() {
 								--count_icon;
-								loadingProgress.attr('value', 40 + (13 - count_icon) * 2);
+								loadingProgress.attr('value', 40 + (14 - count_icon) * 2);
 								if (count_icon == 0) {
 									songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
 									gamearea.append(songAudio);
@@ -689,7 +684,7 @@ var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
 		if (page_status === 1.5 && OKFlag === true && e.keyCode === 13) {
-			$('#tryAudio').remove();
+			$('.tryAudio').remove();
 			page_status = 2;
 			loadingProgress.remove();
 			loadingWindow.remove();
@@ -698,7 +693,7 @@ $('html').bind({
 			maxCombo = 0;
 			fcFlag = true;
 			perfectCount = 0;
-			goodCount = 0;
+			greatCount = 0;
 			wrongCount = 0;
 			score = 0;
 			basicScore = 100;
@@ -765,7 +760,7 @@ $('html').bind({
 									console.log("good");
 									score += (basicScore / 2);
 									setScoreText();
-									goodCount++;
+									greatCount++;
 								} else {
 									console.log("perfect");
 									score += basicScore;
@@ -829,7 +824,7 @@ $('html').bind({
 								if (inrange[queuetop] === 1) {
 									score += (basicScore / 2);
 									setScoreText();
-									goodCount++;
+									greatCount++;
 									setGreatIcon();
 								} else {
 									score += basicScore;
@@ -1034,7 +1029,6 @@ function gametoolsDisappear() {
 	$('#right_in').remove();
 	$('#right_out').remove();
 	drum_icon.remove();
-	$('#Ranking').remove();
 }
 
 function getDigits(num) {
@@ -1051,12 +1045,94 @@ var finalscoreArea;
 var finalscore;
 var detailArea;
 var backButton;
-var perfectText, goodText, wrongText, maxComboText, rankingText, ranking;
+var perfectTextImage, greatTextImage, wrongTextImage, rankingText, ranking;
 function displayScore() {
 	finalscoreArea = $('<div id="finalscoreArea">Score</div>');
 	finalscore = new Array(6);
 	detailArea = $('<div id="detailArea">Results</div>');
-	backButton = $('<div id="backButton">返回</div>');
+	perfectTextImage = $('<img id="perfectTextImage" src="../src/game/icon_perfect.png" />');
+	greatTextImage = $('<img id="greatTextImage" src="../src/game/icon_great.png" />');
+	wrongTextImage = $('<img id="wrongTextImage" src="../src/game/icon_miss.png" />');
+
+	var perfectDigits = getDigits(perfectCount), maxdigit;
+	for (var i = 3; i >= 0; --i) {
+		if (i > 0 && perfectDigits[i] != 0) {
+			maxdigit = i;
+			break;
+		} else if (i === 0) {
+			maxdigit = 0;
+		}
+	}
+	for (var i = maxdigit; i >= 0; --i) {
+		var numberImage = $('<img class="comboTextImage" src="../src/game/score-' + perfectDigits[i] + '.png"/>');
+		numberImage.css('left', 200 + (maxdigit - i) * 40);
+		numberImage.css('top', 165);
+		gamearea.append(numberImage);
+		numberImage.animate({
+			opacity: 1
+		}, 500);
+	}
+	var ximage = $('<img class="comboTextImage" src="../src/game/score-x.png">');
+	ximage.css('left', 200 + (maxdigit + 1) * 40);
+	ximage.css('top', 165);
+	gamearea.append(ximage);
+	ximage.animate({
+		opacity: 1
+	}, 500);
+
+	var greatDigits = getDigits(greatCount);
+	for (var i = 3; i >= 0; --i) {
+		if (i > 0 && greatDigits[i] != 0) {
+			maxdigit = i;
+			break;
+		} else if (i === 0) {
+			maxdigit = 0;
+		}
+	}
+	for (var i = maxdigit; i >= 0; --i) {
+		var numberImage = $('<img class="comboTextImage" src="../src/game/score-' + greatDigits[i] + '.png"/>');
+		numberImage.css('left', 200 + (maxdigit - i) * 40);
+		numberImage.css('top', 245);
+		gamearea.append(numberImage);
+		numberImage.animate({
+			opacity: 1
+		}, 500);
+	}
+	ximage = $('<img class="comboTextImage" src="../src/game/score-x.png">');
+	ximage.css('left', 200 + (maxdigit + 1) * 40);
+	ximage.css('top', 245);
+	gamearea.append(ximage);
+	ximage.animate({
+		opacity: 1
+	}, 500);
+
+	var wrongDigits = getDigits(wrongCount);
+	for (var i = 3; i >= 0; --i) {
+		if (i > 0 && wrongDigits[i] != 0) {
+			maxdigit = i;
+			break;
+		} else if (i === 0) {
+			maxdigit = 0;
+		}
+	}
+	for (var i = maxdigit; i >= 0; --i) {
+		var numberImage = $('<img class="comboTextImage" src="../src/game/score-' + wrongDigits[i] + '.png"/>');
+		numberImage.css('left', 200 + (maxdigit - i) * 40);
+		numberImage.css('top', 325);
+		gamearea.append(numberImage);
+		numberImage.animate({
+			opacity: 1
+		}, 500);
+	}
+	ximage = $('<img class="comboTextImage" src="../src/game/score-x.png">');
+	ximage.css('left', 200 + (maxdigit + 1) * 40);
+	ximage.css('top', 325);
+	gamearea.append(ximage);
+	ximage.animate({
+		opacity: 1
+	}, 500);
+
+	backButton = $('<div id="backButton">Back</div>');
 	rankingText = $('<div id="rankingText"></div>');
 	if (score < fullScore * 0.5) {
 		rankingText.css('background-image', 'url("../src/game/ranking-C.png")');
@@ -1072,6 +1148,9 @@ function displayScore() {
 	ranking = $('<div id="Ranking" />');
 	gamearea.append(ranking);
 	gamearea.append(rankingText);
+	gamearea.append(perfectTextImage);
+	gamearea.append(greatTextImage);
+	gamearea.append(wrongTextImage);
 	rankingText
 	.animate({
 		opacity: 1
@@ -1101,12 +1180,29 @@ function displayScore() {
 	.animate({
 		left: 0
 	}, 500);
+	perfectTextImage
+	.animate({
+		left: 20
+	}, 500);
+	greatTextImage
+	.animate({
+		left: 20
+	}, 500);
+	wrongTextImage
+	.animate({
+		left: 20
+	}, 500);
 
 	backButton.bind({
 		mouseup: function(e) {
 			page_status = 1;
 			$('.finalscore').remove();
 			$('#rankingText').remove();
+			$('#Ranking').remove();
+			$('.comboTextImage').remove();
+			perfectTextImage.remove();
+			greatTextImage.remove();
+			wrongTextImage.remove();
 			background_selectstage
 			.animate({
 				left: -1280
