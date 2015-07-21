@@ -3,7 +3,7 @@ var gamearea = $('#gamearea');
 var coverimage = $('<img id="coverimage" src="../src/game/cover.jpg" />');
 var loadingtext = $('<div id="loadingtext">Now Loading...</div>');
 gamearea.append(loadingtext);
-var clickkeytext = $('<div id="clickkeytext">请点击画面</div>');
+var clickkeytext = $('<div id="clickkeytext"></div>');
 
 var helpInformation = new Array();
 helpInformation[0] = "建议佩戴耳机进行游玩";
@@ -109,7 +109,7 @@ function setSongDetail(index) {
 		loadingtext.remove();
 		$('.difficultyButtons').remove();
 		songdata[index] = json;
-		songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />singer：" + songdata[index].singer + "<br /><div id='autoDiv'><input type='checkbox' id='autoCheckbox' value='auto' />auto</div>");
+		songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />artist：" + songdata[index].artist + "<br /><div id='autoDiv'><input type='checkbox' id='autoCheckbox' value='auto' />auto</div>");
 		var bg = $('<img id="bg_selectstage" src="../src/game/cover/' + songdata[index].wave + '.jpg" />');
 		gamearea.append(loadingtext);
 		bg.load(function() {
@@ -267,7 +267,6 @@ function songlistDisappear(songIndex, buttonIndex) {
 								--count_icon;
 								loadingProgress.attr('value', 40 + (13 - count_icon) * 2);
 								if (count_icon == 0) {
-									$('#tryAudio').remove();
 									songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
 									gamearea.append(songAudio);
 									var songAudio_dom = document.getElementById("songAudio");
@@ -511,6 +510,9 @@ function setoneWidget(index, type, json, difficulty) {
 			}, 20 / flyspeed[difficulty], "linear", function() {
 				if (isClicked[index] === false || isError[index] === true) {
 					wrongCount++;
+					if (isError[index] === false) {
+						setMissIcon();
+					}
 					fcFlag = false;
 					inrange[index] = 0;
 					widgetQueue[index]
@@ -577,11 +579,13 @@ function setoneWidget(index, type, json, difficulty) {
 						basicScore += 100;
 					}
 					setComboText();
+
 				} else {
 					if (maxCombo < combo) {
 						maxCombo = combo;
 					}
 					wrongCount++;
+					setMissIcon();
 					fcFlag = false;
 					combo = 0;
 					basicScore = 0;
@@ -635,6 +639,45 @@ function plusinloop(i) {
 	}
 }
 
+function setPerfectIcon() {
+	var perfectIcon = $('<div id="perfectIcon" />');
+	gamearea.append(perfectIcon);
+	perfectIcon.animate({
+		left: 505,
+		top: 400,
+		width: 270,
+		height: 80
+	}, 200, function() {
+		setTimeout(function() {perfectIcon.remove();}, 100);
+	});
+}
+
+function setGreatIcon() {
+	var greatIcon = $('<div id="greatIcon" />');
+	gamearea.append(greatIcon);
+	greatIcon.animate({
+		left: 505,
+		top: 400,
+		width: 270,
+		height: 80
+	}, 200, function() {
+		greatIcon.remove();
+	});
+}
+
+function setMissIcon() {
+	var missIcon = $('<div id="missIcon" />');
+	gamearea.append(missIcon);
+	missIcon.animate({
+		left: 505,
+		top: 400,
+		width: 270,
+		height: 80
+	}, 200, function() {
+		missIcon.remove();
+	});
+}
+
 var left_in, right_in, left_out, right_out;
 var keys = new Array(70, 74, 68, 75);
 var playinIndex = 0, playoutIndex = 0;
@@ -642,6 +685,7 @@ var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
 		if (page_status === 1.5 && OKFlag === true && e.keyCode === 13) {
+			$('#tryAudio').remove();
 			page_status = 2;
 			loadingProgress.remove();
 			loadingWindow.remove();
@@ -701,6 +745,7 @@ $('html').bind({
 							yellowWidgetDisappear();
 							score += (basicScore / 10);
 							setScoreText();
+							setPerfectIcon();
 							return;
 						}
 
@@ -722,6 +767,7 @@ $('html').bind({
 									score += basicScore;
 									setScoreText();
 									perfectCount++;
+									setPerfectIcon();
 								}
 
 								widgetDisappear(queuetop);
@@ -735,6 +781,7 @@ $('html').bind({
 							} else if (widgetType[queuetop] === 1 || widgetType[queuetop] === 3) {
 								isError[queuetop] = true;
 								wrongCount++;
+								setMissIcon();
 								fcFlag = false;
 								if (widgetType[queuetop] === 1) {
 									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
@@ -753,6 +800,7 @@ $('html').bind({
 							if (widgetType[queuetop] === 0 || widgetType[queuetop] === 2) {
 								isError[queuetop] = true;
 								wrongCount++;
+								setMissIcon();
 								fcFlag = false;
 								if (widgetType[queuetop] === 0) {
 									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
@@ -775,15 +823,15 @@ $('html').bind({
 								}
 
 								if (inrange[queuetop] === 1) {
-									console.log("good");
 									score += (basicScore / 2);
 									setScoreText();
 									goodCount++;
+									setGreatIcon();
 								} else {
-									console.log("perfect");
 									score += basicScore;
 									setScoreText();
 									perfectCount++;
+									setPerfectIcon();
 								}
 
 								widgetDisappear(queuetop);
@@ -981,6 +1029,8 @@ function gametoolsDisappear() {
 	$('#left_out').remove();
 	$('#right_in').remove();
 	$('#right_out').remove();
+	drum_icon.remove();
+	$('#Ranking').remove();
 }
 
 function getDigits(num) {
@@ -997,7 +1047,7 @@ var finalscoreArea;
 var finalscore;
 var detailArea;
 var backButton;
-var perfectText, goodText, wrongText, maxComboText, rankingText;
+var perfectText, goodText, wrongText, maxComboText, rankingText, ranking;
 function displayScore() {
 	finalscoreArea = $('<div id="finalscoreArea">Score</div>');
 	finalscore = new Array(6);
@@ -1015,6 +1065,8 @@ function displayScore() {
 	} else {
 		rankingText.css('background-image', 'url("../src/game/ranking-X.png")');
 	}
+	ranking = $('<div id="Ranking" />');
+	gamearea.append(ranking);
 	gamearea.append(rankingText);
 	rankingText
 	.animate({

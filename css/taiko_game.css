@@ -19,13 +19,12 @@ html {
 
 #clickkeytext {
 	position: absolute;
-	left: 552px;
+	left: 547.5px;
 	top: 440px;
-	letter-spacing: 20px;
-	font-size: 1.5em;
-	font-weight: bold;
 	z-index: 1;
-	color: rgb(131, 175, 155);
+	background-image: url("../src/game/plzclick.png");
+	width: 185px;
+	height: 45px;
 }
 
 #clickkeytext, #loadingtext, #OKText {
@@ -168,7 +167,8 @@ progress {
 	left: 150px;
 	top: 160px;
 	z-index: 1;
-	background-color: #000;
+	/*background-color: #000;*/
+	background-image: url("../src/game/widgetarea.png");
 	width: 1130px;
 	height: 150px;
 	border-radius: 5px;
@@ -324,6 +324,27 @@ progress {
 	height: 80px;
 }
 
+#perfectIcon, #greatIcon, #missIcon {
+	position: absolute;
+	z-index: 2;
+	left: 640px;
+	top: 440px;
+	width: 0px;
+	height: 0px;
+}
+
+#perfectIcon {
+	background-image: url("../src/game/icon_perfect.png");
+}
+
+#greatIcon {
+	background-image: url("../src/game/icon_great.png");
+}
+
+#missIcon {
+	background-image: url("../src/game/icon_miss.png");
+}
+
 #finalscoreArea {
 	position: absolute;
 	z-index: 1;
@@ -387,4 +408,14 @@ progress {
 	width: 370px;
 	height: 482px;
 	opacity: 0;
+}
+
+#Ranking {
+	position: absolute;
+	z-index: 2;
+	left: 850px;
+	top: 10px;
+	width: 300px;
+	height: 100px;
+	background-image: url("../src/game/ranking.png");
 }
