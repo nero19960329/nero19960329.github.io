@@ -195,6 +195,7 @@ function setSonghover(index) {
 	);
 	song.bind({
 		mouseup: function(e) {
+			// 如果换了歌曲，才进行读取数据
 			if (index != nowSongIndex) {
 				nowSongIndex = index;
 				setSongDetail(index);
@@ -208,13 +209,92 @@ function setSonghover(index) {
 		left: 10	
 	}, 500);
 }
-var combo, maxCombo, fcFlag;
-var perfectCount, greatCount, wrongCount;
-var score, basicScore, fullScore;
+
+var combo;	// 连击数
+var perfectCount, greatCount, wrongCount;	// perfect数、great数、miss数
+var score, basicScore, fullScore;			// 当前得分、基础得分、这首歌的满分
 var loadingProgress, loadingWindow, OKText;
-var OKFlag;
+var OKFlag;									// 是否已经加载完毕
 var selectedSongIndex, selectedButtonIndex;
 
+// 设置加载的窗口
+function setLoadingWindow(songIndex, buttonIndex, index) {
+	$('#songlist').remove();
+	loadingProgress = $('<progress value="0" max="100"></progress>');
+	loadingWindow = $('<div id="loadingWindow">' + insertSongs[songIndex] + '<br />artist: ' + songdata[songIndex].artist + '<br /><br />红色鼓点对应F、J按键，蓝色鼓点对应D、K按键<br />黄色鼓点条可以交替持续敲击D、F、J、K中的任意键</div>');
+	OKFlag = false;
+	gamearea.append(loadingProgress);
+	gamearea.append(loadingWindow);
+
+	// 载入得分的图片
+	var count_image = 20;
+	var scoreImage = new Array(10), comboImage = new Array(10);
+	for (var j = 0; j < 10; ++j) {
+		(function(index) {
+			scoreImage[index] = $('<img class="LoadingImage" src="../src/game/default-' + index + '.png" />');
+			comboImage[index] = $('<img class="LoadingImage" src="../src/game/score-' + index + '.png" />');
+			gamearea.append(scoreImage[index]);
+			gamearea.append(comboImage[index]);
+		})(j);
+	}
+	$('.LoadingImage').load(function() {
+		--count_image;
+		loadingProgress.attr('value', (20 - count_image) * 2);
+		if (count_image == 0) {
+			// 载入鼓点、ranking等图片
+			var count_icon = 16;
+			var widgetIcon = new Array(8);
+			for (var j = 0; j < 16; ++j) {
+				widgetIcon[j] = $('<img class="LoadingIcon" />');
+			}
+			widgetIcon[0].attr('src', '../src/game/widget_red.png');
+			widgetIcon[1].attr('src', '../src/game/widget_blue.png');
+			widgetIcon[2].attr('src', '../src/game/widget_red_big.png');
+			widgetIcon[3].attr('src', '../src/game/widget_blue_big.png');
+			widgetIcon[4].attr('src', '../src/game/left_in.png');
+			widgetIcon[5].attr('src', '../src/game/right_in.png');
+			widgetIcon[6].attr('src', '../src/game/left_out.png');
+			widgetIcon[7].attr('src', '../src/game/right_out.png');
+			widgetIcon[8].attr('src', '../src/game/ranking-C.png');
+			widgetIcon[9].attr('src', '../src/game/ranking-B.png');
+			widgetIcon[10].attr('src', '../src/game/ranking-A.png');
+			widgetIcon[11].attr('src', '../src/game/ranking-S.png');
+			widgetIcon[12].attr('src', '../src/game/ranking-X.png');
+			widgetIcon[13].attr('src', '../src/game/widgetarea.png');
+			widgetIcon[14].attr('src', '../src/game/drum_icon.png');
+			widgetIcon[15].attr('src', '../src/game/widget_yellow.png');
+			for (var j = 0; j < 16; ++j) {
+				gamearea.append(widgetIcon[j]);
+			}
+			$('.LoadingIcon').load(function() {
+				--count_icon;
+				loadingProgress.attr('value', 40 + (14 - count_icon) * 2);
+				if (count_icon == 0) {
+					songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
+					gamearea.append(songAudio);
+					var songAudio_dom = document.getElementById("songAudio");
+
+					// canplaythrough 指该音频可以无缓冲地流畅播放
+					songAudio_dom.oncanplaythrough = function() {
+						OKFlag = true;
+						OKText = $('<div id="OKText">点击回车进入游戏</div>');
+						gamearea.append(OKText);
+						loadingProgress.attr('value', 100);
+						selectedButtonIndex = buttonIndex;
+						selectedSongIndex = songIndex;
+					};
+					
+					songAudio_dom.onended = function() {
+						setTimeout(gametoolsDisappear, 2000);
+						setTimeout(displayScore, 2500)
+					};
+				}
+			});
+		}
+	});
+}
+
+// 歌单消失
 function songlistDisappear(songIndex, buttonIndex) {
 	var songs = $('#songlist div');
 	var songlength = songs.length;
@@ -234,81 +314,7 @@ function songlistDisappear(songIndex, buttonIndex) {
 			}, 200, function() {
 				this.remove();
 				if (index == songlength - 1) {
-					$('#songlist').remove();
-					loadingProgress = $('<progress value="0" max="100"></progress>');
-					//debugger;
-					loadingWindow = $('<div id="loadingWindow">' + insertSongs[songIndex] + '<br />artist: ' + songdata[songIndex].artist + '<br /><br />红色鼓点对应F、J按键，蓝色鼓点对应D、K按键<br />黄色鼓点条可以交替持续敲击D、F、J、K中的任意键</div>');
-					OKFlag = false;
-					gamearea.append(loadingProgress);
-					gamearea.append(loadingWindow);
-
-					var count_image = 20;
-					var scoreImage = new Array(10), comboImage = new Array(10);
-					for (var j = 0; j < 10; ++j) {
-						(function(index) {
-							scoreImage[index] = $('<img class="LoadingImage" src="../src/game/default-' + index + '.png" />');
-							comboImage[index] = $('<img class="LoadingImage" src="../src/game/score-' + index + '.png" />');
-							gamearea.append(scoreImage[index]);
-							gamearea.append(comboImage[index]);
-						})(j);
-					}
-					$('.LoadingImage').load(function() {
-						--count_image;
-						loadingProgress.attr('value', (20 - count_image) * 2);
-						if (count_image == 0) {
-							var count_icon = 16;
-							var widgetIcon = new Array(8);
-							for (var j = 0; j < 16; ++j) {
-								widgetIcon[j] = $('<img class="LoadingIcon" />');
-							}
-							widgetIcon[0].attr('src', '../src/game/widget_red.png');
-							widgetIcon[1].attr('src', '../src/game/widget_blue.png');
-							widgetIcon[2].attr('src', '../src/game/widget_red_big.png');
-							widgetIcon[3].attr('src', '../src/game/widget_blue_big.png');
-							widgetIcon[4].attr('src', '../src/game/left_in.png');
-							widgetIcon[5].attr('src', '../src/game/right_in.png');
-							widgetIcon[6].attr('src', '../src/game/left_out.png');
-							widgetIcon[7].attr('src', '../src/game/right_out.png');
-							widgetIcon[8].attr('src', '../src/game/ranking-C.png');
-							widgetIcon[9].attr('src', '../src/game/ranking-B.png');
-							widgetIcon[10].attr('src', '../src/game/ranking-A.png');
-							widgetIcon[11].attr('src', '../src/game/ranking-S.png');
-							widgetIcon[12].attr('src', '../src/game/ranking-X.png');
-							widgetIcon[13].attr('src', '../src/game/widgetarea.png');
-							widgetIcon[14].attr('src', '../src/game/drum_icon.png');
-							widgetIcon[15].attr('src', '../src/game/widget_yellow.png');
-							for (var j = 0; j < 16; ++j) {
-								gamearea.append(widgetIcon[j]);
-							}
-							$('.LoadingIcon').load(function() {
-								--count_icon;
-								loadingProgress.attr('value', 40 + (14 - count_icon) * 2);
-								if (count_icon == 0) {
-									songAudio = $('<audio id="songAudio" src="../src/game/songs/' + songdata[songIndex].wave + '.' + songType[songIndex] + '" />')
-									gamearea.append(songAudio);
-									var songAudio_dom = document.getElementById("songAudio");
-
-									// canplaythrough 指该音频可以无缓冲地流畅播放
-									songAudio_dom.oncanplaythrough = function() {
-										OKFlag = true;
-										OKText = $('<div id="OKText">点击回车进入游戏</div>');
-										gamearea.append(OKText);
-										loadingProgress.attr('value', 100);
-										selectedButtonIndex = buttonIndex;
-										selectedSongIndex = songIndex;
-									};
-									
-									songAudio_dom.onended = function() {
-										if (fcFlag === true) {
-
-										}
-										setTimeout(gametoolsDisappear, 2000);
-										setTimeout(displayScore, 2500)
-									};
-								}
-							});
-						}
-					});
+					setLoadingWindow(songIndex, buttonIndex, index);
 				}
 			});
 		})(i);
@@ -324,6 +330,7 @@ var targetIn;
 var targetBorder;
 var tablecloth;
 
+// 部署游戏部件
 function deployGamewidgets() {
 	drumarea = $('<div id="drumarea" />');
 	drumIn = $('<div id="drumIn" />');
@@ -343,6 +350,7 @@ function deployGamewidgets() {
 	gamearea.append(tablecloth);
 }
 
+// 有可能会出现鼓点很密集从而导致一个audio播放不过来的情况，这里每种鼓点设置10个，以循环播放即可
 var drum_in = new Array(10), drum_out = new Array(10), drum_in_big = new Array(10), drum_out_big = new Array(10);
 for (var i = 0; i < 10; ++i) {
 	drum_in[i] = $('<audio class="drum_in" src="../src/game/taiko-normal-hitnormal.wav" />');
@@ -355,17 +363,19 @@ for (var i = 0; i < 10; ++i) {
 	gamearea.append(drum_out_big[i]);
 }
 
-var widgetQueue = new Array();
+var widgetQueue = new Array();		// 鼓点存储为一个数组，与队列类似，需要维护一个队列头的变量
 var widgetType = new Array();		// 鼓点类型，0：小红、1：小蓝、2：大红、3：大蓝、4：黄
-var isClicked = new Array();
-var isError = new Array();
-var inrange = new Array();
-var queuetop;
+var isClicked = new Array();		// 鼓点是否已经被点击过
+var isError = new Array();			// 鼓点是否按错
+var inrange = new Array();			// 判定区域的变量：0代表未进入判定区、1代表great判定区、2代表perfect判定区
+var queuetop;						// 鼓点队列的头
 var flyspeed = new Array(0.3, 0.5, 0.7, 0.9);					// 鼓点的飞行速度，每毫秒移动的像素数
 var drum_icon;
 
 function generateWidgets(songIndex, buttonIndex) {
+	// 取得该歌的鼓点json数据
 	$.getJSON("https://nero19960329.github.io/json/game/detail/" + jsonName[songIndex] + (buttonIndex + 1) + ".json", function(json) {
+		// 估算这首歌的最大得分（不一定准，但是差不多，因为黄条得分是不定的）
 		fullScore = 0;
 		var length = json.widgets.length, bs = 0;
 		for (var i = 0; i < length; ++i) {
@@ -378,11 +388,11 @@ function generateWidgets(songIndex, buttonIndex) {
 				fullScore += Math.floor((parseInt(json.widgets[i].end) - parseInt(json.widgets[i].start) - 100) / 100) * (bs / 10);
 			}
 		}
-		console.log("fullScore: " + fullScore);
 
 		drum_icon = $('<div id="drum_icon" />');
 		gamearea.append(drum_icon);
 
+		// 两种情况：先放歌后出鼓点、先出鼓点后放歌，都需要计算延迟时间
 		queuetop = 0;
 		if (1085 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start) > 0) {
 			setTimeout("document.getElementById('songAudio').play()", (1085 / flyspeed[buttonIndex] - parseInt(json.widgets[0].start)));
@@ -428,10 +438,11 @@ function generateWidgets(songIndex, buttonIndex) {
 		}
 
 	}).fail(function() {
-
+		alert("读取失败！请检查网络");
 	});
 }
 
+// 设置小节线
 function setMiddleLine(difficulty) {
 	return function() {
 		var targetMiddle = $('<div id="targetMiddle" />');
@@ -445,11 +456,13 @@ function setMiddleLine(difficulty) {
 	}
 }
 
-var hits_yellow;
+var hits_yellow;	// 自动模式中黄色鼓点的交替敲击
+// 设置鼓点，包括样式、动画
 function setoneWidget(index, type, json, difficulty) {
 	// 在setTimeout函数中传递参数的方法
 	return function() {
 		widgetQueue[index] = $('<div class="widget" />');
+		// 非黄条的情况
 		if (type != 4) {
 			if (type === 0) {
 				widgetQueue[index].css('background-image', 'url("../src/game/widget_red.png")');
@@ -483,19 +496,21 @@ function setoneWidget(index, type, json, difficulty) {
 			.animate({
 				left: 245
 			}, (wleft - 245) / flyspeed[difficulty], "linear", function() {
+				// 进入great判定区
 				inrange[index] = 1;
 			});
 			widgetQueue[index]
 			.animate({
 				left: 225
 			}, 20 / flyspeed[difficulty], "linear", function() {
+				// 进入perfect判定区
 				inrange[index] = 2;
 			});
 			widgetQueue[index]
 			.animate({
 				left: 195
 			}, 30 / flyspeed[difficulty], "linear", function() {
-				console.log(document.getElementById("songAudio").currentTime);
+				// 如果是自动打歌，那么模拟键盘事件
 				if (autoFlag === true) {
 					var e = jQuery.Event("keydown");
 					if (type === 0 || type === 2) {
@@ -510,6 +525,7 @@ function setoneWidget(index, type, json, difficulty) {
 			.animate({
 				left: 175
 			}, 20 / flyspeed[difficulty], "linear", function() {
+				// 如果是自动打歌，那么模拟键盘事件
 				if (autoFlag === true) {
 					var e = jQuery.Event("keyup");
 					if (type === 0 || type === 2) {
@@ -519,18 +535,19 @@ function setoneWidget(index, type, json, difficulty) {
 					}
 					$('html').trigger(e);
 				}
+				// 进入great判定区
 				inrange[index] = 1;
 			});
 			widgetQueue[index]
 			.animate({
 				left: 155
 			}, 20 / flyspeed[difficulty], "linear", function() {
+				// 没打这个鼓点或者打错了
 				if (isClicked[index] === false || isError[index] === true) {
 					wrongCount++;
 					if (isError[index] === false) {
 						setMissIcon();
 					}
-					fcFlag = false;
 					inrange[index] = 0;
 					widgetQueue[index]
 					.animate({
@@ -544,8 +561,7 @@ function setoneWidget(index, type, json, difficulty) {
 					$('.comboText').remove();
 				}
 			});
-		} else {
-			//widgetQueue[index].css('background-image', 'url("../src/game/widget_yellow.jpg")');
+		} else {		// 黄色鼓点条的情况
 			widgetQueue[index].css('background-color', 'rgb(243, 242, 57)');
 			widgetQueue[index].css('left', 1280);
 			widgetQueue[index].css('top', 195);
@@ -598,12 +614,8 @@ function setoneWidget(index, type, json, difficulty) {
 					setComboText();
 
 				} else {
-					if (maxCombo < combo) {
-						maxCombo = combo;
-					}
 					wrongCount++;
 					setMissIcon();
-					fcFlag = false;
 					combo = 0;
 					basicScore = 0;
 					$('.comboText').remove();
@@ -648,6 +660,7 @@ function onehit_up(keycode) {
 	}
 }
 
+// 鼓点音频数组的循环
 function plusinloop(i) {
 	if (i < 9) {
 		return i + 1;
@@ -701,6 +714,7 @@ var playinIndex = 0, playoutIndex = 0;
 var numberWidth = new Array(40, 29, 41, 38, 41, 39, 41, 38, 39, 37);
 $('html').bind({
 	keydown: function(e) {
+		// 如果在加载成功后点击回车键
 		if (page_status === 1.5 && OKFlag === true && e.keyCode === 13) {
 			$('.tryAudio').remove();
 			page_status = 2;
@@ -708,8 +722,6 @@ $('html').bind({
 			loadingWindow.remove();
 			deployGamewidgets();
 			combo = 0;
-			maxCombo = 0;
-			fcFlag = true;
 			perfectCount = 0;
 			greatCount = 0;
 			wrongCount = 0;
@@ -723,6 +735,7 @@ $('html').bind({
 		}
 
 		var keyCode;
+		//如果是自动打歌，那么需要转换一下keycode，防止与实际的keycode弄混
 		if (autoFlag === true) {
 			if (e.keyCode < 4) {
 				keyCode = keys[e.keyCode];
@@ -752,6 +765,7 @@ $('html').bind({
 
 					if (inrange[queuetop] > 0) {
 						isClicked[queuetop] = true;
+						// 如果是黄条，那么按哪种键都可以
 						if (widgetType[queuetop] === 4) {
 							if (i === 0 || i === 1) {
 								document.getElementsByClassName('drum_in')[playinIndex].play();
@@ -766,6 +780,7 @@ $('html').bind({
 							return;
 						}
 
+						// 红色鼓点的情况
 						if (i < 2) {
 							if (widgetType[queuetop] === 0 || widgetType[queuetop] === 2) {
 								if (widgetType[queuetop] === 0) {
@@ -789,6 +804,7 @@ $('html').bind({
 
 								widgetDisappear(queuetop);
 								++combo;
+								// 每隔100combo，基础得分增加100
 								if (combo % 100 === 0) {
 									basicScore += 100;
 								}
@@ -799,14 +815,10 @@ $('html').bind({
 								isError[queuetop] = true;
 								wrongCount++;
 								setMissIcon();
-								fcFlag = false;
 								if (widgetType[queuetop] === 1) {
 									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
 								} else {
 									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error_big.png)');
-								}
-								if (maxCombo < combo) {
-									maxCombo = combo;
 								}
 								combo = 0;
 								basicScore = 100;
@@ -818,14 +830,10 @@ $('html').bind({
 								isError[queuetop] = true;
 								wrongCount++;
 								setMissIcon();
-								fcFlag = false;
 								if (widgetType[queuetop] === 0) {
 									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error.png)');
 								} else {
 									widgetQueue[queuetop].css('background-image', 'url(../src/game/widget_error_big.png)');
-								}
-								if (maxCombo < combo) {
-									maxCombo = combo;
 								}
 								combo = 0;
 								basicScore = 100;
@@ -862,6 +870,7 @@ $('html').bind({
 							}
 						}
 					}
+					// 更新下一次播放鼓点声音的下标
 					playinIndex = plusinloop(playinIndex);
 				}
 			}
@@ -879,6 +888,7 @@ $('html').bind({
 		} else {
 			keyCode = e.keyCode;
 		}
+		// 按键抬起后删掉鼓上的图标
 		if (page_status === 2) {
 			if (keyCode === keys[0]) {
 				left_in.remove();
@@ -893,6 +903,7 @@ $('html').bind({
 	}
 });
 
+// 设置得分的图片
 function setScoreText() {
 	$('.scoreText').remove();
 	var digits = getDigits(score);
@@ -905,6 +916,7 @@ function setScoreText() {
 	}
 }
 
+// 设置combo增加的动画
 function setComboTextAnimation(text) {
 	text
 	.animate({
@@ -918,6 +930,7 @@ function setComboTextAnimation(text) {
 	}, 100, "easeInQuad");
 }
 
+// 设置combo的图片
 function setComboText() {
 	$('.comboText').remove();
 	var single = combo % 10, tens = ((combo - single) / 10) % 10, hundreds = parseInt(combo / 100) % 10, thousands = parseInt(combo / 1000);
@@ -966,7 +979,9 @@ function setComboText() {
 	setComboTextAnimation(singleText);
 }
 
+// 鼓点被正确地击中时设置的动画
 function widgetDisappear(qtop) {
+	// 如果当前还在动画中，那么取消掉之后动画的队列
 	if (widgetQueue[qtop].is(":animated")) {
 		widgetQueue[qtop]
 		.stop(true)
@@ -976,7 +991,7 @@ function widgetDisappear(qtop) {
 		}, 200, "easeOutQuart", function() {
 			widgetQueue[qtop].css('z-index', 20);
 		});
-	} else {
+	} else {	// 如果当前不在动画中，那么直接添加动画即可
 		widgetQueue[qtop]
 		.animate({
 			top: 90,
@@ -1023,6 +1038,7 @@ function yellowWidgetDisappear() {
 	});
 }
 
+// 渐隐效果
 function FadeOut(obj) {
 	obj.animate({
 		opacity: 0
@@ -1031,6 +1047,7 @@ function FadeOut(obj) {
 	});
 }
 
+// 游戏部件消失
 function gametoolsDisappear() {
 	FadeOut(drumarea);
 	FadeOut(drumOut);
@@ -1049,6 +1066,7 @@ function gametoolsDisappear() {
 	drum_icon.remove();
 }
 
+// 取得num的八位数字
 function getDigits(num) {
 	var digits = new Array(8);
 	var count = 0;
@@ -1064,6 +1082,7 @@ var finalscore;
 var detailArea;
 var backButton;
 var perfectTextImage, greatTextImage, wrongTextImage, rankingText, ranking;
+// 设置最后的分数界面
 function displayScore() {
 	finalscoreArea = $('<div id="finalscoreArea">Score</div>');
 	finalscore = new Array(6);
