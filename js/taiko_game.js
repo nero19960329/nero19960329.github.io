@@ -5,6 +5,7 @@ var loadingtext = $('<div id="loadingtext">Now Loading...</div>');
 gamearea.append(loadingtext);
 var clickkeytext = $('<div id="clickkeytext"></div>');
 
+// 封面图加载完成
 coverimage.load(function() {
 	loadingtext.remove();
 	gamearea.append(coverimage);
@@ -12,9 +13,10 @@ coverimage.load(function() {
 });
 
 var background_selectstage;
-var songdata = new Array();
+var songdata = new Array();	// 存储歌曲信息的数组
 
 $('#gamearea').bind({
+	// 点击进入选择关卡界面
 	mouseup: function() {
 		if (page_status === 0) {
 			clickkeytext.remove();
@@ -32,6 +34,7 @@ $('#gamearea').bind({
 					.animate({
 						left: 0
 					}, 500, function() {
+						// 读取默认歌曲的数据
 						$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[0] + ".json", function(json) {
 							loadingtext.remove();
 							songdata[0] = json;
@@ -39,7 +42,7 @@ $('#gamearea').bind({
 							setSongDetail(0);
 							nowSongIndex = 0;
 						}).fail(function() {
-
+							alert("读取失败！请检查网络");
 						});
 					});
 				});
@@ -48,6 +51,7 @@ $('#gamearea').bind({
 	}
 });
 var songlist = $('<div id="songlist"></div>');
+// 歌曲名
 var insertSongs = new Array();
 insertSongs[0] = "Brave Shine (TV Size)";
 insertSongs[1] = "Sister's noise(TV Size)";
@@ -55,6 +59,7 @@ insertSongs[2] = "硝子の花園";
 insertSongs[3] = "Butter-Fly(TV Size)";
 insertSongs[4] = "No Brand Girls";
 insertSongs[5] = "God Knows";
+// 歌曲的json文件名
 var jsonName = new Array();
 jsonName[0] = "braveshine";
 jsonName[1] = "fripSide-sister'snoise";
@@ -62,6 +67,7 @@ jsonName[2] = "NanjouYoshinoKusudaAina-GarasunoHanazono";
 jsonName[3] = "WadaKouji-Butter-Fly";
 jsonName[4] = "u's-Nobrandgirls";
 jsonName[5] = "HiranoAya-Godknows";
+// 歌曲的后缀
 var songType = new Array();
 songType[0] = "mp3";
 songType[1] = "mp3";
@@ -69,12 +75,15 @@ songType[2] = "mp3";
 songType[3] = "mp3";
 songType[4] = "mp3";
 songType[5] = "ogg";
+
+// 分别代表完整的歌曲和试听的歌曲
 var songAudio, tryAudio;
 
 var songDetailArea;
 var autoCheckbox;
 var difficultyButtons = new Array(4);
 
+// 显示选择关卡的界面
 function displaySelectstage() {
 	songDetailArea = $('<div id="songDetailArea" ></div>');
 	gamearea.append(songDetailArea);
@@ -95,12 +104,16 @@ function displaySelectstage() {
 	}
 }
 
+// autoFlag即是否是自动打歌
+// nowSongIndex即当前选中歌曲的id
 var autoFlag, nowSongIndex;
 
+// 设置歌曲的具体信息界面
 function setSongDetail(index) {
 	var song = $('<div id="song_' + index + '">' + insertSongs[index] + '</div>');
 	$('.difficultyButtons').remove();
 	gamearea.append(loadingtext);
+	// 读取歌曲对应的json数据
 	$.getJSON("https://nero19960329.github.io/json/game/songs/" + jsonName[index] + ".json", function(json) {
 		loadingtext.remove();
 		$('.difficultyButtons').remove();
@@ -108,6 +121,7 @@ function setSongDetail(index) {
 		songDetailArea.html("Information:<br />" + song.html() + "<br /> —— " + songdata[index].subtitle + "<br />author：" + songdata[index].author + "<br />artist：" + songdata[index].artist + "<br /><div id='autoDiv'><input type='checkbox' id='autoCheckbox' value='auto' />auto</div>");
 		var bg = $('<img id="bg_selectstage" src="../src/game/cover/' + songdata[index].wave + '.jpg" />');
 		gamearea.append(loadingtext);
+		// 背景图读取完毕后进行替换，这样不会出现背景图在一段时间内没有的情况
 		bg.load(function() {
 			background_selectstage.remove();
 			background_selectstage = bg;
@@ -122,6 +136,7 @@ function setSongDetail(index) {
 		for (var i = 0; i < 4; ++i) {
 			difficultyButtons[i].css('top', 85 + 60 * i);
 			(function(buttonIndex) {
+				// 点击关卡难易度按钮进入加载界面
 				difficultyButtons[i].bind({
 					mouseup: function() {
 						page_status = 1.5;
@@ -133,23 +148,28 @@ function setSongDetail(index) {
 			gamearea.append(difficultyButtons[i]);
 		}
 
+		// 防止快速更换歌曲而导致的试听部分同时播放，所以在播放之前先把以前的试听部分删除掉
 		$('.tryAudio').remove(); 
 		tryAudio = $('<audio class="tryAudio" " src="../src/game/songs/' + songdata[index].wave + '.' + songType[index] + '" />');
 		gamearea.append(tryAudio);
 		var tryAudio_dom = document.getElementsByClassName("tryAudio")[0];
+		// 设置歌曲的播放时间，实现从高潮部分开始播放
 		tryAudio_dom.currentTime = parseInt(songdata[index].demostart / 1000);
 		tryAudio_dom.play();
+		// 手动循环
 		tryAudio_dom.onended = function() {
 			this.currentTime = parseInt(songdata[index].demostart / 1000);
 			this.play();
 		}
 	}).fail(function() {
-
+		alert("读取失败！请检查网络");
 	});
 }
 
+// 设置鼠标悬停在歌曲列表上时的动画
 function setSonghover(index) {
 	var song = $('<div id="song_' + index + '">' + insertSongs[index] + '</div>');
+	// 为防止鼠标多次悬停在列表上导致的动画连续播放，在每次触发动画前会调用stop(true)，以此来停止被选元素的所有加入队列的动画
 	song.hover(
 		function(e) {
 			song
@@ -236,9 +256,9 @@ function songlistDisappear(songIndex, buttonIndex) {
 						--count_image;
 						loadingProgress.attr('value', (20 - count_image) * 2);
 						if (count_image == 0) {
-							var count_icon = 15;
+							var count_icon = 16;
 							var widgetIcon = new Array(8);
-							for (var j = 0; j < 15; ++j) {
+							for (var j = 0; j < 16; ++j) {
 								widgetIcon[j] = $('<img class="LoadingIcon" />');
 							}
 							widgetIcon[0].attr('src', '../src/game/widget_red.png');
@@ -256,7 +276,8 @@ function songlistDisappear(songIndex, buttonIndex) {
 							widgetIcon[12].attr('src', '../src/game/ranking-X.png');
 							widgetIcon[13].attr('src', '../src/game/widgetarea.png');
 							widgetIcon[14].attr('src', '../src/game/drum_icon.png');
-							for (var j = 0; j < 15; ++j) {
+							widgetIcon[15].attr('src', '../src/game/widget_yellow.png');
+							for (var j = 0; j < 16; ++j) {
 								gamearea.append(widgetIcon[j]);
 							}
 							$('.LoadingIcon').load(function() {
