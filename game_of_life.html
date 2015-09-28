@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<link rel="stylesheet" type="text/css" href="css/index.css">
+<html>
+	<head>
+		<title>Life Game~</title>
+	</head>
+
+	<body>
+		<div id="allArea">
+			<div id="gameArea">
+				<h3>Game Of Life</h3>
+				<!-- <div id="gridContainer"></div> -->
+				<canvas id="gridCanvas" width="600px" height="450px"></canvas>
+			</div>
+			<div id="divideLine"></div>
+			<div id="controlArea">
+				<h4>游戏控制</h4>
+				<div class="divideRow"></div>
+				<div class="controlButton" onclick="startButton()">开始</div>
+				<div class="controlButton" onclick="stopButton()">停止</div>
+				<br />
+				<h4>进阶设置</h4>
+				<div class="divideRow"></div>
+				<fieldset style="width: 130px">
+					<legend>网格密度</legend>
+					<input type="radio" name="dense" value="low" />低
+					<input type="radio" name="dense" value="medium" checked/>中
+					<input type="radio" name="dense" value="high" />高
+				</fieldset>
+				<fieldset style="width: 150px">
+					<legend>时间间隔</legend>
+					<input type="radio" name="speed" value="low" />慢
+					<input type="radio" name="speed" value="medium" checked/>适中
+					<input type="radio" name="speed" value="high" />快
+				</fieldset>
+			</div>
+		</div>
+	</body>
+	
+	<script type="text/javascript" src="js/jquery-1.8.0.js"></script>
+	<script type="text/javascript" src="js/grid.js"></script>
+	<script type="text/javascript" src="js/interface.js"></script>
+	<script type="text/javascript" src="js/logic.js"></script>
+</html>
