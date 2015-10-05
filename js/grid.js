@@ -1,5 +1,6 @@
-var LIVE = true;
-var DEAD = false;
+var LIVE = 1;
+var DEAD = 0;
+var WALL = -1;
 
 function Grid(width, height) {
 	this.width = width;
@@ -13,5 +14,5 @@ function Grid(width, height) {
 	}
 }
 
-var WIDTH = 0, HEIGHT = 0, SPEED = 1000;
+var WIDTH = 200, HEIGHT = 150, SPEED = 1000, LIVE_DENSE = 0.5;
 var myGrid = new Grid(WIDTH, HEIGHT);

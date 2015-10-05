@@ -85,11 +85,21 @@ body {
 	top: 1px;
 }
 
+.slider {
+	width: 130px;
+}
+
+.sliderText {
+	text-align: center;
+	word-spacing: 100px;
+}
+
 fieldset {
 	margin-bottom: 20px;
 	border-radius: 5px;
 	border: 1px solid #aaa;
 	font-size: 15px;
+	width: 130px;
 }
 
 #gridCanvas {

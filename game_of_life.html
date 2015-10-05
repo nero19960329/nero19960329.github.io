@@ -17,22 +17,26 @@
 			<div id="controlArea">
 				<h4>游戏控制</h4>
 				<div class="divideRow"></div>
+				<div class="controlButton" onclick="generateMap()">生成地图</div>
 				<div class="controlButton" onclick="startButton()">开始</div>
 				<div class="controlButton" onclick="stopButton()">停止</div>
 				<br />
 				<h4>进阶设置</h4>
 				<div class="divideRow"></div>
-				<fieldset style="width: 130px">
-					<legend>网格密度</legend>
-					<input type="radio" name="dense" value="low" />低
-					<input type="radio" name="dense" value="medium" checked/>中
-					<input type="radio" name="dense" value="high" />高
+				<fieldset>
+					<legend>活细胞密度</legend>
+					<div class="sliderText">疏 密</div>
+					<input class="slider" type="range" name="live_dense" min="15" max="85" />
 				</fieldset>
-				<fieldset style="width: 150px">
-					<legend>时间间隔</legend>
-					<input type="radio" name="speed" value="low" />慢
-					<input type="radio" name="speed" value="medium" checked/>适中
-					<input type="radio" name="speed" value="high" />快
+				<fieldset>
+					<legend>网格密度</legend>
+					<div class="sliderText">疏 密</div>
+					<input class="slider" type="range" name="dense" min="40" max="200" />
+				</fieldset>
+				<fieldset>
+					<legend>游戏进行速度</legend>
+					<div class="sliderText">慢 快</div>
+					<input class="slider" type="range" name="speed" min="2.5" max="12.5" />
 				</fieldset>
 			</div>
 		</div>

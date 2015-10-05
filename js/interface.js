@@ -1,17 +1,27 @@
 var displayGrid;
 var width = myGrid.width, height = myGrid.height;
 var windowWidth = $(window).width(), windowHeight = $(window).height();
+var isRunning = false, isPrepared = false;
+var displayWidth, displayHeight, unitWidth, unitHeight;
 
 // 设置随机网格
-function setRandomGrid() {
-	for (var i = 0; i < width; ++i) {
-		for (var j = 0; j < height; ++j) {
-			var randomNumber = Math.random();
-			if (randomNumber <= 0.5) {
-				myGrid.grid[i][j] = DEAD;
-			} else {
-				myGrid.grid[i][j] = LIVE;
+function setRandomGrid(dense) {
+	while(true) {
+		var allGrid = width * height;
+		var liveGrid = 0;
+		for (var i = 0; i < width; ++i) {
+			for (var j = 0; j < height; ++j) {
+				var randomNumber = Math.random();
+				if (randomNumber <= dense) {
+					myGrid.grid[i][j] = LIVE;
+					++liveGrid;
+				} else {
+					myGrid.grid[i][j] = DEAD;
+				}
 			}
+		}
+		if (liveGrid / allGrid >= (dense - 0.005) && liveGrid / allGrid <= (dense + 0.005)) {
+			break;
 		}
 	}
 }
@@ -22,66 +32,115 @@ function setAllArea() {
 }
 
 function colorGrid() {
-	var displayWidth = $("#gridCanvas").width(), displayHeight = $("#gridCanvas").height();
-	var unitWidth = displayWidth / width, unitHeight = displayHeight / height;
 	var ctx = $("#gridCanvas")[0].getContext("2d");
 	ctx.fillStyle = "rgb(255, 255, 255)";
 	ctx.fillRect(0, 0, displayWidth, displayHeight);
-	ctx.fillStyle = "rgb(0, 0, 0)";
 	for (var i = 0; i < width; ++i) {
 		for (var j = 0; j < height; ++j) {
 			if (myGrid.grid[i][j] === DEAD) {
-				ctx.fillRect(unitWidth * i, unitHeight * j, unitWidth, unitHeight);
+				ctx.fillStyle = "rgb(0, 0, 0)";
+			} else if (myGrid.grid[i][j] === WALL) {
+				ctx.fillStyle = "rgb(255, 0, 0)";
+			} else {
+				ctx.fillStyle = "rgb(255, 255, 255)";
 			}
+			ctx.fillRect(unitWidth * i, unitHeight * j, unitWidth, unitHeight);
 		}
+	}
+
+	for (var i = 0; i <= width; ++i) {
+		ctx.beginPath();
+		ctx.moveTo(i * unitWidth, 0);
+		ctx.lineTo(i * unitWidth, displayHeight);
+		ctx.strokeStyle = "blue"
+		ctx.stroke();
+	}
+
+	for (var j = 0; j <= height; ++j) {
+		ctx.beginPath();
+		ctx.moveTo(0, j * unitHeight);
+		ctx.lineTo(displayWidth, j * unitHeight);
+		ctx.strokeStyle = "blue"
+		ctx.stroke();
 	}
 }
 
+function setLiveDense() {
+	var live_dense = parseInt($("input[name='live_dense']").val());
+	LIVE_DENSE = live_dense / 100;
+}
+
 function setDense() {
-	var dense = $("input:radio[name='dense']:checked").val();
-	if (dense === "low") {
-		WIDTH = 60;
-		HEIGHT = 45;
-	} else if (dense === "medium") {
-		WIDTH = 120;
-		HEIGHT = 90;
-	} else {
-		WIDTH = 200;
-		HEIGHT = 150;
-	}
+	var dense = parseInt($("input[name='dense']").val());
+	WIDTH = parseInt(dense / 4) * 4;
+	HEIGHT = WIDTH * 3 / 4;
 	
 	if (width != WIDTH || height != HEIGHT) {
 		myGrid = new Grid(WIDTH, HEIGHT);
 		width = myGrid.width;
 		height = myGrid.height;
-		setRandomGrid();
-	} else {
-		setRandomGrid();
 	}
 }
 
 function setSpeed() {
-	var speed = $("input:radio[name='speed']:checked").val();
-	if (speed === "low") {
-		SPEED = 400;
-	} else if (speed === "medium") {
-		SPEED = 240;
-	} else {
-		SPEED = 80;
+	var speed = parseInt($("input[name='speed']").val());
+	SPEED = 1000 / speed;
+}
+
+function setWall() {
+	var canvas = $("#gridCanvas")[0];
+	if (typeof(canvas) === "undefined") {
+		return;
 	}
+	canvas.addEventListener("click", function(e) {
+		if (isRunning === true) {
+			return;
+		}
+
+		var rect = canvas.getBoundingClientRect();
+		var x = e.clientX - rect.left * (canvas.width / rect.width);
+		var y = e.clientY - rect.top * (canvas.height / rect.height);
+		var i = parseInt(x / unitWidth), j = parseInt(y / unitHeight);
+		myGrid.grid[i][j] = WALL;
+		colorGrid();
+	}, false);
+}
+
+function generateMap() {
+	if (isRunning === true) {
+		return;
+	}
+	setDense();
+	setLiveDense();
+	setRandomGrid(LIVE_DENSE);
+	displayWidth = $("#gridCanvas").width();
+	displayHeight = $("#gridCanvas").height();
+	unitWidth = displayWidth / width;
+	unitHeight = displayHeight / height;
+	colorGrid();
+	isPrepared = true;
 }
 
 function startButton() {
+	if (isPrepared === false) {
+		alert("请先生成地图！");
+		return;
+	}
+	if (isRunning === true) {
+		return;
+	}
+
 	$("input").attr("disabled", true);
-	setDense();
 	setSpeed();
-	colorGrid();
+	console.log("LIVE_DENSE: " + LIVE_DENSE + " WIDTH: " + WIDTH + " HEIGHT: " + HEIGHT + " SPEED: " + SPEED);
+	isRunning = true;
 	start(myGrid, SPEED);
 }
 
 function stopButton() {
 	$("input").attr("disabled", false);
 	pause();
+	isRunning = false;
 }
 
 $(window).resize(function() {
@@ -92,6 +151,13 @@ $(window).resize(function() {
 
 $(document).ready(function() {
 	setAllArea();
-	setDense();
-	colorGrid();
+	//setDense();
+	//setRandomGrid(LIVE_DENSE);
+	displayWidth = $("#gridCanvas").width();
+	displayHeight = $("#gridCanvas").height();
+	unitWidth = displayWidth / width;
+	unitHeight = displayHeight / height;
+	//colorGrid();
+
+	setWall();
 });
