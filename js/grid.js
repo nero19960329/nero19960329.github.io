@@ -16,3 +16,8 @@ function Grid(width, height) {
 
 var WIDTH = 200, HEIGHT = 150, SPEED = 1000, LIVE_DENSE = 0.5;
 var myGrid = new Grid(WIDTH, HEIGHT);
+
+module.exports = Grid;
+module.exports.LIVE = LIVE;
+module.exports.DEAD = DEAD;
+module.exports.WALL = WALL;

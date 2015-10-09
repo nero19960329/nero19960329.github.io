@@ -1,30 +1,8 @@
 var displayGrid;
-var width = myGrid.width, height = myGrid.height;
-var windowWidth = $(window).width(), windowHeight = $(window).height();
+var width, height;
+var windowWidth, windowHeight;
 var isRunning = false, isPrepared = false;
 var displayWidth, displayHeight, unitWidth, unitHeight;
-
-// 设置随机网格
-function setRandomGrid(dense) {
-	while(true) {
-		var allGrid = width * height;
-		var liveGrid = 0;
-		for (var i = 0; i < width; ++i) {
-			for (var j = 0; j < height; ++j) {
-				var randomNumber = Math.random();
-				if (randomNumber <= dense) {
-					myGrid.grid[i][j] = LIVE;
-					++liveGrid;
-				} else {
-					myGrid.grid[i][j] = DEAD;
-				}
-			}
-		}
-		if (liveGrid / allGrid >= (dense - 0.005) && liveGrid / allGrid <= (dense + 0.005)) {
-			break;
-		}
-	}
-}
 
 // 设置样式
 function setAllArea() {
@@ -112,7 +90,7 @@ function generateMap() {
 	}
 	setDense();
 	setLiveDense();
-	setRandomGrid(LIVE_DENSE);
+	setRandomGrid(myGrid, LIVE_DENSE);
 	displayWidth = $("#gridCanvas").width();
 	displayHeight = $("#gridCanvas").height();
 	unitWidth = displayWidth / width;
@@ -150,6 +128,11 @@ $(window).resize(function() {
 });
 
 $(document).ready(function() {
+	width = myGrid.width;
+	height = myGrid.height;
+	windowWidth = $(window).width();
+	windowHeight = $(window).height();
+
 	setAllArea();
 	//setDense();
 	//setRandomGrid(LIVE_DENSE);
