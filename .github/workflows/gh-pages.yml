@@ -3,7 +3,7 @@ name: GitHub Pages
 on:
   push:
     branches:
-    - hugo
+    - main
 
 jobs:
   deploy:
@@ -27,8 +27,7 @@ jobs:
         hugo-version: "latest"
         extended: true
     - name: Build
-      run: |-
-        hugo --minify
+      run: hugo --minify
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v3
       if: ${{ github.ref == 'refs/heads/main' }}
