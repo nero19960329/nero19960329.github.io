@@ -3,9 +3,9 @@ title: "Hugo with Docsy theme"
 date: 2022-05-19T00:28:16+08:00
 draft: false
 tags:
-- hugo
-- docsy
-- github actions
+- Hugo
+- Docsy
+- Github Actions
 - CI
 description: >
     Install Hugo with Docsy theme, use Github Actions to automatically deploy to GitHub Pages.
@@ -13,7 +13,7 @@ description: >
 
 ## Install Hugo
 
-### MacOS
+### macOS
 
 ```bash
 brew install hugo   # install hugo-extended
