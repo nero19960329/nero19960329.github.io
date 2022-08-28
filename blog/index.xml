@@ -1,4 +1,104 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wangzhao's site – Blog</title><link>/blog/</link><description>Recent content in Blog on wangzhao's site</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: LeetCode Problems</title><link>/blog/leetcode-problems/</link><pubDate>Tue, 24 May 2022 21:51:57 +0800</pubDate><guid>/blog/leetcode-problems/</guid><description>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wangzhao's site – Blog</title><link>/blog/</link><description>Recent content in Blog on wangzhao's site</description><generator>Hugo -- gohugo.io</generator><atom:link href="/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: Site Reliability Engineering - Week 1</title><link>/blog/sre_week1/</link><pubDate>Sat, 27 Aug 2022 16:36:00 +0800</pubDate><guid>/blog/sre_week1/</guid><description>
+&lt;h2 id="slo-service-level-objective">SLO: Service Level Objective&lt;/h2>
+&lt;p>服务水平目标。&lt;/p>
+&lt;p>虽然系统的可靠性非常重要，但也不能因为保证系统可靠而不开发新 feature。&lt;/p>
+&lt;p>所以需要平衡需求开发和保持系统可靠性是重要且具有挑战性的。&lt;/p>
+&lt;p>SLO 可以用来判定可靠性和其他新 feature 的优先级。&lt;/p>
+&lt;p>对于保持系统可靠运行的人来说，如果经常陷入&lt;strong>救火-&amp;gt;事件调查-&amp;gt;重复性维护&lt;/strong>循环，就会被拖住。&lt;/p>
+&lt;p>此时，如果我们可以明确知道&lt;strong>可靠性目标&lt;/strong>是什么，就不必陷入这种被动响应的循环。&lt;/p>
+&lt;p>这一点就需要 SLO 来介入，它可以回答&lt;strong>系统的可靠性水平是多少&lt;/strong>这个问题。从而给决策人员通过数据来判定此时此刻是应该开发新 feature 或者提高系统可靠性。&lt;/p>
+&lt;h3 id="slo-三原则">SLO 三原则&lt;/h3>
+&lt;ol>
+&lt;li>Figuring out what you want to promise and to whom
+&lt;ul>
+&lt;li>搞明白要承诺什么，向谁承诺&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Figuring out the metrics you care about that make your service for reliability good
+&lt;ul>
+&lt;li>找出需要关心的指标，使得服务具有良好的可靠性&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Deciding how much reliability is good enough
+&lt;ul>
+&lt;li>搞清楚上述指标达到多少就足够好了&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="sla-service-level-agreements">SLA: Service Level Agreements&lt;/h2>
+&lt;p>服务水平协议，是提供服务者与用户之间达成的可靠性协议。如果违反了 SLA，则提供服务者应当承担后果。&lt;/p>
+&lt;p>一般来说，当提供服务者已经发现 SLA 被 break 时才收到警报，那么修复善后过程则非常贵。&lt;/p>
+&lt;p>所以需要将 SLO 作为阈值，来提前预警 SLA 被 break 的风险。&lt;/p>
+&lt;h3 id="sla-vs-slo">SLA vs SLO&lt;/h3>
+&lt;p>SLA 是存在后果的对外承诺；SLO 则是为了满足客户期望的内部承诺。&lt;/p>
+&lt;p>当系统的 SLO 被 break 时，就需要特别开始关注系统的可靠性与运行风险了。&lt;/p>
+&lt;h2 id="happiness-test-幸福测试">Happiness Test: 幸福测试&lt;/h2>
+&lt;p>用来帮助设定 SLO 的值。当勉强满足 SLO 时，客户是开心的；反之，客户则是不满的。&lt;/p>
+&lt;p>挑战在于如何量化指标，如何衡量客户的幸福感。&lt;/p>
+&lt;p>比如客户可能由很多群体组成，每个群体的关注点不同。&lt;/p>
+&lt;h2 id="sli-service-level-indicators">SLI: Service Level Indicators&lt;/h2>
+&lt;p>服务水平指标，是对用户体验的测量指标。最好是表达所有有效时间中良好的比例，比如过去一段时间内成功请求所占所有合法请求的比例。&lt;/p>
+&lt;pre tabindex="0">&lt;code>SLI = good events / valid events
+&lt;/code>&lt;/pre>&lt;h2 id="error-budgets-错误预算">Error Budgets: 错误预算&lt;/h2>
+&lt;p>用于平滑地表示 break SLO 的程度。当 error budget 达到 100% 时，意味着 SLO 已经被 break 了，需要把可靠性放在第一优先级来看。&lt;/p>
+&lt;p>当 error budget 还低时，就可以让新 feature 开发放在高优先的位置（可以采取更激进的发布），error budget 逐渐升高但还没超过 100% 时，就需要更保守的发布策略。&lt;/p>
+&lt;p>对于某种特定类型的故障来说，可以定义如下指标：&lt;/p>
+&lt;ul>
+&lt;li>TTD: Time to detect
+&lt;ul>
+&lt;li>从用户受到影响到 SRE on-call 来解决问题的时间&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>TTR: Time to repair &amp;amp; Time to resolution
+&lt;ul>
+&lt;li>从发现问题到解决问题的时间&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>TTF: Time to failure
+&lt;ul>
+&lt;li>故障发生的频率&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>该故障对错误预算的预期影响 epsilon&lt;/li>
+&lt;/ul>
+&lt;pre tabindex="0">&lt;code>epsilon = TTD * TTR * 故障影响因子% / TTF
+&lt;/code>&lt;/pre>&lt;p>减少故障对错误预算的影响，可以从以下几点出发：&lt;/p>
+&lt;ul>
+&lt;li>降低 TTD
+&lt;ul>
+&lt;li>添加自动机制来捕获异常，比如自动警报、监视等&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>降低 TTR
+&lt;ul>
+&lt;li>通过写文档，打 log 来让错误更容易被定位与解决&lt;/li>
+&lt;li>做一些简便的工具用来排查问题&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>降低故障影响因子
+&lt;ul>
+&lt;li>限制特定更改在一段时间内可能影响的用户数量
+&lt;ul>
+&lt;li>基于百分比的更新，比如新功能仅推送给 0.1% 的用户，再一点点增加&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>服务在故障期间以降级模式运行，比如只允许读但不允许写&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>提高 TTF
+&lt;ul>
+&lt;li>自动将流量引导至远离发生故障的区域&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h2 id="summary">Summary&lt;/h2>
+&lt;ul>
+&lt;li>做好问题定义：SLOs &amp;amp; SLIs&lt;/li>
+&lt;li>让系统恰好达到它应有的稳定程度，但不必做到 100% 的极致&lt;/li>
+&lt;li>错误预算是沟通的基础&lt;/li>
+&lt;li>SLOs 不是永远不变的&lt;/li>
+&lt;li>组织间需要较强的合作&lt;/li>
+&lt;/ul></description></item><item><title>Blog: LeetCode Problems</title><link>/blog/leetcode-problems/</link><pubDate>Tue, 24 May 2022 21:51:57 +0800</pubDate><guid>/blog/leetcode-problems/</guid><description>
 &lt;h2 id="greedy-algorithm">Greedy Algorithm&lt;/h2>
 &lt;h3 id="435-non-overlapping-intervals">435. Non-overlapping intervals&lt;/h3>
 &lt;p>&lt;a href="https://leetcode.com/problems/non-overlapping-intervals/">https://leetcode.com/problems/non-overlapping-intervals/&lt;/a>&lt;/p>
