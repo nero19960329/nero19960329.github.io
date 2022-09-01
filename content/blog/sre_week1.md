@@ -6,6 +6,14 @@ tags:
 - SRE
 ---
 
+## Course Link
+
+https://www.coursera.org/learn/site-reliability-engineering-slos
+
+## References
+
+https://sre.google/
+
 ## SLO: Service Level Objective
 
 服务水平目标。
