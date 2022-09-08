@@ -84,7 +84,49 @@
 &lt;/blockquote>
 &lt;ul>
 &lt;li>复现问题&lt;/li>
-&lt;/ul></description></item><item><title>Blog: Site Reliability Engineering - Week 2</title><link>/blog/sre_week2/</link><pubDate>Tue, 30 Aug 2022 00:01:00 +0800</pubDate><guid>/blog/sre_week2/</guid><description>
+&lt;/ul></description></item><item><title>Blog: Site Reliability Engineering - Week 3 &amp; 4</title><link>/blog/sre_week3_4/</link><pubDate>Sat, 03 Sep 2022 16:41:00 +0800</pubDate><guid>/blog/sre_week3_4/</guid><description>
+&lt;h2 id="course-link">Course Link&lt;/h2>
+&lt;p>&lt;a href="https://www.coursera.org/learn/site-reliability-engineering-slos">https://www.coursera.org/learn/site-reliability-engineering-slos&lt;/a>&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;p>&lt;a href="https://sre.google/">https://sre.google/&lt;/a>&lt;/p>
+&lt;h2 id="developing-sli--slo-in-4-steps">Developing SLI / SLO in 4 steps&lt;/h2>
+&lt;ol>
+&lt;li>Choose an &lt;strong>SLI specification&lt;/strong> from the SLI menu
+&lt;ul>
+&lt;li>确定 SLI 的大方向&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Refine the specification into a detailed &lt;strong>SLI implementation&lt;/strong>
+&lt;ul>
+&lt;li>确定 SLI 的实现细节&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Walk through the user journey and look for &lt;strong>coverage gaps&lt;/strong>
+&lt;ul>
+&lt;li>寻找 SLI 没有覆盖到的部分&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>Set aspirational &lt;strong>SLO targets&lt;/strong> based on business needs
+&lt;ul>
+&lt;li>设置理想的 SLO 目标&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="分析系统中的风险">分析系统中的风险&lt;/h2>
+&lt;p>围绕着一个 template excel 表格，来做各种分析。&lt;/p>
+&lt;p>&lt;a href="https://goo.gl/bnsPj7">https://goo.gl/bnsPj7&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.coursera.org/learn/site-reliability-engineering-slos/lecture/V8Edf/analyzing-risk">https://www.coursera.org/learn/site-reliability-engineering-slos/lecture/V8Edf/analyzing-risk&lt;/a> 这里有使用方式。还没看得太透彻，之后如果有实战机会再补心得。&lt;/p>
+&lt;p>大致意思就是说，先列出系统中可能出问题的风险点，评估各种指标，并通过 SLO 来确定哪些风险是我们应该重点关注的。&lt;/p>
+&lt;h2 id="为-slo-写文档">为 SLO 写文档&lt;/h2>
+&lt;p>理由是您提供的服务无论用户还是开发者，以及上司，都需要知道服务的 SLO 是如何定义的，且如果 break 了，后果是什么。&lt;/p>
+&lt;p>建议包括以下三点：&lt;/p>
+&lt;ol>
+&lt;li>SLO 阈值如何设定？&lt;/li>
+&lt;li>为什么该 SLI 是可以合理度量 SLO 的？&lt;/li>
+&lt;li>指出哪些数据是不会被 SLI 统计的（非法请求）&lt;/li>
+&lt;/ol>
+&lt;p>SLO dashboard 例子:&lt;/p>
+&lt;p>&lt;img src="https://s3.bmp.ovh/imgs/2022/09/05/436c08bb2d661aa6.jpg" alt="">&lt;/p></description></item><item><title>Blog: Site Reliability Engineering - Week 2</title><link>/blog/sre_week2/</link><pubDate>Tue, 30 Aug 2022 00:01:00 +0800</pubDate><guid>/blog/sre_week2/</guid><description>
 &lt;h2 id="course-link">Course Link&lt;/h2>
 &lt;p>&lt;a href="https://www.coursera.org/learn/site-reliability-engineering-slos">https://www.coursera.org/learn/site-reliability-engineering-slos&lt;/a>&lt;/p>
 &lt;h2 id="references">References&lt;/h2>
