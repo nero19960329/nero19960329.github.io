@@ -54,3 +54,7 @@ tags:
 > reproduce bug
 
 - 复现问题
+
+> trait
+
+- 特征
