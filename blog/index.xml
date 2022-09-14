@@ -84,6 +84,12 @@
 &lt;/blockquote>
 &lt;ul>
 &lt;li>复现问题&lt;/li>
+&lt;/ul>
+&lt;blockquote>
+&lt;p>trait&lt;/p>
+&lt;/blockquote>
+&lt;ul>
+&lt;li>特征&lt;/li>
 &lt;/ul></description></item><item><title>Blog: Site Reliability Engineering - Week 3 &amp; 4</title><link>/blog/sre_week3_4/</link><pubDate>Sat, 03 Sep 2022 16:41:00 +0800</pubDate><guid>/blog/sre_week3_4/</guid><description>
 &lt;h2 id="course-link">Course Link&lt;/h2>
 &lt;p>&lt;a href="https://www.coursera.org/learn/site-reliability-engineering-slos">https://www.coursera.org/learn/site-reliability-engineering-slos&lt;/a>&lt;/p>
