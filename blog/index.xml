@@ -539,7 +539,138 @@ Shims --&amp;gt; pyenv
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">publish_dir&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">./public&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then you need to change your source branch to &lt;code>gh-pages&lt;/code> at &lt;code>Settings &amp;gt; Code and automation &amp;gt; Pages &amp;gt; Source&lt;/code>.&lt;/p>
 &lt;h2 id="example-repo">Example repo&lt;/h2>
-&lt;p>&lt;a href="https://github.com/nero19960329/nero19960329.github.io">https://github.com/nero19960329/nero19960329.github.io&lt;/a>&lt;/p></description></item><item><title>Blog: Convex Hull - Part 1</title><link>/blog/convex-hull-1/</link><pubDate>Tue, 27 Feb 2018 16:40:37 +0800</pubDate><guid>/blog/convex-hull-1/</guid><description>
+&lt;p>&lt;a href="https://github.com/nero19960329/nero19960329.github.io">https://github.com/nero19960329/nero19960329.github.io&lt;/a>&lt;/p></description></item><item><title>Blog: Convex Hull - Part 3</title><link>/blog/convex-hull-3/</link><pubDate>Tue, 13 Mar 2018 18:45:03 +0800</pubDate><guid>/blog/convex-hull-3/</guid><description>
+&lt;p>这次继续介绍几个凸包算法，包括 Graham scan 和快速凸包算法。&lt;/p>
+&lt;h2 id="graham-scan">Graham scan&lt;/h2>
+&lt;hr>
+&lt;p>Graham scan 是一个表达起来很简洁的算法，而且也没有涉及到复杂的数据结构，它仅仅需要两个栈 $$S$$ 和 $$T$$。&lt;/p>
+&lt;p>首先遍历所有点，选出 lowest-then-leftmost 的点 $$p_{1}$$，并以该点为参照，将所有其余点按照极角排序，分别为 $$p_{2},p_{3},\cdots ,p_{n}$$。&lt;/p>
+&lt;p>两个栈初始化为（方括号代表栈底）：
+$$S=[\ p_{1},p_{2}&amp;gt;$$
+$$T=&amp;lt; p_{3},p_{4},\cdots ,p_{n}\ ]$$&lt;/p>
+&lt;p>扫描算法流程：当栈 $$T$$ 非空时，如果栈 $$T$$ 的栈顶在栈 $$S$$ 的栈顶与次栈顶组成的有向边的左侧，则将栈 $$T$$ 的栈顶压入栈 $$S$$；否则弹出栈 $$S$$ 的栈顶元素。伪代码如下：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-cpp" data-lang="cpp">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">while&lt;/span> &lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">!&lt;/span>&lt;span style="color:#000">T&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">empty&lt;/span>&lt;span style="color:#000;font-weight:bold">())&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">toLeft&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">S&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">1&lt;/span>&lt;span style="color:#000;font-weight:bold">],&lt;/span> &lt;span style="color:#000">S&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">],&lt;/span> &lt;span style="color:#000">T&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#0000cf;font-weight:bold">0&lt;/span>&lt;span style="color:#000;font-weight:bold">])&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">?&lt;/span> &lt;span style="color:#000">S&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">push&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">T&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">pop&lt;/span>&lt;span style="color:#000;font-weight:bold">())&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">:&lt;/span> &lt;span style="color:#000">S&lt;/span>&lt;span style="color:#000;font-weight:bold">.&lt;/span>&lt;span style="color:#000">pop&lt;/span>&lt;span style="color:#000;font-weight:bold">();&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>有兴趣的读者可以在下图所示的点集上运行一遍算法流程，我就不赘述了。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/13/9hMEoF.jpg" alt="graham-scan-1">&lt;/p>
+&lt;h3 id="扫描效率">扫描效率&lt;/h3>
+&lt;p>这一节讨论扫描一步的效率。粗浅来看，点集中除了参照点的每个点都可能被做 $$\Omega(n)$$ toLeft 比较，那么扫描效率就是 $$O(n)\times O(n)=O(n^{2})$$。但这种估计方法明显太松了，接下来用两种方法求更紧的上界。&lt;/p>
+&lt;h4 id="平面图">平面图&lt;/h4>
+&lt;p>先来复习一下图论中平面图的概念：&lt;/p>
+&lt;blockquote>
+&lt;p>在图论中，平面图是可以画在平面上并且使得不同的边可以互不交叠的图。而如果一个图无论怎样都无法画在平面上，并使得不同的边互不交叠，那么这样的图不是平面图，或者称为非平面图。&lt;/p>
+&lt;/blockquote>
+&lt;p>而在扫描一步中，遍历的所有边都不会相交（如下图）。也就是说，这一步的搜索空间构成了一个平面图。根据欧拉定理，得知平面图中边数 $$E=O(3n)$$，从而说明了扫描效率为 $$O(n)$$。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/13/9hM5wT.jpg" alt="graham-scan-2">&lt;/p>
+&lt;h4 id="均摊分析">均摊分析&lt;/h4>
+&lt;p>我们从另一方面看待这个问题，考虑变量 $$A=|S|+2|T|$$。显而易见地，每次循环中 $$A$$ 都会减少 $$1$$。扫描开始时，$$A=2n-2$$；扫描结束时，$$A\ge 3$$。则循环执行了 $$O(2n-5)=O(n)$$ 次，也即扫描效率为 $$O(n)$$。&lt;/p>
+&lt;h3 id="简化">简化&lt;/h3>
+&lt;p>仔细想想，算法中的排序一步是不需要 toLeft 作为比较器的。&lt;/p>
+&lt;p>假如在点集中增加一个点作为参考点，并把它无限拉低，直到 $$(0,-\infty)$$，则点集中其余点与参考点连成的线就是竖直的，也就是说，我们只需要对其余点的横轴坐标排序即可。&lt;/p>
+&lt;p>但由于引入了一个新的点，所以也会导致求得的凸包与原点集凸包不符。幸运的是，如果我们将新凸包中与参考点有关的两条边删掉，就可以得到原凸包的上半部分，称之为上半凸包（upper hull）。&lt;/p>
+&lt;p>同理，可以在点集中增加参考点 $$(0,+\infty)$$，就可以求出下半凸包（lower hull）。将两者合并，就得到了原凸包。&lt;/p>
+&lt;h2 id="极点个数期望">极点个数期望&lt;/h2>
+&lt;hr>
+&lt;p>令 $$P$$ 是平面上的点集，假设点的个数是 $$n$$，这一节将讨论 $$CH(P)$$（P的凸包）上点个数的量级。&lt;/p>
+&lt;p>值得注意的是，不同的采样方式会得出不同的结果。考虑在单位正方形内均匀且独立地采样（单位正方形与任意长方形是相同的，因为两者可以通过仿射变换至彼此）。&lt;/p>
+&lt;p>取凸包的最上/下/左/右四个点，可以将凸包分成四个部分，不失一般性，我们只考虑凸包的右上角 $$CH_{UR}(P)$$，如下图。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/13/9hlHMR.jpg" alt="expection-complexity-1">&lt;/p>
+&lt;p>在右上角区域，可以定义「极大点」：&lt;/p>
+&lt;blockquote>
+&lt;p>以点 $$P$$ 为原点建立坐标系，如果第一象限没有点集中的其余点，则称点 $$P$$ 为极大点。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/13/9h1eJg.jpg" alt="expection-complexity-2">&lt;/p>
+&lt;p>称极大点集为 $$MAX(P)$$，则 $$|CH_{UR}(P)|\le |MAX(P)|$$，接下来考虑 $$|MAX(P)|$$ 的期望。&lt;/p>
+&lt;p>从右到左，将点集中的点称之为 $${p_{1},p_{2},\cdots ,p_{n}}$$。对于点 $$p_{k}$$ 来讲，它是极大点当且仅当它是 $${p_{1},
+p_{2}\cdots ,p_{k}}$$ 中最高的。由于点是在单位正方形内均匀独立采样得到的，则 $$p_{k}$$ 是极大点的概率为 $$\frac{1}{k}$$。故&lt;/p>
+&lt;p>$$E[|MAX(P)|]=\sum_{i=1}^{n} \frac{1}{n}=O(\log(n))$$&lt;/p>
+&lt;p>经过上述推导，得知当在单位正方形内均匀独立采样时，凸包上点个数的期望为 $$O(\log(n))$$。&lt;/p>
+&lt;p>除了在单位正方形内采样以外，在其他几何形状内采样则会得到不同的结果：&lt;/p>
+&lt;ul>
+&lt;li>单位圆 —— $$O(n^{\frac{1}{3}})$$；&lt;/li>
+&lt;li>三角形 —— $$O(\log(n))$$；&lt;/li>
+&lt;li>凸 $$k$$ 多边形 —— $$O(k\log(n))$$。&lt;/li>
+&lt;/ul>
+&lt;h2 id="快速凸包quickhull">快速凸包（Quickhull）&lt;/h2>
+&lt;hr>
+&lt;p>首先找出点集中 leftmost-then-lowest 的点 $$s$$，以及 rightmost-then-highest 的点 $$t$$。则求解凸包就可以分为求解上半凸包和下半凸包，如下图。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/13/9hGKQH.jpg" alt="quickhull-1">&lt;/p>
+&lt;p>由于求解上下半凸包是对称的，所以只讨论上半凸包的求解过程。&lt;/p>
+&lt;p>与快速排序类似，在每次求解凸包时，都将当前点集分为三部分：&lt;/p>
+&lt;ul>
+&lt;li>$$P_{0}$$ 区域是需要被剪掉的部分，这其中的点之后无需考虑；&lt;/li>
+&lt;li>$$P_{1},P_{2}$$ 区域为左、右子区域，原凸包可以由这两个子区域的凸包组合而成。&lt;/li>
+&lt;/ul>
+&lt;p>具体来说，取距离线段 $$st$$ 最远的点 $$r$$ 作为哨兵。那么 $$\triangle srt$$ 包围的区域则为 $$P_{0}$$，$$sr$$ 左侧的区域是 $$P_{1}$$，$$rt$$ 右侧的区域是 $$P_{2}$$，如下图。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/13/9hGL1e.jpg" alt="quickhull-2">&lt;/p>
+&lt;p>当然快速凸包算法的最差情况也是 $$O(n^{2})$$ 的，考虑这种情况：在单位圆的直径上取两个点，随后在圆心角为 $$\frac{90^{\circ}}{2^{k}},k=0,1,2,\cdots$$ 的位置加入点，如下图。那么每次选择哨兵时都会造成左右极不均匀，从而导致最坏情况。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/13/9h33jA.jpg" alt="quickhull-3">&lt;/p></description></item><item><title>Blog: Convex Hull - Part 2</title><link>/blog/convex-hull-2/</link><pubDate>Tue, 06 Mar 2018 18:07:42 +0800</pubDate><guid>/blog/convex-hull-2/</guid><description>
+&lt;p>先来说两个简单的计算几何小问题：&lt;/p>
+&lt;blockquote>
+&lt;p>给定两个二维线段，判定它们是否相交？&lt;/p>
+&lt;/blockquote>
+&lt;p>当然最笨的办法就是求出两个线段方程，判断解是否满足要求。但这会引入除法操作，这不是我们希望的结果。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/06/9gQJxK.gif" alt="line-line">&lt;/p>
+&lt;p>如上图，考虑 $$P_{3}, P_{4}$$ 是否在线段 $$a$$ 的异侧（toLeft 返回值不同则表示在异侧）。当然只做这一次异侧判断是不行的，对称地考虑 $$P_{1}, P_{2}$$ 是否在线段 $$b$$ 的异侧。如果两次异侧判断都成功，则说明两个线段相交。这种方法只需要进行 $$4$$ 次 toLeft 判断，提高了效率。&lt;/p>
+&lt;blockquote>
+&lt;p>用极点法求出若干极点后，如何将其排成环？&lt;/p>
+&lt;/blockquote>
+&lt;p>假设 leftmost-then-lowest 的极点为 $$P_0$$，定义 $$P_{1} &amp;lt; P_{2} \Leftrightarrow toLeft(P_{0}P_{1}, P_{2})==false$$。按照上述定义的偏序关系就可以对所有极点排序，排序后从小到大即可。&lt;/p>
+&lt;p>从上面两道小题能够看出 toLeft 判定的重要性，这个判定函数将会贯穿计算几何的学习历程。&lt;/p>
+&lt;h2 id="极边法extreme-edges">极边法（Extreme Edges）&lt;/h2>
+&lt;hr>
+&lt;p>从极点法我们可以自然而然地想到，如果遍历点集中所有可能成为凸包边界（极边）的线段，也能达到求解凸包的目的。事实上，我们也只需要对点集中每两个点相连的线段判断其余点是否都处于它的一侧即可。&lt;/p>
+&lt;p>所以极边法的时间复杂度相对极点法要低一些，遍历所有线段（$$C_{n}^{2}=O(n^2)$$）$$\times$$ $$O(n)$$ 个 toLeft 判断 $$=O(n^3)$$ 的复杂度，虽然好一些但还不够。&lt;/p>
+&lt;h2 id="增量法incremental-construction">增量法（Incremental Construction）&lt;/h2>
+&lt;hr>
+&lt;p>顾名思义，增量法的主要思路就是遍历点集中的所有点，每次都更新当前已遍历点集的凸包，最后得到对于所有点的凸包。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/06/9gJsRs.png" alt="incremental-construction-1">&lt;/p>
+&lt;p>如上图，在添加新点时会发生三种情况：&lt;/p>
+&lt;ul>
+&lt;li>该点作为新凸包上的点，且不影响原凸包上的点；&lt;/li>
+&lt;li>该点在目前凸多边形的内部；&lt;/li>
+&lt;li>该点作为新凸包上的点，并删除一些原凸包上的点。&lt;/li>
+&lt;/ul>
+&lt;p>那么怎么判断新加入的点属于上面哪种情况呢？我们一点一点看，先来判断新点是否属于原凸包内，也即判断点是否属于凸多边形的内部。&lt;/p>
+&lt;p>&lt;strong>线性解法&lt;/strong> —— 逆时针遍历凸多边形的所有边，执行 toLeft 判定。优势是可以应用于链表等动态内存结构，劣势是慢；&lt;/p>
+&lt;p>&lt;strong>二分查找&lt;/strong> —— 二分地判定点是否属于两条射线张成的区域之内，如下图。优势是快，劣势是只能应用于数组等静态内存结构。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/06/9g8W60.png" alt="point-in-convex-polygon">&lt;/p>
+&lt;p>在增量法中，由于我们需要保证能够在常数时间内删除点，所以需要采用链表等结构，那么还是需要使用线性解法。&lt;/p>
+&lt;p>那么怎么应对刚刚说的第三种情况呢？我们将原凸包分成四部分：&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/06/9gJdZ8.png" alt="incremental-construction-2">&lt;/p>
+&lt;ul>
+&lt;li>上、下切点（$$t,s$$）；&lt;/li>
+&lt;li>$$ts$$ 段，需要被删除的部分；&lt;/li>
+&lt;li>$$st$$ 段，需要保留的部分。&lt;/li>
+&lt;/ul>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/06/9gJIJJ.png" alt="incremental-construction-3">&lt;/p>
+&lt;p>那么怎么判断点属于哪种类别呢？如上图，&lt;/p>
+&lt;ul>
+&lt;li>若 $$v$$ 的两个邻域点都分布在 $$xv$$ 的左侧，则 $$v$$ 是下切点；&lt;/li>
+&lt;li>若 $$v$$ 的两个邻域点都分布在 $$xv$$ 的右侧，则 $$v$$ 是上切点；&lt;/li>
+&lt;li>若 $$v$$ 的两个邻域点（逆时针上、逆时针下）分布在 $$xv$$ 的左右侧，则 $$v$$ 属于 $$ts$$ 段；&lt;/li>
+&lt;li>若 $$v$$ 的两个邻域点（逆时针上、逆时针下）分布在 $$xv$$ 的右左侧，则 $$v$$ 属于 $$st$$ 段；&lt;/li>
+&lt;/ul>
+&lt;p>幸运的是，可以用类似的方法判断点是否在凸多边形内，也即判断其余点是否都属于 $$st$$ 段。&lt;/p>
+&lt;h2 id="jarvis-march">Jarvis March&lt;/h2>
+&lt;hr>
+&lt;p>该算法的大致思想是逐条选出极边并加入到凸包中，如下图。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/07/9gymfx.png" alt="jarvis-march-1">&lt;/p>
+&lt;p>如下图，在算法运行中，怎样选取下个点，使得它与当前点 $$k$$ 组成的边是下一条极边（$$ks$$）呢？&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/07/9gya1f.png" alt="jarvis-march-2">&lt;/p>
+&lt;p>对于极点 $$k$$，只要找到点 $$s$$ ，使得 $$ks$$ 的右侧没有任何其他点。与本文一开始提出的第二个小问题类似，以 toLeft 测试为比较函数，找出其余点中最大的那个即可。&lt;/p>
+&lt;p>不失一般性，第一个极点 $$o$$ 可以按照 lowest-than-leftmost 的规则选取。&lt;/p>
+&lt;h2 id="凸包算法的下界">凸包算法的下界&lt;/h2>
+&lt;hr>
+&lt;p>使用归约法（reduction）说明。关于归约法，维基百科有如下说明：&lt;/p>
+&lt;blockquote>
+&lt;p>以直觉观之，如果存在能有效解决问题 B 的算法，也可以作为解决问题 A 的子程序，则将问题 A 称为“可归约”到问题 B，因此求解 A 并不会比求解 B 更困难。&lt;/p>
+&lt;/blockquote>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/07/9g6QCq.png" alt="lower-bound-1">&lt;/p>
+&lt;p>上图表示了一个线性归约，如果对于问题 A 的&lt;strong>任意&lt;/strong>输入都可以在线性时间内转换为&lt;strong>某个&lt;/strong> B 的输入，且对于问题 B 的输出都可以在线性时间内转换为 A 的输出，那么称问题 A 可以线性归约至问题 B。且问题 A 的下界也是问题 B 的下界。&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2018/03/07/9g6xzV.png" alt="lower-bound-2">&lt;/p>
+&lt;p>考虑基于比较的排序问题，对于一维上的所有输入，可以在线性时间内投影到抛物线 $$y=x^2$$ 上。而投影过后的点集的凸包投影回一维上就是排序后的结果。则基于比较的排序问题可以线性归约为二维凸包问题，那么二维凸包问题的下界就是 $$O(n\log(n))$$。&lt;/p>
+&lt;p>下次将介绍几个 $$O(n\log(n))$$ 的凸包算法。&lt;/p></description></item><item><title>Blog: Convex Hull - Part 1</title><link>/blog/convex-hull-1/</link><pubDate>Tue, 27 Feb 2018 16:40:37 +0800</pubDate><guid>/blog/convex-hull-1/</guid><description>
 &lt;p>这学期有幸选到了贵系邓俊辉老师的《计算几何》，这学期会随着课程进度更新一些笔记。&lt;/p>
 &lt;h2 id="凸包">凸包&lt;/h2>
 &lt;p>用邓老师的话来说，所谓凸包就是&lt;/p>
