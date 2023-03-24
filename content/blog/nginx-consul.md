@@ -2,7 +2,7 @@
 title: "Nginx & Consul Usage"
 date: 2023-03-24T22:29:00+08:00
 draft: false
-tag:
+tags:
 - Network
 ---
 
