@@ -16,7 +16,7 @@ tags:
 
 当然这只是一个凸包在二维上的解释，但通俗易懂，如下图。
 
-<center>![convex_hull_1](https://s1.ax1x.com/2018/02/27/9BGTJK.gif)</center>
+![convex_hull_1](https://s1.ax1x.com/2018/02/27/9BGTJK.gif)
 
 那么给定一个点集 $$P$$，如何计算出其凸包 $$CH(P)$$ 呢？接下来将介绍第一个计算凸包的算法 —— 极点法。
 
@@ -28,19 +28,19 @@ tags:
 
 如下图，对于点集中的某个点，若存在一条经过该点的直线，使得点集中的其余点均处于该直线的一侧，则称该点为极点（Extreme Point）。
 
-<center>![convex-hull-extreme-points](https://s1.ax1x.com/2018/02/27/9BJ9W8.png)</center>
+![convex-hull-extreme-points](https://s1.ax1x.com/2018/02/27/9BJ9W8.png)
 
 但根据上述定义很难实现凸包的构建算法，因为对于每个点都要遍历经过它的所有直线，而这些直线是无限的。
 
 对于非极点来说，它必然会被点集中某三个点组成的三角形完全包围（不包括边界），而极点不满足该性质，如下图。
 
-<center>![convex-hull-extreme-points-2](https://s1.ax1x.com/2018/02/27/9BJwlD.png)</center>
+![convex-hull-extreme-points-2](https://s1.ax1x.com/2018/02/27/9BJwlD.png)
 
 **所以就可以遍历点集中的所有三角形，将其覆盖的所有点设置为非极点。通过排除所有的非极点就可以得到点集中的所有极点。**该算法的时间复杂度是 $$O(C_{n}^{3}\cdot n)=O(n^4)$$ 的。
 
 那么如何判断点是否在三角形内呢？当然，可以使用射线法或累计角度法判定，但未免有些「杀鸡用牛刀」的意味。考虑边按逆时针排列的三角形，对于这三条有向边，若某点处于它们的左侧（toLeft 判断），则该点被该三角形覆盖，如下图。
 
-<center>![convex-hull-in-triangle](https://s1.ax1x.com/2018/02/27/9BJ06e.png)</center>
+![convex-hull-in-triangle](https://s1.ax1x.com/2018/02/27/9BJ06e.png)
 
 通过计算有向面积（$$\times 2$$）的符号能够判定某点是否在有向边的左侧：
 $$
