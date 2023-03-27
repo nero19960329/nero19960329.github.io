@@ -92,4 +92,267 @@ Shims --&amp;gt; pyenv
 &lt;li>[2] &lt;a href="https://github.com/pyenv/pyenv/wiki#suggested-build-environment">https://github.com/pyenv/pyenv/wiki#suggested-build-environment&lt;/a>&lt;/li>
 &lt;li>[3] &lt;a href="https://github.com/pyenv/pyenv/issues/1504#issuecomment-703248521">https://github.com/pyenv/pyenv/issues/1504#issuecomment-703248521&lt;/a>&lt;/li>
 &lt;li>[4] &lt;a href="https://rkadezone.wordpress.com/2020/09/14/pyenv-win-virtualenv-windows/">https://rkadezone.wordpress.com/2020/09/14/pyenv-win-virtualenv-windows/&lt;/a>&lt;/li>
-&lt;/ul></description></item></channel></rss>
+&lt;/ul></description></item><item><title>Blog: PEP 440 - Version Identification and Dependency Specification</title><link>/blog/pep-440/</link><pubDate>Wed, 20 Apr 2022 16:49:00 +0800</pubDate><guid>/blog/pep-440/</guid><description>
+&lt;p>原文链接：&lt;a href="https://peps.python.org/pep-0440/#version-specifiers">https://peps.python.org/pep-0440/#version-specifiers&lt;/a>&lt;/p>
+&lt;p>仅挑选部分说明，忽略了预发布、后发布与本地版本等内容。大部分机翻，少部分有语义调整。&lt;/p>
+&lt;h2 id="摘要">摘要&lt;/h2>
+&lt;p>此 PEP 描述了一种用于识别 Python 软件发行版本并声明对特定版本的依赖关系的方案。&lt;/p>
+&lt;p>如 PEP 345 和 PEP 386 中所述，本文档解决了先前尝试标准化版本控制方法的几个限制。&lt;/p>
+&lt;h2 id="版本格式">版本格式&lt;/h2>
+&lt;h3 id="公共版本标识符">公共版本标识符&lt;/h3>
+&lt;p>规范的公共版本标识符必须符合以下格式:&lt;/p>
+&lt;pre tabindex="0">&lt;code>[N!]N(.N)*[{a|b|rc}N][.postN][.devN]
+&lt;/code>&lt;/pre>&lt;p>公共版本标识符不得包含前导或尾随空格。&lt;/p>
+&lt;p>公共版本标识符在给定的发行版中必须是唯一的。&lt;/p>
+&lt;p>公共版本标识符最多分为五个部分：&lt;/p>
+&lt;ul>
+&lt;li>Epoch segment: &lt;code>N!&lt;/code>&lt;/li>
+&lt;li>Release segment: &lt;code>N(.N)*&lt;/code>&lt;/li>
+&lt;li>Pre-release segment: &lt;code>{a|b|rc}N&lt;/code>&lt;/li>
+&lt;li>Post-release segment: &lt;code>.postN&lt;/code>&lt;/li>
+&lt;li>Development release segment: &lt;code>.devN&lt;/code>&lt;/li>
+&lt;/ul>
+&lt;p>任何给定的版本都将是以下部分中定义的 “final release”, “pre-release”, “post-release” 或者 “developmental release”。&lt;/p>
+&lt;p>所有数字组件必须是非负整数，表示为 ASCII 数字序列。&lt;/p>
+&lt;p>所有数字组件必须根据其数值进行解释和排序，而不是作为文本字符串。&lt;/p>
+&lt;p>所有数字分量可能为零。 除了下面对发布部分的描述之外，零的数字分量除了始终是版本排序中可能的最低值之外没有特殊意义。&lt;/p>
+&lt;h3 id="最终发布">最终发布&lt;/h3>
+&lt;p>仅由发布段和可选的时代标识符组成的版本标识符称为“最终版本”。&lt;/p>
+&lt;p>Release segment 由一个或多个非负整数值组成，以点分隔：&lt;/p>
+&lt;pre tabindex="0">&lt;code>N(.N)*
+&lt;/code>&lt;/pre>&lt;p>项目中的最终版本必须以不断增加的方式编号，否则自动化工具将无法正确升级它们。&lt;/p>
+&lt;p>发布段的比较和排序依次考虑发布段的每个组成部分的数值。 当比较具有不同数量的组件的发布段时，较短的段会根据需要用额外的零填充。&lt;/p>
+&lt;p>虽然在此方案下允许在第一个组件之后添加任意数量的附加组件，但最常见的变体是使用两个组件（“major.minor”）或三个组件（“major.minor.micro”）。&lt;/p>
+&lt;h2 id="版本说明符">版本说明符&lt;/h2>
+&lt;p>版本说明符由一系列以逗号分隔的版本条件组成。 例如：&lt;/p>
+&lt;pre tabindex="0">&lt;code>~= 0.9, &amp;gt;= 1.0, != 1.3.4.*, &amp;lt; 2.0
+&lt;/code>&lt;/pre>&lt;p>比较运算符确定版本条件的类型：&lt;/p>
+&lt;ul>
+&lt;li>&lt;code>~=&lt;/code>: 兼容发布条件&lt;/li>
+&lt;li>&lt;code>==&lt;/code>: 版本匹配条件&lt;/li>
+&lt;li>&lt;code>!=&lt;/code>: 版本排除条件&lt;/li>
+&lt;li>&lt;code>&amp;lt;=, &amp;gt;=&lt;/code>: 包含有序比较条件&lt;/li>
+&lt;li>&lt;code>&amp;lt;, &amp;gt;&lt;/code>: 排除有序比较条件&lt;/li>
+&lt;li>&lt;code>===&lt;/code>: 任意相等条件&lt;/li>
+&lt;/ul>
+&lt;p>逗号 (“,”) 等效于&lt;strong>逻辑与&lt;/strong>运算符：候选版本必须匹配所有给定的版本子句才能匹配整个说明符。&lt;/p>
+&lt;p>当多个候选版本与版本说明符匹配时，首选版本应该是由标准版本方案定义的一致排序确定的最新版本。&lt;/p>
+&lt;h3 id="兼容发布">兼容发布&lt;/h3>
+&lt;p>匹配预期与指定版本兼容的任何候选版本。&lt;/p>
+&lt;p>指定的版本标识符必须采用版本格式中描述的标准格式。&lt;/p>
+&lt;p>对于给定的发布标识符 &lt;code>V.N&lt;/code>，兼容的发布子句大致等价于如下两个比较子句：&lt;/p>
+&lt;pre tabindex="0">&lt;code>&amp;gt;= V.N, == V.*
+&lt;/code>&lt;/pre>&lt;p>此运算符不得与单个段版本号（例如 &lt;code>~=1&lt;/code>）一起使用。&lt;/p>
+&lt;p>例如，以下几组版本条件是等价的：&lt;/p>
+&lt;pre tabindex="0">&lt;code>~= 2.2
+&amp;gt;= 2.2, == 2.*
+~=1.4.5
+&amp;gt;= 1.4.5, == 1.4.*
+&lt;/code>&lt;/pre>&lt;h3 id="版本匹配">版本匹配&lt;/h3>
+&lt;p>指定的版本标识符必须采用版本格式中描述的标准格式，但在公共版本标识符上允许使用尾随 .*，如下所述。&lt;/p>
+&lt;p>通过在版本匹配条件中的版本标识符后面附加一个尾随 &lt;code>.*&lt;/code> ，可以请求前缀匹配而不是严格比较。这意味着在确定版本标识符是否与子句匹配时，将忽略附加的尾随段。如果指定的版本仅包含发布段，则发布段中的尾随组件（或缺少的组件）也将被忽略。&lt;/p>
+&lt;h3 id="版本排除">版本排除&lt;/h3>
+&lt;p>与版本匹配正相反。&lt;/p>
+&lt;h3 id="包含有序比较">包含有序比较&lt;/h3>
+&lt;p>包含有序比较条件包括比较运算符和版本标识符，并且将根据标准版本方案定义的一致顺序，根据候选版本和指定版本的相对位置匹配比较正确的任何版本。&lt;/p>
+&lt;h3 id="排除有序比较">排除有序比较&lt;/h3>
+&lt;p>排除有序比较 &lt;code>&amp;gt;&lt;/code> 和 &lt;code>&amp;lt;&lt;/code> 类似于包含排序比较，因为它们依赖于候选版本和指定版本的相对位置，给定标准版本方案定义的一致排序。&lt;/p>
+&lt;p>例如，&lt;code>&amp;gt;1.7&lt;/code> 将允许 &lt;code>1.7.1&lt;/code> 但不允许 &lt;code>1.7.0&lt;/code>。&lt;/p>
+&lt;h3 id="任意相等">任意相等&lt;/h3>
+&lt;p>任意相等比较是简单的字符串相等操作，它不考虑任何语义信息，例如零填充或本地版本。该运算符也不像 == 运算符那样支持前缀匹配。&lt;/p>
+&lt;p>任意相等的主要用例是允许指定一个不能由这个 PEP 表示的版本。 这个操作符是特殊的，它充当一个逃生舱口，允许使用实现此 PEP 的工具的人仍然安装与此 PEP 不兼容的旧版本。&lt;/p>
+&lt;p>一个例子是 &lt;code>===foobar&lt;/code>，它会匹配名为 &lt;code>foobar&lt;/code> 的一个版本。&lt;/p>
+&lt;p>强烈建议不要使用此运算符，并且工具在使用时可能会显示警告。&lt;/p></description></item><item><title>Blog: Python3 wheel 包生成</title><link>/blog/python-wheel/</link><pubDate>Thu, 06 Jan 2022 11:53:00 +0800</pubDate><guid>/blog/python-wheel/</guid><description>
+&lt;h2 id="使用场景">使用场景&lt;/h2>
+&lt;p>当我们开发了一个 python 库时，希望能够生成一个安装包，使得用户可以快速安装、使用该库。&lt;/p>
+&lt;p>此帖涉及的安装包是 &lt;code>.whl&lt;/code>，实质上就是一个 &lt;code>.zip&lt;/code> 压缩包，里面存储了安装该库所必须的文件，比如 source code, scripts 等。&lt;/p>
+&lt;p>直接在本地安装 &lt;code>.whl&lt;/code> 可以 &lt;code>pip3 install xxx.whl --user&lt;/code>&lt;/p>
+&lt;p>更常见的方式是将 &lt;code>.whl&lt;/code> 传到 &lt;code>PyPI&lt;/code> 上，再让用户通过在线方式 &lt;code>pip3 install &amp;lt;package_name&amp;gt; --user&lt;/code> 来完成安装。&lt;/p>
+&lt;h2 id="quick-start">Quick Start&lt;/h2>
+&lt;p>&lt;img src="https://s1.ax1x.com/2023/03/27/ppyFnq1.png" alt="">&lt;/p>
+&lt;h3 id="环境配置">环境配置&lt;/h3>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip3 install setuptools wheel --user --upgrade
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="setuptoolssetup---安装脚本编写">setuptools.setup - 安装脚本编写&lt;/h3>
+&lt;p>假设目前有项目 &lt;code>example_gamma&lt;/code>，在该项目的根路径创建 &lt;code>setup.py&lt;/code>，树状图：&lt;/p>
+&lt;pre tabindex="0">&lt;code>example_gamma
+├── example_gamma
+│ └── __init__.py
+├── requirements.txt
+└── setup.py
+&lt;/code>&lt;/pre>&lt;p>一个简单的 &lt;code>setup.py&lt;/code>：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">from&lt;/span> &lt;span style="color:#000">setuptools&lt;/span> &lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">setup&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">find_packages&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">setup&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># metadata&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">name&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;example_gamma&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">version&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;0.0.1&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">description&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;Example library for python package tutorial.&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">author&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;wangzhao&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">author_email&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;wangzhao@megvii.com&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># options&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">packages&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">find_packages&lt;/span>&lt;span style="color:#000;font-weight:bold">(),&lt;/span> &lt;span style="color:#8f5902;font-style:italic"># 自动寻找路径下的所有包&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">python_requires&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&amp;gt;=3.6&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#8f5902;font-style:italic"># 需要的 python 版本限制&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 读取 requirements.txt 里的所有行，以列表形式呈现&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">install_requires&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#204a87">open&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;requirements.txt&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">read&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">splitlines&lt;/span>&lt;span style="color:#000;font-weight:bold">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>上述 setup 函数参数定义了该库的名称、版本、简介、作者、作者 email，以及设置了安装依赖、python 依赖。&lt;/p>
+&lt;h3 id="setuppyhttpsetuppy---生成-wheel-包">&lt;a href="http://setup.py/">setup.py&lt;/a> - 生成 wheel 包&lt;/h3>
+&lt;p>在项目根目录下运行&lt;/p>
+&lt;p>&lt;code>python3 setup.py sdist bdist_wheel&lt;/code>&lt;/p>
+&lt;p>即可在根目录下生成一个名为 &lt;code>dist&lt;/code> 的路径，进去之后就能发现打好的 whl 包 &lt;code>example_gamma-0.0.1-py3-none-any.whl&lt;/code> 。&lt;/p>
+&lt;h2 id="further-discussion">Further Discussion&lt;/h2>
+&lt;h3 id="setuptools-vs-distutils">&lt;code>setuptools&lt;/code> vs &lt;code>distutils&lt;/code>&lt;/h3>
+&lt;p>&lt;code>distutils&lt;/code> 是 python 原生库，而 &lt;code>setuptools&lt;/code> 是第三方库，是 &lt;code>distutils&lt;/code> 的增强版。官方文档也对 &lt;code>setuptools&lt;/code> 有所提及。&lt;/p>
+&lt;p>&lt;a href="https://docs.python.org/zh-cn/3/library/distutils.html">https://docs.python.org/zh-cn/3/library/distutils.html&lt;/a>&lt;/p>
+&lt;h3 id="更多的-setup-参数">更多的 setup 参数&lt;/h3>
+&lt;p>&lt;a href="https://setuptools.pypa.io/en/latest/deprecated/distutils/apiref.html?highlight=setuptools.setup#distutils.core.setup">官方文档&lt;/a>也没有完全说明所有参数的意义，需要自己拼凑和寻找。&lt;/p>
+&lt;blockquote>
+&lt;p>This document is being retained solely until the setuptools documentation at &lt;a href="https://setuptools.pypa.io/en/latest/setuptools.html">https://setuptools.pypa.io/en/latest/setuptools.html&lt;/a> independently covers all of the relevant information currently included here.&lt;/p>
+&lt;/blockquote>
+&lt;p>stackoverflow 上有人把所有参数都找出来列了个表，可以用来参考。&lt;/p>
+&lt;p>&lt;a href="https://stackoverflow.com/questions/58533084/what-keyword-arguments-does-setuptools-setup-accept">https://stackoverflow.com/questions/58533084/what-keyword-arguments-does-setuptools-setup-accept&lt;/a>&lt;/p>
+&lt;p>这里挑几个参数进行介绍。示例可见: &lt;a href="https://git-pd.megvii-inc.com/tidbit/dev-lecture/-/blob/master/package-python/example_beta/setup.py">https://git-pd.megvii-inc.com/tidbit/dev-lecture/-/blob/master/package-python/example_beta/setup.py&lt;/a>&lt;/p>
+&lt;h4 id="packages">packages&lt;/h4>
+&lt;p>可以用 &lt;code>setuptools.find_packages&lt;/code> 来指定根目录下哪些模块需要被安装，哪些不需要。&lt;/p>
+&lt;p>典型用法：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">setup&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">packages&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">find_packages&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">include&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;example*&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#8f5902;font-style:italic"># 想安装 example 开头的所有模块&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">exclude&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;test&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;test*&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#8f5902;font-style:italic"># 不想安装 test 开头的任何模块&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">....&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>&lt;code>exclude&lt;/code> 会冲掉 &lt;code>include&lt;/code> 的 pattern。&lt;/p>
+&lt;h4 id="scripts">scripts&lt;/h4>
+&lt;p>需要被安装的独立脚本列表。&lt;/p>
+&lt;p>以 &lt;code>pip3 install xxx --user&lt;/code> 为例，这些脚本会被 copy 到 &lt;code>~/.local/bin&lt;/code> 下，并添加权限，使得这些脚本可以直接被执行。&lt;/p>
+&lt;p>比如：&lt;code>remote_board&lt;/code> 的 &lt;code>run_joint.py&lt;/code>, &lt;code>run_neu.py&lt;/code>, &amp;hellip;&lt;/p>
+&lt;h4 id="entry_points">entry_points&lt;/h4>
+&lt;p>用于自动生成脚本，安装后自动生成 &lt;code>~/.local/bin&lt;/code> 下的可执行文件（假如通过 &lt;code>pip3 install xxx --user&lt;/code> 安装）。&lt;/p>
+&lt;p>&lt;code>&amp;lt;name&amp;gt; = [&amp;lt;package&amp;gt;.[&amp;lt;subpackage&amp;gt;.]]&amp;lt;module&amp;gt;[:&amp;lt;object&amp;gt;.&amp;lt;object&amp;gt;]&lt;/code>&lt;/p>
+&lt;p>典型的用法：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">setup&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">entry_points&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># super_beta 指向 example_beta/__init__.py 的 test 函数&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;console_scripts&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;super_beta = example_beta:test&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="classifiers">classifiers&lt;/h4>
+&lt;p>说明包的分类信息，所有支持的列表见 &lt;a href="https://pypi.org/classifiers/">https://pypi.org/classifiers/&lt;/a>&lt;/p>
+&lt;p>典型的用法[2]&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">setup&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">classifiers&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 发展时期，常见的如下&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 3 - Alpha&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 4 - Beta&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 5 - Production/Stable&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Development Status :: 3 - Alpha&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 开发的目标用户&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Intended Audience :: Developers&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 属于什么类型&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Topic :: Software Development :: Build Tools&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 许可证信息&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;License :: OSI Approved :: MIT License&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># 目标 Python 版本&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Programming Language :: Python :: 2&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Programming Language :: Python :: 2.7&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Programming Language :: Python :: 3&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Programming Language :: Python :: 3.3&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Programming Language :: Python :: 3.4&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;Programming Language :: Python :: 3.5&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h4 id="package_data">package_data&lt;/h4>
+&lt;ul>
+&lt;li>需要额外加进包里的文件，比如文档、静态图片、配置文件等&lt;/li>
+&lt;/ul>
+&lt;p>典型用法：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">setup&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">package_data&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#8f5902;font-style:italic"># `example_beta` 模块中满足 &amp;#39;resources/data/*.dat&amp;#39; 的文件都会被包含在包里&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#39;example_beta&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;resources/data/*.dat&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">},&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#ce5c00;font-weight:bold">...&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="更多的-setuppyhttpsetuppy-功能">更多的 &lt;a href="http://setup.py/">setup.py&lt;/a> 功能&lt;/h3>
+&lt;h4 id="sdist--bdist--bdist_egg--bdist_wheel--">sdist / bdist / bdist_egg / bdist_wheel / &amp;hellip;&lt;/h4>
+&lt;ul>
+&lt;li>&lt;strong>sdist&lt;/strong>
+&lt;ul>
+&lt;li>生成 &lt;code>source distribution&lt;/code>，即包括一个所有源代码与额外数据的压缩包，可以在任意平台来重新编译。&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>bdist&lt;/strong>
+&lt;ul>
+&lt;li>生成 &lt;code>built distribution&lt;/code>，一般得到在指定平台上的包，安装时无需再重新编译[8]。
+&lt;ul>
+&lt;li>bdist_wheel: *.whl&lt;/li>
+&lt;li>bdist_rpm: *.rpm&lt;/li>
+&lt;li>bdist_wininst: *.exe&lt;/li>
+&lt;li>bdist_egg: *.egg&lt;/li>
+&lt;li>&amp;hellip;&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h4 id="install">install&lt;/h4>
+&lt;p>通过 &lt;code>python3 setup.py install&lt;/code> 直接在本地安装库，一般使用场景是从源代码 repo 直接安装，或者 pip install 在某些情况下也是帮用户执行了这条指令。&lt;/p>
+&lt;h3 id="pypi--devpi">PyPI &amp;amp; devpi&lt;/h3>
+&lt;ul>
+&lt;li>&lt;strong>PyPI&lt;/strong>
+&lt;ul>
+&lt;li>Python Package Index&lt;/li>
+&lt;li>python 的正式第三方软件包的存储库&lt;/li>
+&lt;li>ws2 用的是 brainpp 的私有 PyPI&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>&lt;strong>devpi&lt;/strong>
+&lt;ul>
+&lt;li>devpi-server: PyPI 服务器&lt;/li>
+&lt;li>devpi-client: 打包/测试/发布工具&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;h3 id="setupcfg--pyprojecttoml">setup.cfg &amp;amp; pyproject.toml&lt;/h3>
+&lt;h4 id="quick-start-1">Quick Start&lt;/h4>
+&lt;p>&lt;code>setuptools&lt;/code> 官方文档快速上手目前以该方式为首选：&lt;/p>
+&lt;p>&lt;a href="https://setuptools.pypa.io/en/latest/userguide/quickstart.html">https://setuptools.pypa.io/en/latest/userguide/quickstart.html&lt;/a>&lt;/p>
+&lt;p>典型的使用方式：&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip3 install build --user # install `PyPA build`
+python3 -m build --wheel # python3 setup.py bdist_wheel
+&lt;/code>&lt;/pre>&lt;p>对比：&lt;/p>
+&lt;p>setup.cfg: &lt;a href="https://git-pd.megvii-inc.com/tidbit/dev-lecture/-/blob/master/package-python/example_alpha/setup.cfg">https://git-pd.megvii-inc.com/tidbit/dev-lecture/-/blob/master/package-python/example_alpha/setup.cfg&lt;/a>&lt;/p>
+&lt;p>&lt;a href="http://setup.py/">setup.py&lt;/a>: &lt;a href="https://git-pd.megvii-inc.com/tidbit/dev-lecture/-/blob/master/package-python/example_beta/setup.py">https://git-pd.megvii-inc.com/tidbit/dev-lecture/-/blob/master/package-python/example_beta/setup.py&lt;/a>&lt;/p>
+&lt;h4 id="为什么要使用这种方式来进行打包">为什么要使用这种方式来进行打包&lt;/h4>
+&lt;h4 id="安装环境隔离">安装环境隔离&lt;/h4>
+&lt;p>pip 在安装包时大多数使用如下方式：&lt;/p>
+&lt;ol>
+&lt;li>寻找包&lt;/li>
+&lt;li>下载、解压包&lt;/li>
+&lt;li>运行 &lt;code>python setup.py install&lt;/code> 进行安装&lt;/li>
+&lt;/ol>
+&lt;p>问题是 pip 调用了本机的 &lt;code>python&lt;/code> 的解释器及本机的各种 &lt;code>python&lt;/code> 第三方库比如 &lt;code>setuptools&lt;/code>。一旦某个包用到了 &lt;code>setuptools&lt;/code> 的最新特性，就必须要用户手动去更新本机的第三方库，有时还会安装其他库的依赖有冲突[7]。&lt;/p>
+&lt;p>此时就需要一个配置文件来隔离“安装包所需要的依赖”和“用户本机上其他第三方库运行时所需的依赖”。这就是 PEP-518[5] 标准中提到的 &lt;code>pyproject.toml&lt;/code> 。&lt;/p>
+&lt;p>在 PEP-518 标准下，一次包的安装则会在 virtual env 下进行，从而达到安装与运行时依赖隔离的效果。&lt;/p>
+&lt;h4 id="声明式安装">声明式安装&lt;/h4>
+&lt;p>虽然目前大部分 &lt;code>setup.py&lt;/code> 都被写成一个声明式的程序，但只要程序员尝试使用命令式的方式来编写脚本，就有可能会导致各种各样的程序 bug 。&lt;/p>
+&lt;p>所以基于配置的安装方式被 PEP-517[4] 标准提出，各种安装框架比如 &lt;code>setuptools&lt;/code> 就建议使用 &lt;code>setup.cfg&lt;/code> 来配置各种参数。当然还有比如 &lt;code>filt&lt;/code> 等其他框架，也支持各种不同的方式。&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;p>[1] &lt;a href="https://setuptools.pypa.io/en/latest/userguide/index.html">https://setuptools.pypa.io/en/latest/userguide/index.html&lt;/a>
+[2] &lt;a href="https://zhuanlan.zhihu.com/p/276461821">https://zhuanlan.zhihu.com/p/276461821&lt;/a>
+[3] &lt;a href="https://www.python.org/dev/peps/pep-0527/">https://www.python.org/dev/peps/pep-0527/&lt;/a>
+[4] &lt;a href="https://www.python.org/dev/peps/pep-0517/">https://www.python.org/dev/peps/pep-0517/&lt;/a>
+[5] &lt;a href="https://www.python.org/dev/peps/pep-0518/">https://www.python.org/dev/peps/pep-0518/&lt;/a>
+[6] &lt;a href="https://python.freelycode.com/contribution/detail/1910">https://python.freelycode.com/contribution/detail/1910&lt;/a>
+[7] &lt;a href="https://bernat.tech/posts/pep-517-518/">https://bernat.tech/posts/pep-517-518/&lt;/a>
+[8] &lt;a href="https://stackoverflow.com/questions/24008112/python-is-there-a-performance-difference-between-dist-and-sdist">https://stackoverflow.com/questions/24008112/python-is-there-a-performance-difference-between-dist-and-sdist&lt;/a>&lt;/p></description></item></channel></rss>

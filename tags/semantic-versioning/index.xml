@@ -1,0 +1,257 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wangzhao's site – Semantic Versioning</title><link>/tags/semantic-versioning/</link><description>Recent content in Semantic Versioning on wangzhao's site</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Wed, 20 Apr 2022 16:49:00 +0800</lastBuildDate><atom:link href="/tags/semantic-versioning/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: PEP 440 - Version Identification and Dependency Specification</title><link>/blog/semver-conventional-commit/</link><pubDate>Wed, 20 Apr 2022 16:49:00 +0800</pubDate><guid>/blog/semver-conventional-commit/</guid><description>
+&lt;h2 id="使用约定式提交进行语义化版本控制">使用约定式提交进行语义化版本控制&lt;/h2>
+&lt;p>全文机翻，有小幅语法调整，不会或无法翻译的部分保留原文。&lt;/p>
+&lt;p>原文: Semantic Versioning with Conventional Commits&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://platform.deloitte.com.au/articles/semantic-versioning-with-conventional-commits">https://platform.deloitte.com.au/articles/semantic-versioning-with-conventional-commits&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="使用约定式提交进行语义化版本控制-1">使用约定式提交进行语义化版本控制&lt;/h2>
+&lt;p>版本控制很重要。我不必告诉你这个。然而，我看到它一遍又一遍地做得不好。&lt;/p>
+&lt;p>我经常遇到的缺陷是缺乏明确的开发和发布流程以及较差的工具支持。如果你的开发人员坐在那里想知道如何完成某些任务，那么这个过程就被打破了。他们应该知道如何发布新版本或如何在主干移动时修复生产。您的 CI/CD 流程也应该支持这些场景！&lt;/p>
+&lt;p>许多人依靠他们的 CI/CD 工具来确定他们应用程序的下一个版本。我也为此感到内疚，但在某些时候，我意识到这是只有开发人员才能做出的决定。我们的工具还不够智能，无法查看代码更改并告诉我它是功能、修复还是其他什么。&lt;/p>
+&lt;p>这让我产生了改变我们做事方式的强烈愿望。我的目标是拥有一个涵盖所有这些用例的明确流程，对开发人员友好，并在我们倾向于跨项目使用的各种 CI/CD 工具中得到支持。&lt;/p>
+&lt;p>这篇文章记录了这种方法。&lt;/p>
+&lt;h3 id="语义版本控制">语义版本控制&lt;/h3>
+&lt;p>我们将在这里使用&lt;a href="https://semver.org/">语义版本控制&lt;/a>(semver)。这可能是当今软件中使用的最突出的版本控制方案。&lt;/p>
+&lt;p>我们构建的大多数应用程序和库都倾向于公开一个 API，无论是 REST API、接口等。Semver 就是对这个 API 进行版本控制。&lt;/p>
+&lt;p>语法是众所周知的：&lt;/p>
+&lt;blockquote>
+&lt;p>&amp;lt;MAJOR&amp;gt;.&amp;lt;MINOR&amp;gt;.&amp;lt;PATCH&amp;gt;&lt;/p>
+&lt;/blockquote>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>MAJOR&lt;/th>
+&lt;th>MINOR&lt;/th>
+&lt;th>PATCH&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>引入新的向后不兼容更改&lt;/td>
+&lt;td>引入新的向后兼容更改&lt;/td>
+&lt;td>在保持向后兼容性的同时修复一个错误&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1.0.0 -&amp;gt; 2.0.0&lt;/td>
+&lt;td>1.0.0 -&amp;gt; 1.1.0&lt;/td>
+&lt;td>1.0.0 -&amp;gt; 1.0.1&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>如表所示，向后兼容性是版本冲突的一大区别。&lt;/p>
+&lt;p>有些人仍然没有搞懂，所以在这里我将使用 JSON REST API 来说明什么构成补丁、功能或重大更改。&lt;/p>
+&lt;p>让我们假设一个称职的开发人员已经实现了这个 REST API，并且它成功地遵循了 &lt;a href="https://en.wikipedia.org/wiki/Robustness_principle">Postel 定律&lt;/a>：&lt;/p>
+&lt;p>&lt;strong>Major&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>删除一个操作，比如删除 HTTP 动词/路径组合&lt;/li>
+&lt;li>向某个请求添加必填字段&lt;/li>
+&lt;li>向某个请求添加/删除字段
+&lt;ul>
+&lt;li>如果所有用户被认为足够宽容，那么添加一个字段可能不会是一个重大变化&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Minor&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>添加一个新操作，即新的 HTTP 动词/路径组合&lt;/li>
+&lt;li>向请求添加可选字段&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Patch&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>没有接口变化&lt;/li>
+&lt;/ul>
+&lt;h3 id="约定式提交">约定式提交&lt;/h3>
+&lt;p>如今，尽管工具非常好，但它们还无法识别代码更改的本质。通过机器学习的那一天将会到来，这将是可能的，但就目前而言，我们必须依靠良好的老式人类智能。&lt;/p>
+&lt;p>&lt;a href="https://www.conventionalcommits.org/">约定式提交&lt;/a>提供了在开发人员和 CI/CD 工具之间传达提交中更改的性质的机制。&lt;/p>
+&lt;p>简而言之，开发人员提供了一个提交消息，该消息明确地标识了更改的性质。然后 CI/CD 工具可以扫描自上一个版本以来的所有提交消息，并确定如何更新版本。&lt;/p>
+&lt;p>除了这种自动化之外，这种方法还为其他团队成员提供了清晰的变更沟通，甚至让我们自动生成发布 release note 和 changelog。&lt;/p>
+&lt;p>约定是提交的官方&lt;a href="https://www.conventionalcommits.org/en/v1.0.0/#summary">总结&lt;/a>和&lt;a href="https://www.conventionalcommits.org/en/v1.0.0/#examples">示例&lt;/a>非常简洁，我没有必要在这里重复它们。来看看吧。我会在这里等你。&lt;/p>
+&lt;p>以下是我们的 JSON REST API 的一些示例提交：&lt;/p>
+&lt;p>&lt;strong>Major&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>&lt;strong>feat:&lt;/strong> disable deletion of records&lt;/p>
+&lt;p>&lt;strong>BREAKING CHANGE:&lt;/strong> removed and endpoint&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;strong>feat:&lt;/strong> expiry date must be provided by the user&lt;/p>
+&lt;p>&lt;strong>BREAKING CHANGE:&lt;/strong> new mandatory field in create operation&lt;/p>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Minor&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>feat(my-operation):&lt;/strong> allow users to provide an optional name to override the default&lt;/li>
+&lt;li>&lt;strong>feat&lt;/strong>: add operation to retrieve sub-records&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>Patch&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>fix:&lt;/strong> remove the infinite loop&lt;/li>
+&lt;li>&lt;strong>fix(my-operation):&lt;/strong> handle null input field&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>N/A&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>&lt;strong>test:&lt;/strong> refactor user management test cases&lt;/li>
+&lt;li>&lt;strong>ci&lt;/strong>: point to the new registry&lt;/li>
+&lt;li>&lt;strong>docs&lt;/strong>: add missing method documentation in create operation&lt;/li>
+&lt;/ul>
+&lt;p>如果您的团队更“有趣”，您可以随时尝试这些替代信号：✨ (feat), 🐛 (fix), 📚 (docs), 💎 (style), ♻️ (refactor), 🚀 (perf), ✅ (test), 📦 (build), 👷 (ci), 🔧 (chore)&lt;/p>
+&lt;h3 id="你在构建什么">你在构建什么？&lt;/h3>
+&lt;p>如果您曾在软件开发中花费过任何时间，您就会知道提倡“一刀切”的人需要滚蛋了。因此，在这篇文章中，我想研究两种截然不同的软件发布方法，以及如何将这种技术应用于这两种方法。&lt;/p>
+&lt;p>&lt;strong>合并后发布&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>描述
+&lt;ul>
+&lt;li>主干分支上的每个提交都是具有新语义版本的发布&lt;/li>
+&lt;li>新版本没什么大不了的，版本不被视为神圣的有限资源&lt;/li>
+&lt;li>一个应用程序每天可能会经历多个版本&lt;/li>
+&lt;li>修改需要通过 QA 关卡，比如单元测试、同事评审、MR 构建甚至 &lt;a href="https://docs.gitlab.com/ee/ci/review_apps/">review app&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>优势
+&lt;ul>
+&lt;li>无预先发版计划。在需要时选择要发布的版本&lt;/li>
+&lt;li>对测试人员和最终用户的反馈循环更短&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>使用时机
+&lt;ul>
+&lt;li>供应商/顾问交付的项目&lt;/li>
+&lt;li>有多个非生产环境可用于快速部署和测试更改的项目&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>&lt;strong>预发布后正式发布&lt;/strong>&lt;/p>
+&lt;ul>
+&lt;li>描述
+&lt;ul>
+&lt;li>每个版本之前都有一个或多个 alpha 和 beta 版本形式的预发布&lt;/li>
+&lt;li>版本更新被认为是珍贵的&lt;/li>
+&lt;li>从预发布版本中删除版本时需要重新测试&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>优势
+&lt;ul>
+&lt;li>通过在引入稳定版本之前发布预发布来获得充分的信心&lt;/li>
+&lt;li>您的用户不必像在其他方法中那样想知道预发布版本发生了什么&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;li>使用时机
+&lt;ul>
+&lt;li>库、软件产品和开源项目&lt;/li>
+&lt;li>稳定发布节奏较慢的项目&lt;/li>
+&lt;/ul>
+&lt;/li>
+&lt;/ul>
+&lt;p>我已经在很多地方看到了这两种方法的许多变体，因此我们将在这里讨论的内容也应该同样适用于这些方法。 虽然我应该提到我倾向于避免破坏版本不变性的样式，例如 Maven 中的 SNAPSHOT 版本或 NPM 中的 @next disributaion channel。&lt;/p>
+&lt;h3 id="pull-requests">Pull Requests&lt;/h3>
+&lt;p>无论您如何发布，我都希望您通过 PR（有时称为 MR）引入新功能。 如果你不是，我们有比版本控制更大的问题。&lt;/p>
+&lt;p>理想情况下，每个拉取请求都应包含一个功能或修复。 作为拉取请求审查的一部分，开发人员可能需要提交更多更改以解决审查意见。 但是这些额外的提交并不是主干上的新功能或代码修复。&lt;/p>
+&lt;p>我的解决方案是使用 squash merge 策略。 这样，开发人员可以在功能/修复分支上对他们的提交消息做任何他们喜欢的事情。 这些提交将全部消失，开发人员可以在合并点为整个拉取请求提供约定是提交消息。&lt;/p>
+&lt;p>&lt;img src="https://imgse.com/i/ppyF6Mj" alt="">&lt;/p>
+&lt;p>大多数体面的 Git 存储库还允许您使用您的拉取请求名称作为您的 squash 提交消息。 如果您希望从开发人员那里看到一致的拉取请求名称并让审阅者甚至在批准之前审阅 squash 提交消息，这很好。&lt;/p>
+&lt;h3 id="合并后发布的分支策略">合并后发布的分支策略&lt;/h3>
+&lt;p>不管发布风格如何，我倾向于基于主干（主线）的分支。我避免使用 Gitflow，因为我足够关心我的开发人员，以免他们每天都花在解决合并冲突上。更不用说，仅仅因为你从 develop 合并到 master 就重新构建相同版本的应用程序，面对“一次构建，多次部署”的CI/CD实践。&lt;/p>
+&lt;p>现在我已经完成了我对 GitFlow 的每日一喷，接下来让我们来谈谈我们在每次合并时发布时如何进行分支。&lt;/p>
+&lt;p>这很简单：创建一个功能/修复分支并遵循上面的拉取请求过程。&lt;/p>
+&lt;p>作为 CI/CD 流程设计师，您的主要目标之一应该是：开发人员最常做的任何事情都应该是最容易做到的。我觉得上面符合这个标准。&lt;/p>
+&lt;p>不太常见的情况也没有那么困难。假设开发人员正在构建应用程序的新主要版本，但之前的主要版本存在生产缺陷，需要热修复。这是执行此修补程序的剧本：&lt;/p>
+&lt;ol>
+&lt;li>找出生产中的次要版本。比方说v1.3。&lt;/li>
+&lt;li>从该次要版本的最新补丁版本创建 v1.3.x 分支，例如v1.3.6。&lt;/li>
+&lt;li>创建一个修复分支并将修复请求拉回 v1.3.x&lt;/li>
+&lt;li>从 v1.3.x 分支构建、部署和升级到生产&lt;/li>
+&lt;li>通过将 v1.3.x 分支合并到 master 将修复移植到主线&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://imgse.com/i/ppyFgLn" alt="">&lt;/p>
+&lt;h3 id="预发布后正式发布的分支策略">预发布后正式发布的分支策略&lt;/h3>
+&lt;p>在此方法中，您将在预发布分支上引入重大更改。 你可以使用任何你喜欢的滑稽名称，但我会坚持使用传统的 alpha/beta 术语。&lt;/p>
+&lt;p>本质上，您在一个或多个预发布分支上工作，直到您准备好向您的用户发布新版本；此时，您只需将预发布分支合并到主干中。&lt;/p>
+&lt;p>该图通过在下一个规范版本升级之前发布 2 个 alpha 和 1 个 beta 版本来证明这一点。&lt;/p>
+&lt;p>&lt;img src="https://imgse.com/i/ppyFcss" alt="">&lt;/p>
+&lt;p>上图还展示了在所有这些预发布工作期间对生产的修补程序。&lt;/p>
+&lt;p>不用说，您可以拥有更少或更多的预发布分支，甚至可以根据需要在它们之间来回合并。 这完全取决于您的个人发布风格。&lt;/p>
+&lt;h3 id="工具中的实现">工具中的实现&lt;/h3>
+&lt;p>让我们看看我们的版本控制和分支方法如何应用于各种源代码管理和 CI/CD 平台。&lt;/p>
+&lt;p>虽然您可以让开发人员遵守约定是提交，但这需要我在我们的专业中几乎看不到的僧侣般的纪律水平。因此，在相关分支上强制执行提交消息格式更为明智。大多数 SCM 提供此功能作为服务器端挂钩。&lt;/p>
+&lt;p>对于一些人来说，意识到他们的提交消息在服务器上不正确已经太晚了。幸运的是，有一些工具，例如 &lt;a href="http://commitizen.github.io/cz-cli/">Commitizen&lt;/a>、&lt;a href="https://commitlint.js.org/">commitlint&lt;/a> 甚至是一个简单的 &lt;a href="https://pre-commit.com/">pre-commit&lt;/a>，可以尽早警告用户。&lt;/p>
+&lt;p>虽然如果你遵循我们的 squash merge 策略，你就不必关心你的本地提交消息。&lt;/p>
+&lt;p>然而，我们并没有免除关心长期存在的分支上的提交。因此，始终建议确保构建过程验证自上次构建以来这些分支上的提交历史记录，以确保所有提交消息都符合要求。&lt;/p>
+&lt;p>通常，我们在 CI/CD 流程中至少具备以下条件：&lt;/p>
+&lt;ul>
+&lt;li>在每次 PR 构建时，验证自上次构建以来的所有提交消息，以确保它们遵循约定式提交&lt;/li>
+&lt;li>在主干构建中，除了常规测试之外：&lt;/li>
+&lt;/ul>
+&lt;ol>
+&lt;li>验证提交消息&lt;/li>
+&lt;li>通过分析提交消息和以前的标签确定下一个版本&lt;/li>
+&lt;li>用新版本标记当前提交&lt;/li>
+&lt;li>可选择生成 relase note&lt;/li>
+&lt;li>发布 artifacts&lt;/li>
+&lt;/ol>
+&lt;p>给提交打 tag 以将其标识为应用程序版本的来源是一种有价值的做法。它使 Git 存储库成为一个独立的真实来源，并消除了对 CI/CD 工具的一些过度依赖。我不止一次看到团队在使用 CI/CD 作为事实来源时不得不重新开始他们的版本控制，但随后他们不得不迁移到不同的工具，或者该工具出现了不可恢复的故障。&lt;/p>
+&lt;p>现在我们知道需要做什么，我们需要弄清楚如何去做。这似乎需要实现很多功能。幸运的是，已经有一些工具可以为我们完成所有这些工作。我目前首选的工具是 &lt;a href="https://github.com/semantic-release/semantic-release">semantic-release&lt;/a>，它提供了以上所有以及更多。&lt;/p>
+&lt;h3 id="semantic-release">semantic-release&lt;/h3>
+&lt;p>semantic-release 提供了一个命令行界面 (CLI)，任何 CI/CD 工具都可以调用它。 先决条件是 NodeJS 和 Git。&lt;/p>
+&lt;p>语义发布的优势之一是它可以使用插件进行扩展。 官方插件让您可以创建发布说明和变更日志文件，将发布发布到 GitHub 和 Gitlab，将包发布到 NPM 和 APM 等。还有很多社区插件。&lt;/p>
+&lt;p>我将使用 GitLab 来说明如何配置和使用这个工具，但这种方法可以很容易地转换为其他 CI/CD 工具。&lt;/p>
+&lt;p>我将使用 GitLab 的 &lt;a href="https://docs.gitlab.com/runner/executors/docker.html">Docker 执行器&lt;/a>在容器中运行我的构建，所以首先，我需要创建一个具有语义发布和我需要的所有插件的 Docker 映像。&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-docker" data-lang="docker">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">FROM&lt;/span>&lt;span style="color:#4e9a06"> node:14.3.0&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">LABEL&lt;/span> &lt;span style="color:#000">maintainer&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;sohrab&amp;#34;&lt;/span>&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#a40000">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">RUN&lt;/span> npm install --global &lt;span style="color:#4e9a06">\\&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> semantic-release@17.0.8 &lt;span style="color:#4e9a06">\\&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @semantic-release/exec@5.0.0 &lt;span style="color:#4e9a06">\\&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> @semantic-release/gitlab@6.0.4&lt;span style="color:#a40000">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>（是的，我对所有内容都进行了版本控制。就像专业人士一样。“可重复、可靠的构建”是另一个 CI/CD 原则。如果您要重复使用它，请查看 &lt;a href="http://npmjs.com/">npmjs.com&lt;/a> 以获取最新版本。）&lt;/p>
+&lt;p>接下来，我需要为我的存储库配置语义发布。 有几种方法可以做到这一点，但在这里我将 .releaserc.json 文件放在我的存储库的根目录中，其中包含以下内容：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-json" data-lang="json">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;plugins&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;@semantic-release/commit-analyzer&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;@semantic-release/release-notes-generator&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;@semantic-release/gitlab&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">[&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#4e9a06">&amp;#34;@semantic-release/exec&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">&amp;#34;successCmd&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;echo \\&amp;#34;&lt;/span>&lt;span style="color:#a40000">VERSION=$&lt;/span>&lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#a40000">nextRelease.version&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>&lt;span style="color:#a40000">\\&lt;/span>&lt;span style="color:#4e9a06">&amp;#34; &amp;gt;&amp;gt; vars.env&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000;font-weight:bold">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>这将只启用我想要使用的插件，在这种情况下：&lt;/p>
+&lt;ul>
+&lt;li>commit-analyzer 通过分析 repo 的提交历史来确定下一个版本&lt;/li>
+&lt;li>release-notes-generator 以传统的变更日志格式生成发行说明&lt;/li>
+&lt;li>gitlab 将发行说明发布为 GitLab Release&lt;/li>
+&lt;li>exec 将发布版本写入 dot-env 文件，以便在后续阶段中可用&lt;/li>
+&lt;/ul>
+&lt;p>最后，我们需要配置 CI/CD 本身。 这里它显示在 GitLab YAML 中。 即使您以前从未使用过 GitLab，这也应该是不言自明的，并且可以翻译成其他 CI/CD 工具：&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-yaml" data-lang="yaml">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">stages&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#000">version&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#000">build&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">version&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">image&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">semantic-release&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">script&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#000">semantic-release&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">artifacts&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">reports&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">dotenv&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">vars.env&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">rules&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">if&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#39;$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == &amp;#34;master&amp;#34;&amp;#39;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">when&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">on_success&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline">&lt;/span>&lt;span style="color:#204a87;font-weight:bold">build&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">image&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">...&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">script&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic"># run all tests, build, package and publish the artifact&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#000">...&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">rules&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>- &lt;span style="color:#204a87;font-weight:bold">if&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#4e9a06">&amp;#39;$VERSION&amp;#39;&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#204a87;font-weight:bold">when&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">on_success&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline">
+&lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>由 version stage 生成的 vars.env 文件中的 VERSION 环境变量随后可以被构建阶段用于对 artifact 进行版本控制。值得注意的是，如果没有产生新版本，我们会跳过构建和发布。&lt;/p>
+&lt;p>最后一点配置是确保语义发布可以将标签推送到您的存储库中。为此，您需要向该工具提供 &lt;a href="https://github.com/semantic-release/semantic-release/blob/master/docs/usage/ci-configuration.md#authentication">Git 身份验证详细信息&lt;/a>。在我的用例中，这是设置 GITLAB_TOKEN 环境变量的问题。&lt;/p>
+&lt;p>&lt;em>提示：如果您使用的是自托管 Gitlab 实例，您还需要配置 GITLAB_URL 以指向您的实例。如果您使用的是 &lt;a href="http://gitlab.com/">gitlab.com&lt;/a>，则不需要这样做。&lt;/em>&lt;/p>
+&lt;p>我应该注意，如果构建失败，版本阶段不应再次运行，因为它已经用版本标记了提交。因此，如果您的 CI/CD 工具允许您从构建阶段恢复失败的管道，则上述顺序是合适的。如果此支持不存在，那么您需要：&lt;/p>
+&lt;p>在重新运行管道之前手动清理标签，或者更改管道以使用 &lt;code>--dry-run&lt;/code> 标志执行语义发布以获取新版本，运行构建并最终真正运行语义发布。&lt;/p>
+&lt;h3 id="就是这样">就是这样！&lt;/h3>
+&lt;p>我们在相对成功的项目中使用了这种方法，尤其是每次合并发布风格。&lt;/p>
+&lt;p>我必须对你说实话，如果你没有好的工具，你将需要良好的开发人员纪律。 如果您两者都没有，那么这可能不适合您。 但是，如果您可以使用这些技术，那么您将永远不必考虑在提交和拉取请求中交付的内容之后的版本控制。&lt;/p></description></item></channel></rss>
