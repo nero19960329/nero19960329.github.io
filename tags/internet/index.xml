@@ -1,6 +1,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wangzhao's site – Internet</title><link>/tags/internet/</link><description>Recent content in Internet on wangzhao's site</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 27 Mar 2023 18:27:00 +0800</lastBuildDate><atom:link href="/tags/internet/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: How does the internet work? - Backend Developer Roadmap #1</title><link>/blog/backend-internet/</link><pubDate>Mon, 27 Mar 2023 18:27:00 +0800</pubDate><guid>/blog/backend-internet/</guid><description>
 &lt;p>Roadmap: &lt;a href="https://roadmap.sh/backend">https://roadmap.sh/backend&lt;/a>&lt;/p>
 &lt;p>本文隶属于 Roadmap 中的 &lt;code>Internet --&amp;gt; How does the internet work?&lt;/code>。&lt;/p>
+&lt;p>原文：https://cs.fyi/guide/how-does-internet-work&lt;/p>
 &lt;p>本文介绍了互联网的基础知识，包括互联网的定义、工作原理、基本概念、术语和常用协议。作为开发人员，了解互联网是如何工作的，以及如何利用其强大的互联性和连接性来构建高效、安全且可扩展的应用和服务是非常重要的。&lt;/p>
 &lt;h2 id="internet-介绍">Internet 介绍&lt;/h2>
 &lt;p>互联网是由许多网络组成的巨大网络，最初是为了应对核战争而建立的。如今，它已经成为现代生活的重要组成部分，被全球数十亿人用于访问信息、与亲友交流、开展业务等。作为开发人员，了解互联网如何工作，以及它的各种技术和协议是非常重要的。&lt;/p>
