@@ -1,5 +1,5 @@
 ---
-title: "PEP 440 - Version Identification and Dependency Specification"
+title: "使用约定式提交进行语义化版本控制"
 date: 2022-04-20T16:49:00+08:00
 draft: false
 tags:
@@ -7,8 +7,6 @@ tags:
 - Semantic Versioning
 - Conventional Commits
 ---
-
-## 使用约定式提交进行语义化版本控制
 
 全文机翻，有小幅语法调整，不会或无法翻译的部分保留原文。
 
