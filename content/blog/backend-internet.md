@@ -11,6 +11,8 @@ Roadmap: [https://roadmap.sh/backend](https://roadmap.sh/backend)
 
 本文隶属于 Roadmap 中的 `Internet --> How does the internet work?`。
 
+原文：https://cs.fyi/guide/how-does-internet-work 
+
 本文介绍了互联网的基础知识，包括互联网的定义、工作原理、基本概念、术语和常用协议。作为开发人员，了解互联网是如何工作的，以及如何利用其强大的互联性和连接性来构建高效、安全且可扩展的应用和服务是非常重要的。
 
 ## Internet 介绍
