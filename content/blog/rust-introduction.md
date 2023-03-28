@@ -33,7 +33,7 @@ Rust’s rich type system and ownership model guarantee memory-safety and thread
 Rust has great documentation, a friendly compiler with useful error messages, and top-notch tooling — an integrated package manager and build tool, smart multi-editor support with auto-completion and type inspections, an auto-formatter, and more.
 > 
 
-![](https://imgse.com/i/ppyF7QJ)
+![](https://s1.ax1x.com/2023/03/27/ppyF7QJ.png)
 
 ## 安装
 
@@ -329,11 +329,11 @@ from [https://kaisery.github.io/trpl-zh-cn/ch04-01-what-is-ownership.html](https
 
 但 `String` 由于有一个指向堆的指针（存储在栈上）
 
-![](https://imgse.com/i/ppyFIWF)
+![](https://s1.ax1x.com/2023/03/27/ppyFIWF.png)
 
 所以 `let s2 = s1;` 一句实际上做的是 move 操作（与 cpp 的 std::move 类似）
 
-![](https://imgse.com/i/ppyFoz4)
+![](https://s1.ax1x.com/2023/03/27/ppyFoz4.png)
 
 执行后 `s1` 变成了一个无效的变量，不能再被使用了。
 
