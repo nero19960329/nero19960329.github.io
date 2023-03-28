@@ -20,7 +20,7 @@ Rust’s rich type system and ownership model guarantee memory-safety and thread
 &lt;p>Productivity
 Rust has great documentation, a friendly compiler with useful error messages, and top-notch tooling — an integrated package manager and build tool, smart multi-editor support with auto-completion and type inspections, an auto-formatter, and more.&lt;/p>
 &lt;/blockquote>
-&lt;p>&lt;img src="https://imgse.com/i/ppyF7QJ" alt="">&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2023/03/27/ppyF7QJ.png" alt="">&lt;/p>
 &lt;h2 id="安装">安装&lt;/h2>
 &lt;p>&lt;a href="https://kaisery.github.io/trpl-zh-cn/ch01-01-installation.html">https://kaisery.github.io/trpl-zh-cn/ch01-01-installation.html&lt;/a>&lt;/p>
 &lt;h3 id="rustup">rustup&lt;/h3>
@@ -228,9 +228,9 @@ Rust has great documentation, a friendly compiler with useful error messages, an
 &lt;/span>&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">println!&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;s1: &lt;/span>&lt;span style="color:#4e9a06">{}&lt;/span>&lt;span style="color:#4e9a06">, s2: &lt;/span>&lt;span style="color:#4e9a06">{}&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">s1&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#000">s2&lt;/span>&lt;span style="color:#000;font-weight:bold">);&lt;/span>&lt;span style="color:#f8f8f8;text-decoration:underline"> &lt;/span>&lt;span style="color:#8f5902;font-style:italic">// compiler will complain!
 &lt;/span>&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>因为整数是有已知固定大小的简单值，所以这两个 &lt;code>5&lt;/code> 被放入了栈中。&lt;/p>
 &lt;p>但 &lt;code>String&lt;/code> 由于有一个指向堆的指针（存储在栈上）&lt;/p>
-&lt;p>&lt;img src="https://imgse.com/i/ppyFIWF" alt="">&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2023/03/27/ppyFIWF.png" alt="">&lt;/p>
 &lt;p>所以 &lt;code>let s2 = s1;&lt;/code> 一句实际上做的是 move 操作（与 cpp 的 std::move 类似）&lt;/p>
-&lt;p>&lt;img src="https://imgse.com/i/ppyFoz4" alt="">&lt;/p>
+&lt;p>&lt;img src="https://s1.ax1x.com/2023/03/27/ppyFoz4.png" alt="">&lt;/p>
 &lt;p>执行后 &lt;code>s1&lt;/code> 变成了一个无效的变量，不能再被使用了。&lt;/p>
 &lt;p>&lt;strong>克隆&lt;/strong>&lt;/p>
 &lt;p>连数据一起拷贝。未来提及 trait 时也有其他情况，这里不引入。&lt;/p>
