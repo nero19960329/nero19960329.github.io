@@ -992,14 +992,13 @@ Shims --&amp;gt; pyenv
 &lt;p>任意相等比较是简单的字符串相等操作，它不考虑任何语义信息，例如零填充或本地版本。该运算符也不像 == 运算符那样支持前缀匹配。&lt;/p>
 &lt;p>任意相等的主要用例是允许指定一个不能由这个 PEP 表示的版本。 这个操作符是特殊的，它充当一个逃生舱口，允许使用实现此 PEP 的工具的人仍然安装与此 PEP 不兼容的旧版本。&lt;/p>
 &lt;p>一个例子是 &lt;code>===foobar&lt;/code>，它会匹配名为 &lt;code>foobar&lt;/code> 的一个版本。&lt;/p>
-&lt;p>强烈建议不要使用此运算符，并且工具在使用时可能会显示警告。&lt;/p></description></item><item><title>Blog: PEP 440 - Version Identification and Dependency Specification</title><link>/blog/semver-conventional-commit/</link><pubDate>Wed, 20 Apr 2022 16:49:00 +0800</pubDate><guid>/blog/semver-conventional-commit/</guid><description>
-&lt;h2 id="使用约定式提交进行语义化版本控制">使用约定式提交进行语义化版本控制&lt;/h2>
+&lt;p>强烈建议不要使用此运算符，并且工具在使用时可能会显示警告。&lt;/p></description></item><item><title>Blog: 使用约定式提交进行语义化版本控制</title><link>/blog/semver-conventional-commit/</link><pubDate>Wed, 20 Apr 2022 16:49:00 +0800</pubDate><guid>/blog/semver-conventional-commit/</guid><description>
 &lt;p>全文机翻，有小幅语法调整，不会或无法翻译的部分保留原文。&lt;/p>
 &lt;p>原文: Semantic Versioning with Conventional Commits&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://platform.deloitte.com.au/articles/semantic-versioning-with-conventional-commits">https://platform.deloitte.com.au/articles/semantic-versioning-with-conventional-commits&lt;/a>&lt;/li>
 &lt;/ul>
-&lt;h2 id="使用约定式提交进行语义化版本控制-1">使用约定式提交进行语义化版本控制&lt;/h2>
+&lt;h2 id="使用约定式提交进行语义化版本控制">使用约定式提交进行语义化版本控制&lt;/h2>
 &lt;p>版本控制很重要。我不必告诉你这个。然而，我看到它一遍又一遍地做得不好。&lt;/p>
 &lt;p>我经常遇到的缺陷是缺乏明确的开发和发布流程以及较差的工具支持。如果你的开发人员坐在那里想知道如何完成某些任务，那么这个过程就被打破了。他们应该知道如何发布新版本或如何在主干移动时修复生产。您的 CI/CD 流程也应该支持这些场景！&lt;/p>
 &lt;p>许多人依靠他们的 CI/CD 工具来确定他们应用程序的下一个版本。我也为此感到内疚，但在某些时候，我意识到这是只有开发人员才能做出的决定。我们的工具还不够智能，无法查看代码更改并告诉我它是功能、修复还是其他什么。&lt;/p>
