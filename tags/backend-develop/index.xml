@@ -90,8 +90,8 @@ Server: Apache 0.84
 &lt;/ul>
 &lt;h3 id="二进制协议">二进制协议&lt;/h3>
 &lt;p>HTTP/2 试图通过将其变为二进制协议来解决 HTTP/1.x 中存在的延迟增加问题。作为二进制协议，它更易于解析，但与 HTTP/1.x 不同，它不再可读。HTTP/2 的主要构建块是帧和流&lt;/p>
-&lt;p>&lt;strong>帧和流&lt;/strong>
-HTTP 消息现在由一个或多个帧组成。有一个 HEADERS 帧用于元数据，一个 DATA 帧用于有效负载，还有几种其他类型的帧（HEADERS、DATA、RST_STREAM、SETTINGS、PRIORITY 等），你可以通过 HTTP/2 规范检查。&lt;/p>
+&lt;p>&lt;strong>帧和流&lt;/strong>&lt;/p>
+&lt;p>HTTP 消息现在由一个或多个帧组成。有一个 HEADERS 帧用于元数据，一个 DATA 帧用于有效负载，还有几种其他类型的帧（HEADERS、DATA、RST_STREAM、SETTINGS、PRIORITY 等），你可以通过 HTTP/2 规范检查。&lt;/p>
 &lt;p>每个 HTTP/2 请求和响应都被赋予一个唯一的流 ID，并被划分为帧。帧只是二进制数据块。一组帧称为一个流。每个帧都有一个流 ID，用于标识它所属的流，每个帧都有一个公共头。另外，除了流 ID 是唯一的，值得一提的是，任何由客户端发起的请求都使用奇数，服务器的响应具有偶数流 ID。&lt;/p>
 &lt;p>除了 HEADERS 和 DATA 之外，我认为值得在此提到的另一种帧类型是 RST_STREAM，它是一种特殊的帧类型，用于中止某个流，即客户端可以发送此帧，让服务器知道我不再需要此流。在 HTTP/1.1 中，使服务器停止向客户端发送响应的唯一方法是关闭连接，这导致了延迟增加，因为必须为任何连续请求打开新连接。而在 HTTP/2 中，客户端可以使用 RST_STREAM 并停止接收特定流，而连接仍将保持打开状态，其他流仍将继续播放。&lt;/p>
 &lt;h3 id="多路复用">多路复用&lt;/h3>
