@@ -13,10 +13,6 @@ Roadmap: [https://roadmap.sh/backend](https://roadmap.sh/backend)
 
 原文：[https://cs.fyi/guide/http-in-depth](https://cs.fyi/guide/http-in-depth) 
 
-HTTP是每个Web开发者都应该知道的协议，因为它支持整个Web。了解HTTP肯定可以帮助您开发更好的应用程序。
-
-本文将讨论HTTP是什么，它是如何产生的，它现在的地位在哪里，以及我们是如何到达这里的。
-
 ## 什么是 HTTP？
 
 HTTP 是一个基于 TCP/IP 的应用层通信协议，标准化客户端和服务器之间的通信方式。它定义了互联网上请求和传输内容的方式。所谓应用层协议，是指它简单地抽象出了主机（客户端和服务器）之间的通信标准。HTTP 本身依赖于 TCP/IP，在客户端和服务器之间进行请求和响应。默认情况下，使用 TCP 端口 80，但也可以使用其他端口。HTTPS 使用端口 443。
