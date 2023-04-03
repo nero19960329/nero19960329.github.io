@@ -1,0 +1,188 @@
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>wangzhao's site – Prometheus</title><link>/tags/prometheus/</link><description>Recent content in Prometheus on wangzhao's site</description><generator>Hugo -- gohugo.io</generator><lastBuildDate>Mon, 03 Apr 2023 14:52:00 +0800</lastBuildDate><atom:link href="/tags/prometheus/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog: What is HTTP? - Backend Developer Roadmap #2</title><link>/blog/fastapi-prometheus/</link><pubDate>Mon, 03 Apr 2023 14:52:00 +0800</pubDate><guid>/blog/fastapi-prometheus/</guid><description>
+&lt;h2 id="introduction">Introduction&lt;/h2>
+&lt;p>FastAPI is a modern, fast (high-performance), web framework for building APIs with Python 3.7+ based on standard Python type hints. It is designed to be easy to use, fast to develop with, and fast to run. Prometheus is a popular open-source monitoring system that collects metrics from various sources and stores them in a time-series database. It is used to monitor and alert on system metrics, application metrics, and business metrics.&lt;/p>
+&lt;h2 id="requirements">Requirements&lt;/h2>
+&lt;p>Before we start, make sure that you have the following requirements installed:&lt;/p>
+&lt;ul>
+&lt;li>Python 3.7+&lt;/li>
+&lt;li>FastAPI&lt;/li>
+&lt;li>Prometheus Client&lt;/li>
+&lt;li>Uvicorn&lt;/li>
+&lt;/ul>
+&lt;p>You can install these packages using pip:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>pip install fastapi prometheus_client uvicorn
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="creating-a-fastapi-application">Creating a FastAPI Application&lt;/h2>
+&lt;p>We will start by creating a new FastAPI application. Create a new Python file called &lt;code>app.py&lt;/code> and add the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">from&lt;/span> &lt;span style="color:#000">fastapi&lt;/span> &lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">FastAPI&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">app&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">FastAPI&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#5c35cc;font-weight:bold">@app.get&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">async&lt;/span> &lt;span style="color:#204a87;font-weight:bold">def&lt;/span> &lt;span style="color:#000">root&lt;/span>&lt;span style="color:#000;font-weight:bold">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;message&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Hello World&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This creates a new FastAPI application with a single endpoint &lt;code>/&lt;/code> that returns a JSON response with the message &lt;code>&amp;quot;Hello World&amp;quot;&lt;/code>.&lt;/p>
+&lt;p>To run the application, you can use the &lt;code>uvicorn&lt;/code> server:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>uvicorn app:app --reload
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will start the server on &lt;code>http://localhost:8000&lt;/code>.&lt;/p>
+&lt;h2 id="adding-prometheus-metrics">Adding Prometheus Metrics&lt;/h2>
+&lt;p>Now, let&amp;rsquo;s add Prometheus metrics to the application. We will use the &lt;code>prometheus_client&lt;/code> library to create and expose metrics.&lt;/p>
+&lt;p>First, let&amp;rsquo;s create a new endpoint &lt;code>/metrics&lt;/code> that will return the Prometheus metrics. Update &lt;code>app.py&lt;/code> with the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">from&lt;/span> &lt;span style="color:#000">fastapi&lt;/span> &lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">FastAPI&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">from&lt;/span> &lt;span style="color:#000">prometheus_client&lt;/span> &lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">Counter&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">generate_latest&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CONTENT_TYPE_LATEST&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">app&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">FastAPI&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">REQUESTS&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Counter&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;requests_total&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;Total HTTP requests.&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#5c35cc;font-weight:bold">@app.get&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">async&lt;/span> &lt;span style="color:#204a87;font-weight:bold">def&lt;/span> &lt;span style="color:#000">root&lt;/span>&lt;span style="color:#000;font-weight:bold">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">REQUESTS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">inc&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;message&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Hello World&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#5c35cc;font-weight:bold">@app.get&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;/metrics&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">async&lt;/span> &lt;span style="color:#204a87;font-weight:bold">def&lt;/span> &lt;span style="color:#000">metrics&lt;/span>&lt;span style="color:#000;font-weight:bold">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">Response&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">generate_latest&lt;/span>&lt;span style="color:#000;font-weight:bold">(),&lt;/span> &lt;span style="color:#000">media_type&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">CONTENT_TYPE_LATEST&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We have created a new counter &lt;code>REQUESTS&lt;/code> that will keep track of the total number of HTTP requests. Every time the &lt;code>/&lt;/code> endpoint is called, we increment the counter using &lt;code>REQUESTS.inc()&lt;/code>.&lt;/p>
+&lt;p>We have also added a new endpoint &lt;code>/metrics&lt;/code> that returns the Prometheus metrics. We use the &lt;code>generate_latest()&lt;/code> function to generate the metrics in the Prometheus exposition format.&lt;/p>
+&lt;p>To run the application with the metrics endpoint, you can use the following command:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>uvicorn app:app --reload --workers &lt;span style="color:#0000cf;font-weight:bold">1&lt;/span> --host 0.0.0.0 --port &lt;span style="color:#0000cf;font-weight:bold">8000&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This will start the server on &lt;code>http://localhost:8000&lt;/code> with a single worker.&lt;/p>
+&lt;h2 id="adding-prometheus-histograms">Adding Prometheus Histograms&lt;/h2>
+&lt;p>In addition to counters, we can also use histograms to measure the latency of our requests. A histogram measures the distribution of values over a set of buckets. We will use the &lt;code>Histogram&lt;/code> class from the &lt;code>prometheus_client&lt;/code> library to create histograms.&lt;/p>
+&lt;p>Update &lt;code>app.py&lt;/code> with the following code:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">from&lt;/span> &lt;span style="color:#000">fastapi&lt;/span> &lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">FastAPI&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Response&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Request&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">from&lt;/span> &lt;span style="color:#000">prometheus_client&lt;/span> &lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">Counter&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">Histogram&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">generate_latest&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CONTENT_TYPE_LATEST&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">CollectorRegistry&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">import&lt;/span> &lt;span style="color:#000">time&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">app&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">FastAPI&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">registry&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">CollectorRegistry&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">REQUESTS&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Counter&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;requests_total&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;Total HTTP requests.&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">EXCEPTIONS&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Counter&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;exceptions_total&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;Total HTTP exceptions.&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">LATENCY&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Histogram&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;latency_seconds&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;HTTP request latency (seconds).&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#5c35cc;font-weight:bold">@app.get&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;/&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">async&lt;/span> &lt;span style="color:#204a87;font-weight:bold">def&lt;/span> &lt;span style="color:#000">root&lt;/span>&lt;span style="color:#000;font-weight:bold">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">REQUESTS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">inc&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000;font-weight:bold">{&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;message&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#4e9a06">&amp;#34;Hello World&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#5c35cc;font-weight:bold">@app.get&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;/metrics&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">async&lt;/span> &lt;span style="color:#204a87;font-weight:bold">def&lt;/span> &lt;span style="color:#000">metrics&lt;/span>&lt;span style="color:#000;font-weight:bold">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">Response&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">generate_latest&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#000">media_type&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">CONTENT_TYPE_LATEST&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#5c35cc;font-weight:bold">@app.exception_handler&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#c00;font-weight:bold">Exception&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">async&lt;/span> &lt;span style="color:#204a87;font-weight:bold">def&lt;/span> &lt;span style="color:#000">exceptions_handler&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">request&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">exc&lt;/span>&lt;span style="color:#000;font-weight:bold">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">EXCEPTIONS&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">inc&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">raise&lt;/span> &lt;span style="color:#000">exc&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#5c35cc;font-weight:bold">@app.middleware&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;http&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">async&lt;/span> &lt;span style="color:#204a87;font-weight:bold">def&lt;/span> &lt;span style="color:#000">add_process_time_header&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">request&lt;/span>&lt;span style="color:#000;font-weight:bold">:&lt;/span> &lt;span style="color:#000">Request&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">call_next&lt;/span>&lt;span style="color:#000;font-weight:bold">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">start_time&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">response&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87;font-weight:bold">await&lt;/span> &lt;span style="color:#000">call_next&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">request&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">process_time&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">time&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">time&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">-&lt;/span> &lt;span style="color:#000">start_time&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">LATENCY&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">observe&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">process_time&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#000">response&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">.&lt;/span>&lt;span style="color:#000">headers&lt;/span>&lt;span style="color:#000;font-weight:bold">[&lt;/span>&lt;span style="color:#4e9a06">&amp;#34;X-Process-Time&amp;#34;&lt;/span>&lt;span style="color:#000;font-weight:bold">]&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#204a87">str&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">process_time&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">response&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We have defined a new histogram &lt;code>LATENCY&lt;/code> that will measure the HTTP request latency in seconds. We use the &lt;code>Histogram&lt;/code> class to define the histogram and specify the buckets that we want to use. We have also defined a new counter &lt;code>EXCEPTIONS&lt;/code> that will keep track of the total number of HTTP exceptions.&lt;/p>
+&lt;p>We have also defined a new middleware function &lt;code>add_process_time_header&lt;/code> that will measure the HTTP request latency and add the &lt;code>X-Process-Time&lt;/code> header to the response.&lt;/p>
+&lt;h2 id="using-collectorregistry">Using CollectorRegistry&lt;/h2>
+&lt;p>In the code above, we used &lt;code>registry&lt;/code> variable to create our Prometheus counters and histograms.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">registry&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">CollectorRegistry&lt;/span>&lt;span style="color:#000;font-weight:bold">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>The &lt;code>CollectorRegistry&lt;/code> is a container for all the metrics that you want to expose to Prometheus. It provides a way to register metric collectors and expose them as a single endpoint using the &lt;code>/metrics&lt;/code> endpoint.&lt;/p>
+&lt;p>When you create a new metric, you can specify the registry that you want to use. By default, the &lt;code>prometheus_client&lt;/code> library uses the global registry, but you can create your own registry and use it to isolate your metrics.&lt;/p>
+&lt;p>In the example above, we created a new registry and passed it to the &lt;code>Counter&lt;/code> and &lt;code>Histogram&lt;/code> constructors:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">REQUESTS&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Counter&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;requests_total&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;Total HTTP requests.&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span>&lt;span style="color:#000">LATENCY&lt;/span> &lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span> &lt;span style="color:#000">Histogram&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#4e9a06">&amp;#39;latency_seconds&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">,&lt;/span> &lt;span style="color:#4e9a06">&amp;#39;HTTP request latency (seconds).&amp;#39;&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>We also passed the registry to the &lt;code>generate_latest&lt;/code> function when returning the metrics:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-python" data-lang="python">&lt;span style="display:flex;">&lt;span>&lt;span style="color:#204a87;font-weight:bold">return&lt;/span> &lt;span style="color:#000">Response&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">generate_latest&lt;/span>&lt;span style="color:#000;font-weight:bold">(&lt;/span>&lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">registry&lt;/span>&lt;span style="color:#000;font-weight:bold">),&lt;/span> &lt;span style="color:#000">media_type&lt;/span>&lt;span style="color:#ce5c00;font-weight:bold">=&lt;/span>&lt;span style="color:#000">CONTENT_TYPE_LATEST&lt;/span>&lt;span style="color:#000;font-weight:bold">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>This ensures that only the metrics that we defined using this registry are returned.&lt;/p>
+&lt;h2 id="conclusion">Conclusion&lt;/h2>
+&lt;p>In this tutorial, we have learned how to build a FastAPI application with Prometheus metrics. We have added counters to measure the total number of HTTP requests and histograms to measure the HTTP request latency. Prometheus metrics can be used to monitor and alert on system metrics, application metrics, and business metrics.&lt;/p>
+&lt;hr>
+&lt;h2 id="介绍">介绍&lt;/h2>
+&lt;p>FastAPI 是一个现代化、高效的 Web 框架，用于基于 Python 3.7+ 构建 API，基于标准 Python 类型提示。它被设计成易于使用、开发快速、运行快速。Prometheus 是一个流行的开源监控系统，它从各种来源收集指标并将它们存储在时间序列数据库中。它用于监视和警报系统指标、应用程序指标和业务指标。&lt;/p>
+&lt;h2 id="要求">要求&lt;/h2>
+&lt;p>在开始之前，请确保已安装以下要求：&lt;/p>
+&lt;ul>
+&lt;li>Python 3.7+&lt;/li>
+&lt;li>FastAPI&lt;/li>
+&lt;li>Prometheus 客户端&lt;/li>
+&lt;li>Uvicorn&lt;/li>
+&lt;/ul>
+&lt;p>您可以使用 pip 安装这些软件包：&lt;/p>
+&lt;pre tabindex="0">&lt;code>pip install fastapi prometheus_client uvicorn
+&lt;/code>&lt;/pre>&lt;h2 id="创建-fastapi-应用程序">创建 FastAPI 应用程序&lt;/h2>
+&lt;p>我们将从创建一个新的 FastAPI 应用程序开始。创建一个名为 &lt;code>app.py&lt;/code> 的新 Python 文件，并添加以下代码：&lt;/p>
+&lt;pre tabindex="0">&lt;code>from fastapi import FastAPI
+app = FastAPI()
+@app.get(&amp;#34;/&amp;#34;)
+async def root():
+return {&amp;#34;message&amp;#34;: &amp;#34;Hello World&amp;#34;}
+&lt;/code>&lt;/pre>&lt;p>这将创建一个具有单个端点 &lt;code>/&lt;/code> 的新 FastAPI 应用程序，该端点返回一个带有消息 &lt;code>&amp;quot;Hello World&amp;quot;&lt;/code> 的 JSON 响应。&lt;/p>
+&lt;p>要运行应用程序，您可以使用 &lt;code>uvicorn&lt;/code> 服务器：&lt;/p>
+&lt;pre tabindex="0">&lt;code>uvicorn app:app --reload
+&lt;/code>&lt;/pre>&lt;p>这将在 &lt;code>http://localhost:8000&lt;/code> 上启动服务器。&lt;/p>
+&lt;h2 id="添加-prometheus-指标">添加 Prometheus 指标&lt;/h2>
+&lt;p>现在，让我们为应用程序添加 Prometheus 指标。我们将使用 &lt;code>prometheus_client&lt;/code> 库来创建和公开指标。&lt;/p>
+&lt;p>首先，让我们创建一个新的端点 &lt;code>/metrics&lt;/code>，该端点将返回 Prometheus 指标。使用以下代码更新 &lt;code>app.py&lt;/code>：&lt;/p>
+&lt;pre tabindex="0">&lt;code>from fastapi import FastAPI
+from prometheus_client import Counter, generate_latest, CONTENT_TYPE_LATEST
+app = FastAPI()
+REQUESTS = Counter(&amp;#39;requests_total&amp;#39;, &amp;#39;Total HTTP requests.&amp;#39;)
+@app.get(&amp;#34;/&amp;#34;)
+async def root():
+REQUESTS.inc()
+return {&amp;#34;message&amp;#34;: &amp;#34;Hello World&amp;#34;}
+@app.get(&amp;#34;/metrics&amp;#34;)
+async def metrics():
+return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
+&lt;/code>&lt;/pre>&lt;p>我们创建了一个名为 &lt;code>REQUESTS&lt;/code> 的新计数器，该计数器将跟踪 HTTP 请求的总数。每次调用 &lt;code>/&lt;/code> 端点时，我们使用 &lt;code>REQUESTS.inc()&lt;/code> 增加计数器。&lt;/p>
+&lt;p>我们还添加了一个新的端点 &lt;code>/metrics&lt;/code>，该端点返回 Prometheus 指标。我们使用 &lt;code>generate_latest()&lt;/code> 函数以 Prometheus 暴露格式生成指标。&lt;/p>
+&lt;p>要使用带有指标端点的应用程序运行，可以使用以下命令：&lt;/p>
+&lt;pre tabindex="0">&lt;code>uvicorn app:app --reload --workers 1 --host 0.0.0.0 --port 8000
+&lt;/code>&lt;/pre>&lt;p>这将在 &lt;code>http://localhost:8000&lt;/code> 上启动服务器，并使用单个 worker。&lt;/p>
+&lt;h2 id="添加-prometheus-直方图">添加 Prometheus 直方图&lt;/h2>
+&lt;p>除了计数器之外，我们还可以使用直方图来测量请求的延迟。直方图测量值在一组存储桶上的分布。我们将使用 &lt;code>prometheus_client&lt;/code> 库中的 &lt;code>Histogram&lt;/code> 类来创建直方图。&lt;/p>
+&lt;p>使用以下代码更新 &lt;code>app.py&lt;/code>：&lt;/p>
+&lt;pre tabindex="0">&lt;code>from fastapi import FastAPI, Response, Request
+from prometheus_client import Counter, Histogram, generate_latest, CONTENT_TYPE_LATEST, CollectorRegistry
+import time
+app = FastAPI()
+registry = CollectorRegistry()
+REQUESTS = Counter(&amp;#39;requests_total&amp;#39;, &amp;#39;Total HTTP requests.&amp;#39;, registry=registry)
+EXCEPTIONS = Counter(&amp;#39;exceptions_total&amp;#39;, &amp;#39;Total HTTP exceptions.&amp;#39;)
+LATENCY = Histogram(&amp;#39;latency_seconds&amp;#39;, &amp;#39;HTTP request latency (seconds).&amp;#39;)
+@app.get(&amp;#34;/&amp;#34;)
+async def root():
+REQUESTS.inc()
+return {&amp;#34;message&amp;#34;: &amp;#34;Hello World&amp;#34;}
+@app.get(&amp;#34;/metrics&amp;#34;)
+async def metrics():
+return Response(generate_latest(registry=registry), media_type=CONTENT_TYPE_LATEST)
+@app.exception_handler(Exception)
+async def exceptions_handler(request, exc):
+EXCEPTIONS.inc()
+raise exc
+@app.middleware(&amp;#34;http&amp;#34;)
+async def add_process_time_header(request: Request, call_next):
+start_time = time.time()
+response = await call_next(request)
+process_time = time.time() - start_time
+LATENCY.observe(process_time)
+response.headers[&amp;#34;X-Process-Time&amp;#34;] = str(process_time)
+return response
+&lt;/code>&lt;/pre>&lt;p>我们定义了一个名为 &lt;code>LATENCY&lt;/code> 的新直方图，该直方图将以秒为单位测量 HTTP 请求延迟。我们使用 &lt;code>Histogram&lt;/code> 类来定义直方图并指定要使用的桶。我们还定义了一个新计数器 &lt;code>EXCEPTIONS&lt;/code>，该计数器将跟踪 HTTP 异常的总数。&lt;/p>
+&lt;p>我们还定义了一个新的中间件函数 &lt;code>add_process_time_header&lt;/code>，该函数将测量 HTTP 请求延迟并将 &lt;code>X-Process-Time&lt;/code> 标头添加到响应中。&lt;/p>
+&lt;h2 id="使用-collectorregistry">使用 CollectorRegistry&lt;/h2>
+&lt;p>在上面的代码中，我们使用 &lt;code>registry&lt;/code> 变量来创建我们的 Prometheus 计数器和直方图。&lt;/p>
+&lt;pre tabindex="0">&lt;code>registry = CollectorRegistry()
+&lt;/code>&lt;/pre>&lt;p>&lt;code>CollectorRegistry&lt;/code> 是用于容纳要公开给 Prometheus 的所有指标的容器。它提供了一种注册度量收集器并使用 &lt;code>/metrics&lt;/code> 端点将它们公开为单个端点的方法。&lt;/p>
+&lt;p>当您创建新指标时，可以指定要使用的注册表。默认情况下，&lt;code>prometheus_client&lt;/code> 库使用全局注册表，但是您可以创建自己的注册表并使用它来隔离指标。&lt;/p>
+&lt;p>在上面的示例中，我们创建了一个新的注册表并将其传递给 &lt;code>Counter&lt;/code> 和 &lt;code>Histogram&lt;/code> 构造函数：&lt;/p>
+&lt;pre tabindex="0">&lt;code>REQUESTS = Counter(&amp;#39;requests_total&amp;#39;, &amp;#39;Total HTTP requests.&amp;#39;, registry=registry)
+LATENCY = Histogram(&amp;#39;latency_seconds&amp;#39;, &amp;#39;HTTP request latency (seconds).&amp;#39;)
+&lt;/code>&lt;/pre>&lt;p>我们还在返回指标时将注册表传递给 &lt;code>generate_latest&lt;/code> 函数：&lt;/p>
+&lt;pre tabindex="0">&lt;code>return Response(generate_latest(registry=registry), media_type=CONTENT_TYPE_LATEST)
+&lt;/code>&lt;/pre>&lt;p>这确保我们只返回使用此注册表定义的指标。&lt;/p>
+&lt;h2 id="结论">结论&lt;/h2>
+&lt;p>在本教程中，我们学习了如何构建带有 Prometheus 指标的 FastAPI 应用程序。我们添加了计数器以测量 HTTP 请求的总数，并添加了直方图以测量 HTTP 请求的延迟。Prometheus 指标可用于监视和警报系统指标、应用程序指标和业务指标。&lt;/p></description></item></channel></rss>
