@@ -4,9 +4,9 @@
 &lt;h2 id="状态转移方程">状态转移方程&lt;/h2>
 &lt;p>&lt;code>dp[i][j] = max(dp[i-1][j], dp[i-1][j-w[i]] + v[i])&lt;/code>&lt;/p>
 &lt;p>其中 &lt;code>dp[i][j]&lt;/code> 表示前 &lt;code>i&lt;/code> 件物品放入容量为 &lt;code>j&lt;/code> 的背包可以获得的最大价值，&lt;code>w[i]&lt;/code> 和 &lt;code>v[i]&lt;/code> 分别表示第 &lt;code>i&lt;/code> 件物品的重量和价值。&lt;/p>
-&lt;h2 id="优化">&lt;strong>优化&lt;/strong>&lt;/h2>
+&lt;h2 id="优化">优化&lt;/h2>
 &lt;p>将二维数组压缩为一维数组，即 &lt;code>dp[j] = max(dp[j], dp[j - w[i]] + v[i])&lt;/code>。这是因为当前状态只与上一个状态有关，因此可以使用滚动数组来优化空间复杂度。&lt;/p>
-&lt;h2 id="例题">&lt;strong>例题&lt;/strong>&lt;/h2>
+&lt;h2 id="例题">例题&lt;/h2>
 &lt;h3 id="leetcode-416">LeetCode 416&lt;/h3>
 &lt;p>&lt;a href="https://leetcode.com/problems/partition-equal-subset-sum/">https://leetcode.com/problems/partition-equal-subset-sum/&lt;/a>&lt;/p>
 &lt;p>题意：给定一个只包含正整数的非空数组，判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。&lt;/p>
