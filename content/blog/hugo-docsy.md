@@ -21,7 +21,9 @@ brew install hugo   # install hugo-extended
 
 ### Windows
 
-Download binary at release page of Hugo: https://github.com/gohugoio/hugo/releases
+Download binary at release page of Hugo: https://github.com/gohugoio/hugo/releases .
+
+For example, press `Show all xx assets` first, then download `hugo_extended_x.xxx.x_windows-amd64.zip`, then unzip it, and add the path of `hugo.exe` to `PATH` environment variable.
 
 ## Install Docsy theme
 
