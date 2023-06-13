@@ -1327,7 +1327,8 @@ Shims --&amp;gt; pyenv
 &lt;h3 id="macos">macOS&lt;/h3>
 &lt;div class="highlight">&lt;pre tabindex="0" style="background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4;">&lt;code class="language-bash" data-lang="bash">&lt;span style="display:flex;">&lt;span>brew install hugo &lt;span style="color:#8f5902;font-style:italic"># install hugo-extended&lt;/span>
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;h3 id="windows">Windows&lt;/h3>
-&lt;p>Download binary at release page of Hugo: &lt;a href="https://github.com/gohugoio/hugo/releases">https://github.com/gohugoio/hugo/releases&lt;/a>&lt;/p>
+&lt;p>Download binary at release page of Hugo: &lt;a href="https://github.com/gohugoio/hugo/releases">https://github.com/gohugoio/hugo/releases&lt;/a> .&lt;/p>
+&lt;p>For example, press &lt;code>Show all xx assets&lt;/code> first, then download &lt;code>hugo_extended_x.xxx.x_windows-amd64.zip&lt;/code>, then unzip it, and add the path of &lt;code>hugo.exe&lt;/code> to &lt;code>PATH&lt;/code> environment variable.&lt;/p>
 &lt;h2 id="install-docsy-theme">Install Docsy theme&lt;/h2>
 &lt;h3 id="preparation">Preparation&lt;/h3>
 &lt;p>Install NodeJS first. Then install packages below:&lt;/p>
